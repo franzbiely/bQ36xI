@@ -1,0 +1,309 @@
+﻿******************************************************************************************
+*                                                                                        *
+*    IMPORTANT! When coping the LIVE site to the test site -                             *
+*    1. The database name and user must be different                                     *
+*    2. public/config.php must be updated to the copied TEST database credentials   *
+*                                                                                        *
+******************************************************************************************
+
+v3.0 | 9 of September 2016
+ - Changes some termed used
+ - Made catchment area field required
+
+Files Updated: 
+	-public/pages/dashboard.php
+	-public/pages/catchment.php
+	-public/models/cls_catchment.php
+	-public/models/cls_records.php
+	-public/parts/footer.php (change the version number)
+	
+Database:
+	-Add catchment field in tbl_records table.
+
+v2.9 | 18 of August 2016
+Fixed DBS reports not showing
+File Updated: 
+	-models/cls_reports.php
+	-public\parts\footer.php (change the version number)
+
+v2.8 | 10 of August 2016
+- Added "There is currently no people in this range." to HB email reports &
+
+Files Update:
+	-public\mail.php
+	-public\parts\footer.php (change the version number)
+
+v2.7 | 30 of May 2016
+- Added record number field of user in the hb level report as well as in the mail report.
+
+Files Update:
+	-public\pages\hb_level_reports.php
+	-public\models\cls_reports.php
+	-public\mail.php
+	-public\parts\footer.php (change the version number)
+
+v2.6 | 23 of May 2016
+- Fix sql script, that queries records from different location.
+
+Files Update:
+	-public\pages\hb_level_reports.php
+	-public\models\cls_reports.php
+	-public\mail.php
+	-public\parts\footer.php (change the version number)
+
+
+v2.5 | 5 of May 2016
+- In hb report, logged as admin, changed the 'location' field to area_name.
+- In hb report, logged as admin, only data related to the currently logged(admin) in location will be displayed.
+- In hb report, logged as superreporting, all data from different locations will be displayed.
+- In email, all data from different locations will be sent. 
+- Changes HB level termininoliges 10+, 10-, 8- to  Hb>10g%, Hb<10g%, Hb<8g%, respectively.
+
+Files Update:
+	-public\pages\hb_level_reports.php
+	-public\models\cls_reports.php
+	-public\mail.php
+	-public\parts\footer.php (change the version number)
+
+v2.4 | 23 of March 2016
+- Updated the client page script to load faster
+Files Added:
+	-public\models\cls_clients.php
+	-public\parts\footer.php (change the version number)
+
+v2.3 | 22nd of Feb 2016
+- Added the hb_level to the database tbl_records
+- Rearrange the fields in consultation form.
+- Added Hb level drop down in consultation form when ANC is ticked.
+- Added a page for reports for HB level
+- Added ajax code to count the ANC visit of each client
+- Added a link in Admin Settings -> 'Notifications'
+- Notification settings will save in json.file.
+- Added a code to check and send email reports based on settings.
+Files Added:
+	-public\pages\hb_level_reports.php
+	-public\pages\report_settings.php
+	-public\ajax.php
+	-public\mail.php
+	-public\json.php
+	-public\anc.json
+	-public\js\moment.js
+
+Files Update:
+	-public\models\cls_clients.php
+	-public\models\cls_records.php
+	-public\models\cls_reports.php
+	-public\pages\records.php
+	-public\pages\reports.php
+	-public\pages\settings.php	
+	-public\pages\style.css
+	-public\parts\footer.php (change the version number)
+
+
+Folder Added:
+	-public\library\plugin
+
+
+
+Updated v2.2.5 | 27th of May 2015
+	-public\models\cls_clients.php
+	-public\parts\footer.php (change the version number)
+	-public\changelog.txt
+-Fixed bug where the search result was extracted from the distric_id instead of the district_id and the office_id
+
+
+Updated v2.2.4 | 19th of April 2015
+	-public\js\global_script.js
+	-public\model\cls_clients.php
+	-public\model\cls_records.php
+	-public\model\cls_reports.php
+	-public\model\main.php
+	-public\pages\clients.php
+	-public\pages\consultation_reports.php
+	-public\pages\records.php
+	-public\parts\header.php
+	-public\functions.php
+	-public\parts\footer.php (change the version number)
+	-public\changelog.txt
+
+-Added the total number of referrals counter to display in the excel when user click the export button to excel file
+
+-Added code for clearing the values for each fields in the consultation modal when the user click the add new consultation
+
+-Removed the rerview date when adding a new client into the database
+
+-Added code to set cell value for total number of referrals when the user clicks export button to excel file
+
+-Added code new function for counting the total number of referrals to avoid repeatition in counting total number of referrals
+
+-Added code to fixed existing bug when the admin user clicks the export button to excel file or to cvs file which loads infinete
+
+-Removed the code for referral_id and review_date values in the hidden element in the table and avoid error in the database
+
+-Added code for displaying the total number of referrals in the reports view when the user generate a reports using the date range
+
+-Added code for displaying the referral values for each row or consultation records
+
+-Added code to fixed the error code in views consultation when user select clinic attendance
+
+-Added code to change the appearance of the review date using jquery datapicker
+
+
+v2.2.3 | 8th of April 2015
+-Added sususmama_v2.2.3.zip file, just unzip the file to overwrite the existing code for the following files:
+	-public\js\global_script.js
+	-public\model\cls_clients.php
+	-public\pages\clients.php
+	-public\changelog.txt
+
+-Added the Timestamps to the Database tbl_client and TABLE tbl_records
+
+-Added code to public\js\global_script.js:
+	- Added code [global function "timestampToDateTimeLocal" for javascript to convert timestamp value to datetimelocal format ex.2015-04-08T08:00:00]
+	- Added code [to reset the value of datetime-local and display to none the child type]
+
+-Added code to public\model\cls_clients.php: 
+	- Added code [to set the datetimelocal format value when "dataEntry user" clicks the edit button for client records]
+	- Added code [to fix ajax error when adding a new client record "this error will show as undefined in the network tab by pressing F12 goto network tab then response" using ajax call]
+	- Added code [to validate the value from datetimelocal value and to fixed existing but in not saving the edited client records]
+	- Added code [to add select type element for client referral option and Datetimelocal type element for review date]
+	- Added code [to clear the input element before the modal is showed]
+	- Added code [to set the value if the client is a child type and to display the relationship value]
+	- Added code [to fix the bug that not showing the province value from database for every client record and populate the listed districts for particular area]
+	- Added code [to set _callback variable if needed a list of province from database]
+	- Modified code [to fixed existing bug that is not getting the value relation_to from the databse using LEFT JOIN sql statement will retrieve the value field of relation_to]
+
+-Added code to public\pages\clients.php:
+	- Added code [to get the value referral_id and revie_date when dataentry clicks edit button]
+
+
+v2.2.2 | 25th of February 2015
+- age count is now based on the time of visit (Client Type Totals - Client Reports)
+- fixed the age count of child type
+- added total Child count in Client Type Totals
+	- public/pages/client_reports.php
+	- public/models/cls_reports.php
+- added a validation in the add client section to stop future death dates being added
+- added a validation in the edit client info section to stop future birthdates, and death dates
+	- public/models/cls_clients.php
+	- public/models/cls_records.php
+	- public/pages/records.php
+
+v2.2.1 | 16th of February 2015
+- added timestamps to table tbl_client and tbl_records using database queries
+  with both, created date, and, updated date, columns being added.
+
+- fixed the issue on success message
+	- public/functions.php
+- edited footer to set versionto 2.2.1
+	- public/parts/footer.php
+
+
+v2.2 | 2nd of February 2015
+- Added a validation in the add client section to stop future birthdates being added
+- Made the start date and end date for reports a required field
+- MAde the Select Type field in Additional Reports a required field
+- fixed bugs from reports if start date was not set﻿
+- files updated:
+	- public/pages/client_reports.php
+	- public/pages/additional_reports.php
+	- public/pages/feeding_reports.php
+	- public/pages/consultation_reports.php
+	- public/models/cls_clients.php
+- edited footer to set version to 2.2
+	- public/parts/footer.php
+- added a banner to display if your in test site
+	- public/functions.php
+	- public/pages/login.php
+
+v2.1 | 31st of January 2015
+- Added Enforcement of mother and child relationship.
+- Enforcement of mother child relationship applies for 2 years old and below
+- add cancel button in record
+- no unlinking or relationship if gkaenquiry account
+- remove add client button in sidebar if gkaenquiry 
+- add return to client record button after search
+- fix date popup for firefox users (it doesnt show in firefox users)
+
+v2.0.5 | 11th of August 2014
+- Added Client Archive functionality
+
+v2.0.4 | 21th of July 2014
+- Solved bug of client records appearing in different database. 
+
+v2.0.3 | 15th of July 2014
+- added client relationship functionality and implemented validated on it's forms.  
+
+v2.0.2 | 20th of June 2014
+- have added hourglass implmeentation
+- detects age of clients
+- notifies admin for clients that doesn't have birthdates
+- mandatory birthday rule
+- have added client type detection and notifies admin if Child client must be changed based on the age.
+
+v2.0.1 | 12th of May 2014
+- Fixed bugs from superadmin panel.
+- Fixed bugs in reporting modules.
+- Make function error and success messages longer.
+- Make menu links hidden based on the logged in user.
+- Standardized all form label and placeholder
+- Restricted user to click the submit button again once it's clicked.
+- Reset form when user edit an existing account.
+
+v2.0.0 | 22th of April 2014
+- Added permission schema.
+- Make system based in districts.
+- Restrict province, district and Health Facility not to be deleted when there is account attached to it.
+- Created new system users and added permission based on the system functions that they access.
+- Separate System wide functions like; Province, District to HC based function like; Clinic.
+
+
+
+v1.1.0 | 11th of March 2014
+- update the edit function edit in cls_clinics which causes the error of reports not showing when editing the name of an specific clinic.
+v1.0.9 | 3rd of March 2014
+- Fix bugs on clients search where other offices are showing in one office.
+- - Added Kagamuga Health Facility
+- Rename "Office" to "Health Facility". Applied to all pages/parts of the system.
+- Added new User for Health Facility Kagamuga
+- Make Hagen and Kagamuga Health Facilities connected, 
+  these two Health Facilities will share its records except for the reports section.
+- Deleted the Search by Client_type in Feeding reports.
+  ->That is not needed because in the feeding reports will only returns reports from Clients where type is "Child"
+- Solve the bug in Clinic page when Updating Clinic record.
+  ->Added code that convert contact to JSON format. 
+    System will return some errors when contact field is not converted to JSON format.
+
+v1.0.8 | 22th of February 2014
+- Removed all orphaned consultation records
+- Added delete and edit on search results
+- Enables to transfer or remove all the associated consultation records of the client for delete.
+- Fix bugs found on search (displaying both client with and without consultation records in a single table)
+v1.0.7 | 10th of February 2014
+- All date fields typing ability disabled so that the user will be forced to use the calendar modal to make sure that the entered format is valid to the database.
+Upon this version please make sure to use Google chrome for this system.
+
+v1.0.6 | 9th of February 2014
+- Rename Infant to Child across entire system.
+
+v1.0.5 | 7th of February 2014
+- Rename Shot to Immunisation across all data.
+
+v1.0.4 | 20th of January 2014
+- Modified database datas to fix issues on feeding type upon data migration.
+
+v1.0.3 | 20th of January 2014
+- Added a Maintenance Mode to the client database.
+
+v1.0.2 | 17th of January 2014
+- Updated the get_client_record function from cls_reports.php  file to solve the problem of “Names are not showing when generating the client reports”. Problem solved.
+- Updated quick_search function from cls_clients.php file to solve the problem of “search result is showing for all centres”. Problem solve.
+- Updated table tbl_clinic (column “llg” from “Select LLG Name” to “49”). This solve the problem of “Feeding report is not showing for the last month”.  problem solve.
+- Updated all NULL values in feeding_type column in tbl_records. This solve the issue of not showing the clients report even they already have a records. 
+
+v1.0.1 | 14th of January 2014
+- After the user adds a new client, the system will automatically redirect to the page with the modal form for adding a Consultation Record entry.
+- The search (advance and quick) should search all clients even without consultation records.
+
+v1.0.0 | 16th of December 2013
+- Initial release of SSM Client DB

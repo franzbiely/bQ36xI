@@ -1,0 +1,452 @@
+===[ 02/06/2014 07:25:04 am ]=========
+Begin...
+Removing Shot on records that has already Immunization in tbl_records 
+Removing double comma (,,) in tbl_records left by the previous step
+Rename Shot to Immunisation on all records in tbl_records
+Removing Shot in tbl_type
+Renaming Immunization to Immunisation
+Success
+---- end ---------
+
+===[ 02/06/2014 07:40:53 am ]=========
+Begin...
+Renaming Immunization to Immunisation for tbl_type table
+Success
+---- end ---------
+
+===[ 02/06/2014 07:53:27 am ]=========
+Begin...
+Removing Blank value in tbl_type table
+Success
+---- end ---------
+
+===[ 02/08/2014 10:24:22 pm ]=========
+Begin...
+Renaming Infant to Child in tbl_client | Rows affected = 0
+Fetching and logging records that is not Male or Female or Infant | Rows affected = 0
+Returned Data affected (record_number) :
+Renaming Infant to Child in tbl_type | Rows affected = 5
+Success
+---- end ---------
+
+===[ 02/09/2014 08:57:41 am ]=========
+Begin...
+Renaming Infant to Child in tbl_client | Rows affected = 23891
+Fetching and logging records that is not Male or Female or Child | Rows affected = 0
+Returned Data affected (record_number) :
+Renaming Infant to Child in tbl_type | Rows affected = 5
+Success
+---- end ---------
+
+===[ 02/22/2014 08:03:43 am ]=========
+Begin...
+Removing all orphaned consultation records | Rows affected = 23
+Success
+---- end ---------
+
+===[ 03/11/2014 03:38:39 pm ]=========
+Begin...
+Update llg_id of clinic "GGH Special Care Nursery, North Urban Clinic, BoP Susu Mamas DIC" 
+							back to "8" from "Select LLG Name" which cause the errror of
+						 	reports not showing after editing the clinic name | Rows affected = 4
+Update llg_id of clinic "Tarabo Outreach" 
+							back to "7" from "Select LLG Name" which cause the errror of
+						 	reports not showing after editing the clinic name | Rows affected = 1
+Update llg_id of clinic "Megabo Outreach" 
+							back to "59" from "Select LLG Name, Koninggi Outreach" which cause the errror of
+						 	reports not showing after editing the clinic name | Rows affected = 2
+Success
+---- end ---------
+
+===[ 04/21/2014 11:33:17 am ]=========
+Begin...
+Add column fullname to tbl_users | Rows affected = 9
+Add column email to tbl_users | Rows affected = 9
+Add column phone to tbl_users | Rows affected = 9
+Add column address to tbl_users | Rows affected = 9
+Add column district to tbl_users | Rows affected = 9
+Success
+---- end ---------
+
+===[ 04/21/2014 11:33:40 am ]=========
+Begin...
+insert superadmin user n in tbl_users table | Rows affected = 1
+Success
+---- end ---------
+
+===[ 04/21/2014 11:34:03 am ]=========
+Begin...
+add table tbl_permissions for permission schema function also columns | Rows affected = 0
+Success
+---- end ---------
+
+===[ 04/21/2014 11:34:46 am ]=========
+Begin...
+insert permission access to user gkaadmin in tbl_permissions table | Rows affected = 1
+Success
+---- end ---------
+
+===[ 04/21/2014 11:35:10 am ]=========
+Begin...
+Update llg_id from 7 to 5 | Rows affected = 1
+Update llg_id from 8 to 6 | Rows affected = 4
+Update llg_id from 19 to 13 | Rows affected = 0
+Update llg_id from 20 to 14 | Rows affected = 1
+Update llg_id from 21 to 15 | Rows affected = 6
+Update llg_id from 22 to 16 | Rows affected = 2
+Update llg_id from 23 to 17 | Rows affected = 3
+Update llg_id from 24 to 18 | Rows affected = 3
+Update llg_id from 42 to 34 | Rows affected = 1
+Update llg_id from 43 to 34 | Rows affected = 0
+Update llg_id from 44 to 34 | Rows affected = 0
+Update llg_id from 45 to 37 | Rows affected = 0
+Update llg_id from 46 to 39 | Rows affected = 3
+Update llg_id from 47 to 39 | Rows affected = 0
+Update llg_id from 48 to 39 | Rows affected = 1
+Update llg_id from 49 to 37 | Rows affected = 3
+Update llg_id from 59 to 56 | Rows affected = 1
+Update llg_id from 73 to 68 | Rows affected = 0
+Update llg_id from 74 to 69 | Rows affected = 0
+Update llg_id from 75 to 72 | Rows affected = 0
+Update llg_id from 76 to 70 | Rows affected = 0
+Update llg_id from 77 to 71 | Rows affected = 0
+Update llg_id from 18 to 15 | Rows affected = 3
+Update llg_id from 19 to 15 | Rows affected = 0
+Update llg_id from 20 to 14 | Rows affected = 0
+Update llg_id from 33 to 14 | Rows affected = 0
+Update llg_id from 39 to 72 | Rows affected = 4
+Update llg_id from 41 to 86 | Rows affected = 0
+Update llg_id from 42 to 86 | Rows affected = 0
+Update llg_id from 43 to 86 | Rows affected = 0
+Update llg_id from 46 to 86 | Rows affected = 0
+Update llg_id from 47 to 86 | Rows affected = 0
+Update llg_id from 48 to 86 | Rows affected = 0
+Update llg_id from 50 to 86 | Rows affected = 0
+Update llg_id from 53 to 86 | Rows affected = 0
+Update llg_id from 59 to 36 | Rows affected = 0
+Update llg_id from 65 to 72 | Rows affected = 0
+Success
+---- end ---------
+
+===[ 04/21/2014 11:35:35 am ]=========
+Begin...
+Add column "province" to tbl_clinic | Rows affected = 46
+Success
+---- end ---------
+
+===[ 04/21/2014 11:35:56 am ]=========
+Begin...
+Add district Goroka to Goroka HC | Rows affected = 3731
+Add district Hagen to Hagen HC | Rows affected = 24112
+Add district Lae District to Morobe HC | Rows affected = 14738
+Add district to Moresby HC | Rows affected = 10001
+Success
+---- end ---------
+
+===[ 04/21/2014 11:36:20 am ]=========
+Begin...
+Add parent_ids to Goroka HC | Rows affected = 1
+Add parent_ids to Hagen HC | Rows affected = 1
+Add parent_ids to Morobe HC | Rows affected = 1
+Add parent_ids to Moresby HC | Rows affected = 1
+Add parent_ids to Kagamuga HC | Rows affected = 1
+Success
+---- end ---------
+
+===[ 04/21/2014 11:36:35 am ]=========
+Begin...
+insert user types to tbl_type. | Rows affected = 1
+Success
+---- end ---------
+
+===[ 04/21/2014 12:57:27 pm ]=========
+Begin...
+delete all users except superadmin | Rows affected = 9
+Success
+---- end ---------
+
+===[ 04/23/2014 05:45:45 pm ]=========
+Begin...
+Add column fullname to tbl_usersFailed... (rolling back changes)
+---- end ---------
+
+===[ 04/23/2014 05:47:02 pm ]=========
+Begin...
+Update llg_id from 7 to 5 | Rows affected = 0
+Update llg_id from 8 to 6 | Rows affected = 0
+Update llg_id from 19 to 13 | Rows affected = 0
+Update llg_id from 20 to 14 | Rows affected = 0
+Update llg_id from 21 to 15 | Rows affected = 0
+Update llg_id from 22 to 16 | Rows affected = 0
+Update llg_id from 23 to 17 | Rows affected = 0
+Update llg_id from 24 to 18 | Rows affected = 0
+Update llg_id from 42 to 34 | Rows affected = 0
+Update llg_id from 43 to 34 | Rows affected = 0
+Update llg_id from 44 to 34 | Rows affected = 0
+Update llg_id from 45 to 37 | Rows affected = 0
+Update llg_id from 46 to 39 | Rows affected = 0
+Update llg_id from 47 to 39 | Rows affected = 0
+Update llg_id from 48 to 39 | Rows affected = 0
+Update llg_id from 49 to 37 | Rows affected = 0
+Update llg_id from 59 to 56 | Rows affected = 0
+Update llg_id from 73 to 68 | Rows affected = 0
+Update llg_id from 74 to 69 | Rows affected = 0
+Update llg_id from 75 to 72 | Rows affected = 0
+Update llg_id from 76 to 70 | Rows affected = 0
+Update llg_id from 77 to 71 | Rows affected = 0
+Update llg_id from 18 to 15 | Rows affected = 0
+Update llg_id from 19 to 15 | Rows affected = 0
+Update llg_id from 20 to 14 | Rows affected = 0
+Update llg_id from 33 to 14 | Rows affected = 0
+Update llg_id from 39 to 72 | Rows affected = 0
+Update llg_id from 41 to 86 | Rows affected = 0
+Update llg_id from 42 to 86 | Rows affected = 0
+Update llg_id from 43 to 86 | Rows affected = 0
+Update llg_id from 46 to 86 | Rows affected = 0
+Update llg_id from 47 to 86 | Rows affected = 0
+Update llg_id from 48 to 86 | Rows affected = 0
+Update llg_id from 50 to 86 | Rows affected = 0
+Update llg_id from 53 to 86 | Rows affected = 0
+Update llg_id from 59 to 36 | Rows affected = 0
+Update llg_id from 65 to 72 | Rows affected = 0
+Success
+---- end ---------
+
+===[ 04/23/2014 05:47:28 pm ]=========
+Begin...
+Add column "province" to tbl_clinicFailed... (rolling back changes)
+---- end ---------
+
+===[ 04/23/2014 05:48:18 pm ]=========
+Begin...
+Add district Goroka to Goroka HC | Rows affected = 0
+Add district Hagen to Hagen HC | Rows affected = 0
+Add district Lae District to Morobe HC | Rows affected = 0
+Add district to Moresby HC | Rows affected = 0
+Success
+---- end ---------
+
+===[ 04/23/2014 05:48:37 pm ]=========
+Begin...
+Add parent_ids to Goroka HC | Rows affected = 1
+Add parent_ids to Hagen HC | Rows affected = 1
+Add parent_ids to Morobe HC | Rows affected = 1
+Add parent_ids to Moresby HC | Rows affected = 1
+Add parent_ids to Kagamuga HC | Rows affected = 1
+Success
+---- end ---------
+
+===[ 04/23/2014 06:03:55 pm ]=========
+Begin...
+Update llg_id from 18 to 15 | Rows affected = 1
+Update llg_id from 19 to 15 | Rows affected = 1
+Update llg_id from 20 to 14 | Rows affected = 1
+Update llg_id from 33 to 14 | Rows affected = 1
+Update llg_id from 39 to 72 | Rows affected = 1
+Update llg_id from 41 to 86 | Rows affected = 1
+Update llg_id from 42 to 86 | Rows affected = 1
+Update llg_id from 43 to 86 | Rows affected = 1
+Update llg_id from 46 to 86 | Rows affected = 1
+Update llg_id from 47 to 86 | Rows affected = 1
+Update llg_id from 48 to 86 | Rows affected = 1
+Update llg_id from 50 to 86 | Rows affected = 1
+Update llg_id from 53 to 86 | Rows affected = 1
+Update llg_id from 59 to 36 | Rows affected = 1
+Update llg_id from 65 to 72 | Rows affected = 1
+Success
+---- end ---------
+
+===[ 04/23/2014 06:05:33 pm ]=========
+Begin...
+Update clinic type to ANC\/PPTCT Clinic | Rows affected = 3
+Update clinic type to Outreach Clinic | Rows affected = 7
+Success
+---- end ---------
+
+===[ 04/23/2014 06:06:22 pm ]=========
+Begin...
+updated llg_id of clinic MHGH to 15 | Rows affected = 1
+Success
+---- end ---------
+
+===[ 04/23/2014 06:06:47 pm ]=========
+Begin...
+updated llg_id of Kompiam Hospital clinic MHGH to 13 | Rows affected = 1
+Success
+---- end ---------
+
+===[ 04/23/2014 06:07:02 pm ]=========
+Begin...
+updated llg_id of Kompiam Hospital clinic MHGH to 13 | Rows affected = 0
+Success
+---- end ---------
+
+===[ 04/23/2014 06:07:13 pm ]=========
+Begin...
+Add district Goroka to Goroka HC | Rows affected = 0
+Add district Hagen to Hagen HC | Rows affected = 0
+Add district Lae District to Morobe HC | Rows affected = 0
+Add district to Moresby HC | Rows affected = 0
+Success
+---- end ---------
+
+===[ 04/23/2014 06:08:26 pm ]=========
+Begin...
+Add parent_ids to Goroka HC | Rows affected = 0
+Add parent_ids to Hagen HC | Rows affected = 0
+Add parent_ids to Morobe HC | Rows affected = 0
+Add parent_ids to Moresby HC | Rows affected = 0
+Add parent_ids to Kagamuga HC | Rows affected = 0
+Success
+---- end ---------
+
+===[ 04/24/2014 08:55:35 pm ]=========
+Begin...
+Success
+---- end ---------
+
+===[ 04/24/2014 08:57:17 pm ]=========
+Begin...
+Success
+---- end ---------
+
+===[ 04/24/2014 08:58:45 pm ]=========
+Begin...
+Success
+---- end ---------
+
+===[ 04/24/2014 08:59:57 pm ]=========
+Begin...
+DELETE province from tbl_area where ID is 61 | Rows affected = 1
+DELETE province from tbl_area where ID is 63 | Rows affected = 1
+DELETE province from tbl_area where ID is 83 | Rows affected = 1
+DELETE province from tbl_area where ID is 60 | Rows affected = 1
+DELETE province from tbl_area where ID is 51 | Rows affected = 1
+DELETE province from tbl_area where ID is 28 | Rows affected = 1
+DELETE province from tbl_area where ID is 29 | Rows affected = 1
+DELETE province from tbl_area where ID is 50 | Rows affected = 1
+DELETE province from tbl_area where ID is 62 | Rows affected = 1
+DELETE province from tbl_area where ID is 52 | Rows affected = 1
+Success
+---- end ---------
+
+===[ 04/25/2014 11:02:37 am ]=========
+Begin...
+Update llg_id from 7 to 5 | Rows affected = 0
+Update llg_id from 8 to 6 | Rows affected = 0
+Update llg_id from 19 to 13 | Rows affected = 0
+Update llg_id from 20 to 14 | Rows affected = 0
+Update llg_id from 21 to 15 | Rows affected = 0
+Update llg_id from 22 to 16 | Rows affected = 0
+Update llg_id from 23 to 17 | Rows affected = 0
+Update llg_id from 24 to 18 | Rows affected = 0
+Update llg_id from 42 to 34 | Rows affected = 0
+Update llg_id from 43 to 34 | Rows affected = 0
+Update llg_id from 44 to 34 | Rows affected = 0
+Update llg_id from 45 to 37 | Rows affected = 0
+Update llg_id from 46 to 39 | Rows affected = 0
+Update llg_id from 47 to 39 | Rows affected = 0
+Update llg_id from 48 to 39 | Rows affected = 0
+Update llg_id from 49 to 37 | Rows affected = 0
+Update llg_id from 59 to 56 | Rows affected = 0
+Update llg_id from 73 to 68 | Rows affected = 0
+Update llg_id from 74 to 69 | Rows affected = 0
+Update llg_id from 75 to 72 | Rows affected = 0
+Update llg_id from 76 to 70 | Rows affected = 0
+Update llg_id from 77 to 71 | Rows affected = 0
+Update llg_id from 18 to 15 | Rows affected = 0
+Update llg_id from 19 to 15 | Rows affected = 0
+Update llg_id from 20 to 14 | Rows affected = 0
+Update llg_id from 33 to 14 | Rows affected = 0
+Update llg_id from 39 to 72 | Rows affected = 0
+Update llg_id from 41 to 86 | Rows affected = 0
+Update llg_id from 42 to 86 | Rows affected = 0
+Update llg_id from 43 to 86 | Rows affected = 0
+Update llg_id from 46 to 86 | Rows affected = 0
+Update llg_id from 47 to 86 | Rows affected = 0
+Update llg_id from 48 to 86 | Rows affected = 0
+Update llg_id from 50 to 86 | Rows affected = 0
+Update llg_id from 53 to 86 | Rows affected = 0
+Update llg_id from 59 to 36 | Rows affected = 0
+Update llg_id from 65 to 72 | Rows affected = 0
+Success
+---- end ---------
+
+===[ 04/25/2014 11:03:04 am ]=========
+Begin...
+Update llg_id from 18 to 15 | Rows affected = 1
+Update llg_id from 19 to 15 | Rows affected = 1
+Update llg_id from 20 to 14 | Rows affected = 1
+Update llg_id from 33 to 14 | Rows affected = 1
+Update llg_id from 39 to 72 | Rows affected = 1
+Update llg_id from 41 to 86 | Rows affected = 1
+Update llg_id from 42 to 86 | Rows affected = 1
+Update llg_id from 43 to 86 | Rows affected = 1
+Update llg_id from 46 to 86 | Rows affected = 1
+Update llg_id from 47 to 86 | Rows affected = 1
+Update llg_id from 48 to 86 | Rows affected = 1
+Update llg_id from 50 to 86 | Rows affected = 1
+Update llg_id from 53 to 86 | Rows affected = 1
+Update llg_id from 59 to 36 | Rows affected = 1
+Update llg_id from 65 to 72 | Rows affected = 1
+Success
+---- end ---------
+
+===[ 04/25/2014 11:03:25 am ]=========
+Begin...
+Add column "province" to tbl_clinicFailed... (rolling back changes)
+---- end ---------
+
+===[ 04/25/2014 11:03:50 am ]=========
+Begin...
+Update clinic type to ANC\/PPTCT Clinic | Rows affected = 3
+Update clinic type to Outreach Clinic | Rows affected = 7
+Success
+---- end ---------
+
+===[ 04/25/2014 11:04:08 am ]=========
+Begin...
+updated llg_id of clinic MHGH to 15 | Rows affected = 1
+Success
+---- end ---------
+
+===[ 04/25/2014 11:04:33 am ]=========
+Begin...
+updated llg_id of Kompiam Hospital clinic MHGH to 13 | Rows affected = 1
+Success
+---- end ---------
+
+===[ 04/25/2014 11:05:27 am ]=========
+Begin...
+Add district Goroka to Goroka HC | Rows affected = 0
+Add district Hagen to Hagen HC | Rows affected = 0
+Add district Lae District to Morobe HC | Rows affected = 0
+Add district to Moresby HC | Rows affected = 0
+Success
+---- end ---------
+
+===[ 04/25/2014 11:05:46 am ]=========
+Begin...
+Add parent_ids to Goroka HC | Rows affected = 0
+Add parent_ids to Hagen HC | Rows affected = 0
+Add parent_ids to Morobe HC | Rows affected = 0
+Add parent_ids to Moresby HC | Rows affected = 0
+Add parent_ids to Kagamuga HC | Rows affected = 0
+Success
+---- end ---------
+
+===[ 04/25/2014 11:06:21 am ]=========
+Begin...
+DELETE province from tbl_area where ID is 61 | Rows affected = 1
+DELETE province from tbl_area where ID is 63 | Rows affected = 1
+DELETE province from tbl_area where ID is 83 | Rows affected = 1
+DELETE province from tbl_area where ID is 60 | Rows affected = 1
+DELETE province from tbl_area where ID is 51 | Rows affected = 1
+DELETE province from tbl_area where ID is 28 | Rows affected = 1
+DELETE province from tbl_area where ID is 29 | Rows affected = 1
+DELETE province from tbl_area where ID is 50 | Rows affected = 1
+DELETE province from tbl_area where ID is 62 | Rows affected = 1
+DELETE province from tbl_area where ID is 52 | Rows affected = 1
+Success
+---- end ---------
+

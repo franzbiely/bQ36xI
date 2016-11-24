@@ -622,6 +622,16 @@ class Reports extends DB{
   function get_consultation_record($start_date,$end_date,$by, $id){
 
     switch($by){
+      case "clinic_catchment" : 
+        $query = "SELECT DISTINCT a.*, b.record_number,  CONCAT(b.fname,' ',b.lname) AS fullname, c.clinic_name as name, COUNT(*) AS ctr_consultation 
+                  FROM tbl_records as a
+                  JOIN tbl_client as b ON b.ID = a.client_id
+                  JOIN tbl_clinic AS c ON c.ID = a.clinic_id
+                  WHERE a.date >= :start_date AND a.date <= :end_date 
+                  AND a.clinic_id = :clinic_id 
+                  GROUP BY a.client_id";      
+        $bind_array = array("start_date"=>$start_date, "end_date"=>$end_date, "clinic_id"=>$id);
+        break;
       case "clinic":
         $query = "SELECT DISTINCT a.*, b.record_number,  CONCAT(b.fname,' ',b.lname) AS fullname, c.clinic_name as name, COUNT(*) AS ctr_consultation 
                   FROM tbl_records as a

@@ -185,18 +185,44 @@ class Catchment extends DB{
 		echo json_encode($data);
 		exit();
 	}	
-	function scripts(){
+	function scripts_report() {
 		?>
 		<script>
 		$(document).ready(function(){ 
 			get_clinics();
+		});
+		// =============== Catchment Page > get clinic names by health facility
+		function get_clinics() {
+			$('#healthFacility').on('change',function(){
+				var that = $(this);
+				// request data sa backend based sa this.value
+				_data = 'class=catchment&func=get_clinic_lists&health_facility='+$(this).find('option:selected').val();
+				$.post( window.location.href, _data, function( data ) {
+					element = "<div class='form-group' id='by_detail'><select class='form-control' name='id' id='id' required>";
+					element += "<option value=''>--[Choose clinic]--</option>";
+              		if(data!='false') {
+              			JSON.parse(data).forEach(function( elem ) {
+              				element += "<option value='"+ elem.ID +"'>"+ elem.clinic_name +"</option>";
+              			});
+              		}
+              		element += "</select></div>";
+              		$(that).parent().after(element);
+				});
+			});
+		}
+		</script>
+		<?php
+	}
+	function scripts(){
+		?>
+		<script>
+		$(document).ready(function(){ 
 			$(".col-md-9 form").on('submit',function(){
 				
 				show_loader($);
 				
 				$(this).find('.btn-success').prop('disabled', true);
 				$(this).find('.btn-success').html('Saving...');
-				console.log("adding");
 				_data = $(this).serialize();
 				_this = $(this);
 				
@@ -313,9 +339,7 @@ class Catchment extends DB{
 				$("#district-form").addClass("hide"); 
 			 	var _province_id = $("select#province option").filter(":selected").val();
 			 	_data = "class=clinic&func=get_districts&province_id="+_province_id;
-                console.log()
 			 	$.post(window.location.href,_data, function(data){
-					//console.log(data);	
 					var _district = $.parseJSON(data);
 					   element = '<div class="form-group district-form1" id="district-form1">';
 		            	element += '<label for="area_name">Clinic District</label><span class="required_field">*</span>';
@@ -336,25 +360,6 @@ class Catchment extends DB{
 			           
 					    
 				});
-		}
-		// =============== Catchment Page > get clinic names by health facility
-		function get_clinics() {
-			$('#healthFacility').on('change',function(){
-				var that = $(this);
-				// request data sa backend based sa this.value
-				_data = 'class=catchment&func=get_clinic_lists&health_facility='+$(this).find('option:selected').val();
-				$.post( window.location.href, _data, function( data ) {
-					element = "<div class='form-group' id='by_detail'><select class='form-control' name='id' id='id' required>";
-					element += "<option value=''>--[Choose clinic]--</option>";
-              		if(data!='false') {
-              			JSON.parse(data).forEach(function( elem ) {
-              				element += "<option value='"+ elem.ID +"'>"+ elem.clinic_name +"</option>";
-              			});
-              		}
-              		element += "</select></div>";
-              		$(that).parent().after(element);
-				});
-			});
 		}
 		</script>
 		<?php

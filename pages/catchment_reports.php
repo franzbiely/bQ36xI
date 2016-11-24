@@ -1,12 +1,12 @@
 <?php 
-  // if (isset($_POST['btnGenReport'])){
-  //      $sDate = $_POST['start_date'];
-  //      $eDate = $_POST['end_date'];
-  //      $select_by = $_POST['by'];
-  //      if (isset($_POST['id'])) {
-  //        $select_id = $_POST['id'];
-  //      }
-  //  }
+  if (isset($_POST['btnGenReport'])){
+       $sDate = $_POST['start_date'];
+       $eDate = $_POST['end_date'];
+       $select_by = $_POST['by'];
+       if (isset($_POST['id'])) {
+         $select_id = $_POST['id'];
+       }
+   }
  ?>
 <?php header_nav_bar("phone-alt", "Catchment Reports","reports") ?>
 
@@ -20,6 +20,7 @@
           <h1 id="overview" style="width: 100%; padding-top: 10px; margin-top: 20px;">Catchment Reports</h1>
           <div class="clearfix">
             <form method="POST" action="?page=catchment_reports" id="frmClientReport" class="form-inline" role="form" style="float: right; margin-top: -5px;">
+              <input type="hidden" name="by" value="clinic_catchment" />
               <div class="form-group">
                 <label class="sr-only" for="startdate"></label>
                 <input type="text" class="form-control" name="start_date" id="start_date" placeholder="Enter Start Date" value="<?php echo isset($_POST["start_date"])?$_POST["start_date"]:""; ?>" required>
@@ -29,7 +30,7 @@
                 <input type="text" class="form-control" name="end_date" id="end_date" placeholder="Enter End Date" value="<?php echo isset($_POST["end_date"])?$_POST["end_date"]:""; ?>" required>
               </div>
               <div class="form-group">
-                <select class="form-control" name="by" id="healthFacility" required>
+                <select class="form-control" id="healthFacility" required>
                   <option value="">--[Choose Health Facility]--</option>
                   <?php $catchment->get_office_options(); ?>
                 </select>
@@ -141,4 +142,4 @@
       </div><!--/span-->        
     </div>
   </div>
-  <?php  $catchment->scripts(); ?>
+  <?php  $catchment->scripts_report(); ?>

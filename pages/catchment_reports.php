@@ -3,8 +3,8 @@
        $sDate = $_POST['start_date'];
        $eDate = $_POST['end_date'];
        $select_by = $_POST['by'];
-       if (isset($_POST['id'])) {
-         $select_id = $_POST['id'];
+       if (isset($_POST['clinic_id'])) {
+         $select_id = $_POST['clinic_id'];
        }
    }
  ?>
@@ -44,7 +44,7 @@
         if(!isset($_POST['start_date'])) :
           echo "<p>Please set start and end date.</p>";
         else:
-         $data = $reports->get_consultation_record($_POST['start_date'], $_POST['end_date'],$_POST['by'],$_POST['id']);
+         $data = $reports->get_consultation_record($_POST['start_date'], $_POST['end_date'],$_POST['by'],$_POST['clinic_id']);
          $total_no_client = $reports->count_client($data);
          $total_no_consul = $reports->count_no_consultation($data);
          $total_no_referrals = $reports->count_no_referrals($data);
@@ -56,7 +56,7 @@
         }
          
           if($data==false):
-            echo "<p>No Record Found in the specified date and \"By\" field.</p>";
+            echo "<p>No catchment record found in the specified date and \"clinic\" field.</p>";
           else:
         ?>
         <table class="table table-bordered table-striped table-hover table-condensed">
@@ -107,17 +107,11 @@
             <tr>
               <th><b>Record Number</b></th>
               <th><b>Full Name</b></th>
-              <?php if(isset($_POST['by'])) { ?>
-                <?php if($_POST['by'] == "clinic"){ ?><th><b>Clinic</b></th> <?php } ?>  
-                <?php if($_POST['by'] == "office"){ ?><th><b>Health Facility</b></th> <?php } ?>  
-                <?php //if($_POST['by'] == "llg"){ ?><!-- <th><b>LLG</b></th> --> <?php //} ?>  
-                <?php if($_POST['by'] == "district"){ ?><th><b>District</b></th> <?php } ?>  
-                <?php if($_POST['by'] == "province"){ ?><th><b>Province</b></th> <?php } ?>  
-              <?php } ?>  
-               <th><b>Date</b></th>
+              <th><b>Clinic</b></th>
+              <th><b>Date</b></th>
               <th><b>Consultation</b></th>
-              <th><b>Referrals</b></th>
-              
+              <th><b>Catchment Area</b></th>
+              <th><b>NHFC</b></th>
             </tr>
           </thead>
           <tbody>
@@ -131,8 +125,8 @@
               <td class="clinic"><?php echo $data['name']; ?></td>
               <td class="clinic"><?php echo $data['date']; ?></td>
               <td class="consultation"><?php echo $data['ctr_consultation']; ?></td> 
-              <td class="referrals"><?php  echo $_referral['value'][$data['referral_id']]; ?> </td> 
-             
+              <td class="catchment_area"><?php  echo $data['catchment_area']; ?> </td> 
+              <td class="national_health_facility_code"><?php  echo $data['national_health_facility_code']; ?> </td> 
             </tr>                             
           <?php endforeach; endif; ?>
           </tbody>

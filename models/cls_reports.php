@@ -623,12 +623,13 @@ class Reports extends DB{
 
     switch($by){
       case "clinic_catchment" : 
-        $query = "SELECT DISTINCT a.*, b.record_number,  CONCAT(b.fname,' ',b.lname) AS fullname, c.clinic_name as name, COUNT(*) AS ctr_consultation 
+        $query = "SELECT DISTINCT a.*, b.record_number,  CONCAT(b.fname,' ',b.lname) AS fullname, c.clinic_name as name, COUNT(*) AS ctr_consultation, d.catchment_area, d.national_health_facility_code 
                   FROM tbl_records as a
                   JOIN tbl_client as b ON b.ID = a.client_id
                   JOIN tbl_clinic AS c ON c.ID = a.clinic_id
+                  JOIN tbl_catchment AS d ON d.ID = a.catchment
                   WHERE a.date >= :start_date AND a.date <= :end_date 
-                  AND a.clinic_id = :clinic_id 
+                  AND d.clinic_id = :clinic_id 
                   GROUP BY a.client_id";      
         $bind_array = array("start_date"=>$start_date, "end_date"=>$end_date, "clinic_id"=>$id);
         break;
@@ -1039,7 +1040,7 @@ class Reports extends DB{
             WHERE $where a.date BETWEEN :start_date AND :end_date 
             AND a.feeding_type <>  'N/A'
             AND b.office_id =  :office_id";
-			
+      
             /*$bind_array=array("start_date"=>$start_date, "end_date"=>$end_date, "office_id"=>$_SESSION['office_id']);*/
              $bind_query['start_date']= $_data['start_date'];
              $bind_query['end_date']= $_data['end_date'];

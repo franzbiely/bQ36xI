@@ -198,7 +198,7 @@ class Catchment extends DB{
 				// request data sa backend based sa this.value
 				_data = 'class=catchment&func=get_clinic_lists&health_facility='+$(this).find('option:selected').val();
 				$.post( window.location.href, _data, function( data ) {
-					element = "<div class='form-group' id='by_detail'><select class='form-control' name='id' id='id' required>";
+					element = "<div class='form-group' id='by_detail'><select class='form-control' name='clinic_id' id='clinic_id' required>";
 					element += "<option value=''>--[Choose clinic]--</option>";
               		if(data!='false') {
               			JSON.parse(data).forEach(function( elem ) {

@@ -82,7 +82,7 @@
         </table>  
         <div class="btn-group">
           <form method="POST">
-            <input type="hidden" name="func" value="export_consultation" />
+            <input type="hidden" name="func" value="export_catchment" />
             <input type="hidden" name="param1" value="excel" />
             <input type="hidden" name="sDate" value="<?php echo $sDate ?>" />
             <input type="hidden" name="eDate" value="<?php echo $eDate ?>" />
@@ -92,7 +92,7 @@
             value="Export to Excel" />
           </form>
           <form method="POST">
-            <input type="hidden" name="func" value="export_consultation" />
+            <input type="hidden" name="func" value="export_catchment" />
             <input type="hidden" name="param1" value="csv" />
             <input type="hidden" name="sDate" value="<?php echo $sDate ?>" />
             <input type="hidden" name="eDate" value="<?php echo $eDate ?>" />

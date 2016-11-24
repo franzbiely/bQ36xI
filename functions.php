@@ -130,7 +130,32 @@ function export_consultation(){
 	}
      
 }
+function export_catchment(){
+  require_once dirname(__FILE__) . '/models/Classes/PHPExcel.php';
+  global $reports;
+  extract($_POST);
 
+   $data = $reports->get_consultation_record($sDate, $eDate, $select_by , $select_id);
+   $total_no_client = $reports->count_client($data);
+   $total_no_consul = $reports->count_no_consultation($data);
+   $total_no_referrals = $reports->count_no_referrals($data);
+   if($total_no_consul != 0) $ave_no_consul = $total_no_consul/$total_no_client;
+   $overview_row = array( "total_no_client"=>$total_no_client, 
+                          "total_no_consul"=> $total_no_consul,
+                          "total_no_referrals" => $total_no_referrals,
+                          "ave_no_consul"=>round($ave_no_consul,1,PHP_ROUND_HALF_DOWN));
+
+   $client_record_header = array("Record Number", "Full Name", "Clinic", "Consultation", "Catchment Area", "NHFC");
+   $client_details= $reports->get_client_and_catchment_record_details($sDate,$eDate,$client_type,$visit_type,$select_id);
+    if ($param1 == "excel") {
+         $reports->generate_report_catchment($sDate, $eDate,   $overview_row, 
+                    $client_record_header , $client_details, 'Excel2007','Catchment Report.xlsx');
+    }else{
+        $reports->generate_report_catchment($sDate, $eDate,   $overview_row, 
+                    $client_record_header , $client_details, 'CSV', 'Catchment Report.csv');
+  }
+     
+}
 function export_feeding(){
 	require_once dirname(__FILE__) . '/models/Classes/PHPExcel.php';
 	global $reports;

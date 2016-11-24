@@ -35,7 +35,7 @@ class Reports extends DB{
           $objPHPExcel = new PHPExcel();
           $sheet = $objPHPExcel->getActiveSheet();
                               $sheet->setTitle('Client Report');
-                              $sheet->setCellValue('B1','consultation Reports');
+                              $sheet->setCellValue('B1','Consultation Reports');
                               $sheet->fromArray($client_record_header, null, 'A5');
                               $sheet->fromArray($client_details, null, 'A6');   
                              /* $sheet ->mergeCells('A3:C3');
@@ -53,7 +53,53 @@ class Reports extends DB{
           $objWriter->save('php://output');
           exit;
   }
+  function generate_report_catchment($sDate, $eDate, $overview_row, $client_record_header , $client_details, $file_type, $file_name){
+     error_reporting(E_ALL);
+            ini_set('display_errors', TRUE);
+            ini_set('display_startup_errors', TRUE);
+            date_default_timezone_set('Asia/Manila');
 
+          if (PHP_SAPI == 'cli')
+           die('This example should only be run from a Web Browser');
+        
+          /** Create a new PHPExcel object 1.0 */
+          $objPHPExcel = new PHPExcel();
+          $sheet = $objPHPExcel->getActiveSheet();
+                              $sheet->setTitle('Catchment Report');
+                              $sheet ->mergeCells('B1:D1');
+                              $sheet ->mergeCells('A3:C3');
+                              $sheet ->mergeCells('A4:C4');
+                              $sheet->setCellValue('G1','Catchment Reports');
+                              $sheet->setCellValue('F3', 'Start Date:'. ' '. $sDate);
+                              $sheet->setCellValue('F4', 'End Date:'. ' '. $eDate);
+                              $sheet->setCellValue('A6', 'Overview');
+                              $sheet->setCellValue('A7', 'Total No. of Clients');
+                              $sheet->setCellValue('A8', 'Total No. of Consultations');
+                              $sheet->setCellValue('A9', 'Total No. of Referrals');
+                              $sheet->setCellValue('A10', 'Average Consultation');
+                              $sheet->setCellValue('E7', $overview_row["total_no_client"]);
+                              $sheet->setCellValue('E8', $overview_row["total_no_consul"]);
+                              $sheet->setCellValue('E9', $overview_row["total_no_referrals"]);
+                              $sheet->setCellValue('E10', $overview_row["ave_no_consul"]);
+                              $sheet->setCellValue('A15', 'Record Number');
+                              $sheet->setCellValue('B15', 'Full Name');
+                              $sheet->setCellValue('C15', 'Clinic');  
+                              $sheet->setCellValue('D15', 'Consultation');  
+                              $sheet->setCellValue('E15', 'Catchment Area');  
+                              $sheet->setCellValue('F15', 'NHFC');  
+                              //$sheet->fromArray($client_record_header, null, 'A15'); 
+                              $sheet->fromArray($client_details, null, 'A16');  
+    
+
+          /** Create Excel 2007 file with writer 1.0 */
+          //ob_end_clean();
+          header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+          header('Content-Disposition: attachment;filename=' .$file_name);
+          header('Cache-Control: max-age=0');
+          $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $file_type);
+          $objWriter->save('php://output');
+          exit;
+  }
   function generate_report_consultation($sDate, $eDate, $overview_row, $client_record_header , $client_details, $file_type, $file_name){
      error_reporting(E_ALL);
             ini_set('display_errors', TRUE);
@@ -485,6 +531,42 @@ class Reports extends DB{
         }
         return $array;
 
+  }
+  function get_client_and_catchment_record_details($sDate,$eDate,$client_type="",$visit_type="",$clinic=""){
+         $temp = array("start_date"=>$sDate,"end_date"=>$eDate, "client_type"=>$client_type,
+                       "visit_type"=>$visit_type,"clinic"=>$clinic);
+       
+            $_data = array_filter($temp);  
+            $where = "";
+            $bind_query = array();
+
+            if(array_key_exists("client_type", $_data)){
+              $where .= "b.client_type =  :client_type AND ";
+              $bind_query['client_type']=$_data['client_type'];
+            }
+            
+            if(array_key_exists("clinic", $_data)){
+              if ($_data['clinic'] != 'all') {
+                 $where .= "a.clinic_id =  :clinic AND ";
+                 $bind_query['clinic']=$_data['clinic'];
+              }
+              
+            }
+            $bind_query['start_date']= $_data['start_date'];
+            $bind_query['end_date']= $_data['end_date'];
+
+            $query = "SELECT b.record_number, CONCAT(b.fname,' ',b.lname) AS fullname, c.clinic_name as name, COUNT(*) AS ctr_consultation, d.catchment_area, d.national_health_facility_code 
+                  FROM tbl_records as a
+                  JOIN tbl_client as b ON b.ID = a.client_id
+                  JOIN tbl_clinic AS c ON c.ID = a.clinic_id
+                  JOIN tbl_catchment AS d ON d.ID = a.catchment
+                  WHERE a.date >= :start_date AND a.date <= :end_date 
+                  AND d.clinic_id = :clinic
+                  GROUP BY a.client_id";
+            $stmt = $this->query($query,$bind_query);
+            $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $array;
+    
   }
   function get_client_record_details($sDate,$eDate,$client_type="",$visit_type="",$clinic=""){
          $temp = array("start_date"=>$sDate,"end_date"=>$eDate, "client_type"=>$client_type,

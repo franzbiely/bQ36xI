@@ -111,6 +111,31 @@ class Catchment extends DB{
 		$data = $this->select("clinic_name",array("ID"=>$id), true, "tbl_clinic");
 		return $data['clinic_name'];
 	}
+	function get_office_options() { 
+		global $office;
+		$return = '';
+        if (enablea_and_disable_ele($_SESSION['type'], "generate_all_hc", $_SESSION['consultation_reports']) == true || $_SESSION['type'] == 'superreporting') {
+            $return .= "<option value='0'>--[All HC]--</option>"; 
+            if (enablea_and_disable_ele($_SESSION['type'], "generate_other_hc", $_SESSION['consultation_reports'])){
+                $data = $office->get_all(); // access all office/HC
+            }
+            else { 
+            	$data = $office->get_all_wsession(); 
+            } // access offices/HC in current district only }
+          	if($data!=false) {
+              	foreach($data as $data ) {
+	                if ($data['ID'] == $_SESSION['office_id']) {
+	                	if (enablea_and_disable_ele($_SESSION['type'], "generate_current_hc", $_SESSION['consultation_reports'])) {
+	                  		$return .= "<option value='". $data['ID'] ."'>". $data['area_name'] ."</option>\n";
+	                	}
+	                }else{
+	                	$return .= "<option value='". $data['ID'] ."'>". $data['area_name'] ."</option>\n";
+	               }
+	            }
+            }
+        }
+        echo $return;
+	}
 	function modal(){
 		global $llg, $type, $district, $province,$clinic;
 		ob_start();
@@ -154,12 +179,17 @@ class Catchment extends DB{
 	    $output = ob_get_contents();
 	    ob_end_clean();
 	    modal_container("Catchment",$output);
-	}		
+	}	
+	function get_clinic_lists() {
+		$data = $this->select("*",array("office_id"=>$_POST['health_facility']), false, "tbl_clinic");
+		echo json_encode($data);
+		exit();
+	}	
 	function scripts(){
 		?>
 		<script>
 		$(document).ready(function(){ 
-			
+			get_clinics();
 			$(".col-md-9 form").on('submit',function(){
 				
 				show_loader($);
@@ -306,6 +336,25 @@ class Catchment extends DB{
 			           
 					    
 				});
+		}
+		// =============== Catchment Page > get clinic names by health facility
+		function get_clinics() {
+			$('#healthFacility').on('change',function(){
+				var that = $(this);
+				// request data sa backend based sa this.value
+				_data = 'class=catchment&func=get_clinic_lists&health_facility='+$(this).find('option:selected').val();
+				$.post( window.location.href, _data, function( data ) {
+					element = "<div class='form-group' id='by_detail'><select class='form-control' name='id' id='id' required>";
+					element += "<option value=''>--[Choose clinic]--</option>";
+              		if(data!='false') {
+              			JSON.parse(data).forEach(function( elem ) {
+              				element += "<option value='"+ elem.ID +"'>"+ elem.clinic_name +"</option>";
+              			});
+              		}
+              		element += "</select></div>";
+              		$(that).parent().after(element);
+				});
+			});
 		}
 		</script>
 		<?php

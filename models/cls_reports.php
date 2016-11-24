@@ -1137,7 +1137,8 @@ class Reports extends DB{
           $(this).html("Show Advance Filter");
         }
           
-      })
+      });
+
       $("#by").change(function(){
         //show_loader($);
         choice = $(this).find('option:selected').val();

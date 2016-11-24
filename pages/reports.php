@@ -48,6 +48,10 @@
                           District and Province and type of report.</p>
 
                     </a>
+                    <a class="list-group-item" href="?page=catchment_reports">
+                      <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-plus" style="margin-right: 10px;"></span>Catchment</h4>
+                      <p class="list-group-item-text">Shows catchment report.</p>
+                    </a>
                   </div>
                 </div>
               </div>       

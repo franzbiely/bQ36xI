@@ -6,6 +6,12 @@
 *                                                                                        *
 ******************************************************************************************
 
+v3.1 | 27 of November 2016
+ - Added catchment report page, filter
+ - Separated scripts for reporting only
+ - Catchment report query and display
+ - Integrate Catchment reports (CSV and Excel)
+
 v3.0 | 9 of September 2016
  - Changes some termed used
  - Made catchment area field required

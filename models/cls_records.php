@@ -93,7 +93,7 @@ class Records extends DB{
     }
   }
 	function get_consultation_records(){
-    $query = "SELECT a.ID, a.feeding_type, a.date, b.clinic_name, a.visit_reasons 
+    $query = "SELECT a.ID, a.hb_level, a.feeding_type, a.date, b.clinic_name, a.visit_reasons 
               FROM tbl_records as a JOIN tbl_clinic as b ON b.ID = a.clinic_id
               WHERE a.client_id = :client_id AND record_type = :record_type ORDER BY a.date ASC";
     $bind_array['client_id'] = $_GET['cid'];

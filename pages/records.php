@@ -244,7 +244,14 @@
         <table class="table  table-striped table-hover table-condensed">
           <thead>
             <tr>
-              <th>Feeding Type</th>
+              <?php 
+              if($client_info['client_type']=="Child") {
+                echo '<th>Feeding Type</th>';
+              } ?>
+              <?php 
+              if($client_info['client_type']=="Female") {
+                echo '<th>HB Level</th>';
+              } ?>
               <th>Consultation Date</th>
               <th>Clinic Attended</th>
               <th>Visit Reasons</th>
@@ -258,11 +265,19 @@
                  <td class="id record hide" data-id="<?php echo $data['ID']; ?>"><?php echo $data['ID'] ?></td>
                 <?php if($client_info['client_type']=="Child" && 
                         ($client_info['date_birth']=="0000-00-00" || 
-                         $client->get_age($client_info['date_birth']) <= 2) ) : ?>
-                  <td><?php echo $data['feeding_type'] ?></td>
-                <?php else:  ?>
-                  <td>N/A</td>
-                <?php endif; ?>
+                         $client->get_age($client_info['date_birth']) <= 2) ) {
+                        echo '<td>'.$data['feeding_type'].'</td>';
+                          } ?>
+                <?php 
+                if($client_info['client_type']=="Female") {
+                  $temp = json_decode($data['visit_reasons'], true);
+                  if(in_array('ANC', $temp)) {
+                    echo '<td>'.$data['hb_level'].'</td>';
+                  }
+                  else {
+                    echo '<td>n/a</td>';
+                  }
+                } ?>
                 <td><?php echo $data['date'] ?></td>
                 <td><?php echo $data['clinic_name'] ?></td>
                 <td><?php echo $record->display_visit_reasons($data['visit_reasons']) ?></td>

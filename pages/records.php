@@ -244,6 +244,9 @@
         <table class="table  table-striped table-hover table-condensed">
           <thead>
             <tr>
+              <th>Consultation Date</th>
+              <th>Clinic Attended</th>
+              <th>Visit Reasons</th>
               <?php 
               if($client_info['client_type']=="Child") {
                 echo '<th>Feeding Type</th>';
@@ -252,9 +255,6 @@
               if($client_info['client_type']=="Female") {
                 echo '<th>HB Level</th>';
               } ?>
-              <th>Consultation Date</th>
-              <th>Clinic Attended</th>
-              <th>Visit Reasons</th>
               <th></th>
             </tr>
           </thead>
@@ -262,7 +262,10 @@
               <?php 
               if($datas!=false): foreach($datas as $data ):  ?>
                <tr>
-                 <td class="id record hide" data-id="<?php echo $data['ID']; ?>"><?php echo $data['ID'] ?></td>
+                <td class="id record hide" data-id="<?php echo $data['ID']; ?>"><?php echo $data['ID'] ?></td>
+                <td><?php echo $data['date'] ?></td>
+                <td><?php echo $data['clinic_name'] ?></td>
+                <td><?php echo $record->display_visit_reasons($data['visit_reasons']) ?></td>
                 <?php if($client_info['client_type']=="Child" && 
                         ($client_info['date_birth']=="0000-00-00" || 
                          $client->get_age($client_info['date_birth']) <= 2) ) {
@@ -278,9 +281,6 @@
                     echo '<td>n/a</td>';
                   }
                 } ?>
-                <td><?php echo $data['date'] ?></td>
-                <td><?php echo $data['clinic_name'] ?></td>
-                <td><?php echo $record->display_visit_reasons($data['visit_reasons']) ?></td>
                  <?php if ($_GET['p'] != 'delete'): ?>
                     <td>
                       <div class="btn-group">

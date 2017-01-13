@@ -252,7 +252,7 @@
                 echo '<th>Feeding Type</th>';
               } ?>
               <?php 
-              if($client_info['client_type']=="Female") {
+              if($client_info['client_type']=="Female" && $record->has_ANC_visits($datas)) {
                 echo '<th>HB Level</th>';
               } ?>
               <th></th>
@@ -272,13 +272,13 @@
                         echo '<td>'.$data['feeding_type'].'</td>';
                           } ?>
                 <?php 
-                if($client_info['client_type']=="Female") {
+                if($client_info['client_type']=="Female" && $record->has_ANC_visits($datas)) {
                   $temp = json_decode($data['visit_reasons'], true);
                   if(in_array('ANC', $temp)) {
                     echo '<td>'.$data['hb_level'].'</td>';
                   }
                   else {
-                    echo '<td>n/a</td>';
+                    echo '<td>&nbsp;</td>';
                   }
                 } ?>
                  <?php if ($_GET['p'] != 'delete'): ?>

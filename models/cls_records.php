@@ -18,6 +18,16 @@ class Records extends DB{
      }
    
   }
+  function has_ANC_visits($datas) {
+    $has_ANC = false;
+    foreach($datas as $data) {
+      $temp = json_decode( $data['visit_reasons'], true );
+      if(in_array('ANC',$temp)) {
+        $has_ANC = true;
+      }
+    }
+    return $has_ANC;
+  }
 	function add(){
 		$_data = $_POST;
 	    unset($_data['class']);

@@ -6,6 +6,10 @@
 *                                                                                        *
 ******************************************************************************************
 
+v3.3 | 22 of February 2017 (testsite, update this date when it was uploaded to livesite)
+ - added Review Date in consultation reports and it's export to CSV / Excel functionality.
+ - Fix problem found in Export for Consultation (problem : some column titles didn't show up and the alignment of the cells is incorrect on the current setup)
+
 v3.2 | 15 of January 2017
  - Add HB Level to Female only and Feeding type to only Children. Changes made in Consultation Records.
  - Moved HB Level and Feeding Type column to the right of Visit Reasons

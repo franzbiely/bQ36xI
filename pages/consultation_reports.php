@@ -120,7 +120,7 @@
                <th><b>Date</b></th>
               <th><b>Consultation</b></th>
               <th><b>Referrals</b></th>
-              
+              <th><b>Review Date</b></th>
             </tr>
           </thead>
           <tbody>
@@ -135,7 +135,7 @@
               <td class="clinic"><?php echo $data['date']; ?></td>
               <td class="consultation"><?php echo $data['ctr_consultation']; ?></td> 
               <td class="referrals"><?php  echo $_referral['value'][$data['referral_id']]; ?> </td> 
-             
+              <td class="review-date"><?php echo $data['review_date']; ?></td>
             </tr>                             
           <?php endforeach; endif; ?>
           </tbody>

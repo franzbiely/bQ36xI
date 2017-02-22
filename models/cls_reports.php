@@ -129,9 +129,16 @@ class Reports extends DB{
                               $sheet->setCellValue('E9', $overview_row["total_no_referrals"]);
                               $sheet->setCellValue('E10', $overview_row["ave_no_consul"]);
                               $sheet->setCellValue('A15', 'Record Number');
-                              $sheet->setCellValue('C15', 'Full Name');
-                              $sheet->setCellValue('E15', 'Clinic');  
-                              $sheet->setCellValue('H15', 'Consultation');  
+                              $sheet->setCellValue('B15', 'Full Name');
+                              $sheet->setCellValue('C15', 'Province');  
+                              $sheet->setCellValue('D15', 'District');  
+                              $sheet->setCellValue('E15', 'Health Facility');  
+                              $sheet->setCellValue('F15', 'Clinic');  
+                              $sheet->setCellValue('G15', 'Date'); 
+                              $sheet->setCellValue('H15', 'Visit Reasons '); 
+                              $sheet->setCellValue('I15', 'Consultation');  
+                              $sheet->setCellValue('J15', 'Review Date');  
+
                               //$sheet->fromArray($client_record_header, null, 'A15'); 
                               $sheet->fromArray($client_details, null, 'A16');  
     
@@ -599,8 +606,9 @@ class Reports extends DB{
                   office.area_name AS office, 
                   c.clinic_name,    
                   a.date,
-                  a.visit_reasons,        
-                  COUNT(*) AS ctr_consultation            
+                  a.visit_reasons,  
+                  COUNT(*) AS ctr_consultation,
+                  a.review_date
                   FROM tbl_records AS a
                   JOIN tbl_client AS b ON a.client_id = b.ID
                   JOIN tbl_clinic AS c ON a.clinic_id = c.ID
@@ -619,8 +627,9 @@ class Reports extends DB{
                       office.area_name AS office, 
                       c.clinic_name,  
                       a.date,  
-                      a.visit_reasons,        
-                      COUNT(*) AS ctr_consultation            
+                      a.visit_reasons,  
+                      COUNT(*) AS ctr_consultation,
+                      a.review_date            
                       FROM tbl_records AS a
                       JOIN tbl_client AS b ON a.client_id = b.ID
                       JOIN tbl_clinic AS c ON a.clinic_id = c.ID

@@ -22,9 +22,9 @@ switch (ENV) {
 	case 'testsite':
     	error_reporting(0);
         define("DBHOST","localhost");
-		define("DBUSER","clientsu_ssmclsu");
+		define("DBUSER","cldbtest_clients");
 		define("DBPASS","hMD6QFrGELnL");
-		define("DBNAME","clientsu_ssmcldb");
+		define("DBNAME","cldbtest_clients");
 		define("SITE_URL","http://testclients.susumamas.org.pg");
         break;
 

@@ -6,6 +6,9 @@
 *                                                                                        *
 ******************************************************************************************
 
+v3.4 | 28 of May 2017
+ - Fixed DB access for testsite to correct data
+
 v3.3 | 1 of March 2017
  - added Review Date in consultation reports and it's export to CSV / Excel functionality.
  - Fix problem found in Export for Consultation (problem : some column titles didn't show up and the alignment of the cells is incorrect on the current setup)

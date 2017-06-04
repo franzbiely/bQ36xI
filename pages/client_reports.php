@@ -142,7 +142,7 @@
           <tbody>
             <tr>
               <label><h4>Client Reports</h4></label> 
-              <td rowspan="6"><b>Client Type Totals</b></td>  
+              <td rowspan="8"><b>Client Type Totals</b></td>  
               <td>Male</td>
               <td></td>
               <td><?php echo $reports->count_report($data2,array("client_type"=>"Male")) ?></td>
@@ -171,6 +171,16 @@
               <td></td>
               <td>5 - 14 years of Age</td>
               <td><?php echo $reports->count_age_between($data2, 5, 14) ?></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>15 - 19 years of Age</td>
+              <td><?php echo $reports->count_age_between($data2, 15, 19) ?></td>
+            </tr>                                  
+            <tr>
+              <td></td>
+              <td>20 - 24 years of Age</td>
+              <td><?php echo $reports->count_age_between($data2, 20, 24) ?></td>
             </tr>                                  
           </tbody> 
         </table>           

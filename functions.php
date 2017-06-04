@@ -256,11 +256,20 @@ function header_nav_bar($icon, $page, $parent_page=""){
 	          <span class="icon-bar"></span>
 	        </button>
 	        <a class="navbar-brand" 
-          <?php if ($_SESSION['type'] != 'reporting' && $_SESSION['type'] != 'superreporting' && $_SESSION['type'] != 'dataentry' && $_SESSION['type'] != 'enquiry'): ?>
-            href="<?php echo SITE_URL ?>/?page=dashboard"
-            else{
-            href="#"
-          }
+          <?php 
+          if ($_SESSION['type'] != 'reporting' && 
+              $_SESSION['type'] != 'superreporting' && 
+              $_SESSION['type'] != 'dataentry' && 
+              $_SESSION['type'] != 'enquiry') : ?>
+            href="<?php echo SITE_URL ?>/?page=dashboard" 
+
+          <?php elseif ($_SESSION['type'] == 'reporting' || 
+                        $_SESSION['type'] == 'superreporting') : ?>
+            href="<?php echo SITE_URL ?>/?page=reports" 
+
+          <?php elseif ($_SESSION['type'] == 'dataentry' || 
+                        $_SESSION['type'] == 'enquiry') : ?>
+            href="<?php echo SITE_URL ?>/?page=clients"
           <?php endif ?>
            title="Susu Mamas | Dashboard">Susu Mamas</a>
 	      </div>

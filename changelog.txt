@@ -6,6 +6,13 @@
 *                                                                                        *
 ******************************************************************************************
 
+v3.5 | 5th of June 2017
+ - Removed delete function for client type
+ - Fixed homebutton link for all user types
+ - Added new age group for client reporting
+ - Auto logout when idle
+ - Set session lifespan for 8 hours only
+
 v3.4 | 28 of May 2017
  - Fixed DB access for testsite to correct data
 

@@ -1,7 +1,7 @@
 $(document).ready(function (){
 	show_loading_in_pagination();
 	show_loading_in_search();
-
+	autologout($);
 
 });
 
@@ -90,3 +90,26 @@ function timestampToDateTimeLocal (timestamp) {
 	seconds = (seconds<10) ? '0' + seconds : seconds;
 	return year + "-" + month + "-" + day + "T" + hours + ":" + minutes + ":" + seconds;
 }
+
+function autologout($) {
+	console.log('callme');
+	// timer for 3 minutes idle
+    var idleTime = 0;
+    var submitted = false;
+
+    var idleInterval = setInterval(timerIncrement, 60000); // 1 minute
+    $(this).mousemove(function(e) { //Zero the idle timer on mouse movement and keypress.
+        idleTime = 0;
+    });
+    $(this).keypress(function(e) {
+        idleTime = 0;
+    });
+    function timerIncrement() {
+	    idleTime = idleTime + 1;
+	    if (idleTime > 4) { // 5 minutes
+	        alert('You have been idle for longer than 5 minutes on the client database. \nPlease login again.');
+	        window.location.href = '/?c=user&f=logout';
+	    }
+	}
+}
+

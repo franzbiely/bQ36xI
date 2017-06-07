@@ -24,7 +24,7 @@ switch (ENV) {
         define("DBHOST","localhost");
 		define("DBUSER","cldbtest_clients");
 		define("DBPASS","hMD6QFrGELnL");
-		define("DBNAME","cldbtest_clients_2");
+		define("DBNAME","cldbtest_clients");
 		define("SITE_URL","http://testclients.susumamas.org.pg");
         break;
 

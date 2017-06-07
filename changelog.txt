@@ -5,6 +5,10 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.6 | 7th of June 2017
+ - Show db info in live and testsite footer
+ - Updated testsite DB to latest records
+ - Removed bug client type in testsite and livesite
 
 v3.5 | 5th of June 2017
  - Removed delete function for client type

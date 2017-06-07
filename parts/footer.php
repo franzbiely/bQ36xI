@@ -7,9 +7,17 @@
 					<li><a href="/changelog.txt">Changelog</a></li>
 					<li><a href="#">Official Website</a></li>
 					<li class="last"><a href="#">Contact Us</a></li>
+					<?php if (preg_match('/testclients.susumamas.org.pg$/', $_SERVER['HTTP_HOST'])) { ?>
+						<li style="color: purple;">
+						DBUser : <strong><?php echo DBUSER ?></strong> | DBName : <strong><?php echo DBNAME ?></strong>
+						</li>
+						<?php
+
+				} ?>
 				</ul>
 
-				<br class="clr"/>					
+				<br class="clr"/>
+									
 			</footer>	
 		</div>
 	</div>

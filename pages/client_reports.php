@@ -155,7 +155,7 @@
             <tr>
               <td>Child</td>
               <td></td>
-              <td><?php echo $reports->count_report($data2,array("client_type"=>"Child")) ?></td>
+              <td><?php echo $reports->count_age_between($data2,0,14) ?></td>
             </tr>
             <tr>
               <td></td>

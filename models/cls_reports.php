@@ -951,7 +951,9 @@ class Reports extends DB{
   function count_age_between($data, $start, $end){
     $ctr=0;
     foreach($data as $key=>$val){
-      if($val['age']>=$start && $val['age']<=$end) $ctr++;
+      if($val['age']>=$start && $val['age']<=$end) {
+        $ctr++;
+      }
     }
     return $ctr;
   }

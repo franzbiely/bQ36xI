@@ -5,6 +5,9 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.7 | 25th of Aug 2017
+ - Fixed child counter
+
 v3.6 | 7th of June 2017
  - Show db info in live and testsite footer
  - Updated testsite DB to latest records

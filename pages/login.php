@@ -1,4 +1,3 @@
-<script src="<?php echo SITE_URL ?>/library/jquery-ui-1.10.3/jquery-1.9.1.js" type="text/javascript"></script>
 <div class="container" style="font-family: 'Lato', Calibri, Arial, sans-serif !important;">
 	<?php if(MAINTENANCE_MODE) : ?>
 		<div class="alert alert-warning" style="background: red; display:block;

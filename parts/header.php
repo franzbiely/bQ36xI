@@ -38,7 +38,9 @@ else{
 	<meta name="author" content="ThemeTribe" />
 
 	<link rel="shortcut icon" href="<?php echo SITE_URL ?>/images/tab_logo.png"> 
-	
+	<script src="<?php echo SITE_URL ?>/library/jquery-ui-1.10.3/jquery-1.9.1.js" type="text/javascript"></script>
+	<script src="<?php echo SITE_URL ?>/library/bootstrap/dist/js/bootstrap.js"></script>		
+	<script src="<?php echo SITE_URL ?>/js/global_script.js"></script>
 <?php if(isset($_GET['page']) && $_GET['page']!=FRONT_PAGE): ?>
 
 	<!-- Bootstrap core CSS --> 
@@ -47,17 +49,15 @@ else{
 
 	<!-- JQuery UI CSS --> 
 	<link href="<?php echo SITE_URL ?>/library/jquery-ui-1.10.3/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />	
-
+	
 	<!-- Datepicker widget -->
-	<script src="<?php echo SITE_URL ?>/library/jquery-ui-1.10.3/jquery-1.9.1.js" type="text/javascript"></script>
 	<script src="<?php echo SITE_URL ?>/library/jquery-ui-1.10.3/ui/jquery-ui.js" type="text/javascript"></script>
 
 	<!-- Bootstrap core JS --> 
-	<script src="<?php echo SITE_URL ?>/library/bootstrap/dist/js/bootstrap.js"></script>		
-	<script src="<?php echo SITE_URL ?>/library/bootstrap/js/alert.js"></script>
+	
 	
 	<!-- global script  -->
-	<script src="<?php echo SITE_URL ?>/js/global_script.js"></script>
+	<script src="<?php echo SITE_URL ?>/library/bootstrap/js/alert.js"></script>
 	<script type="text/javascript">
 	$(document).ready(function($) {
 		$('#date_birth, #date_death, #datepicker3, #datepicker-review_date, #followup_date, #start_date, #end_date').datepicker({

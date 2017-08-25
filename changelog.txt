@@ -8,6 +8,7 @@
 v3.8 | 25th of Aug 2017
  - Fixed catchment reports dropdown for non superreporting users
  - Fix browser bug on modal for login page
+ - Fixed doubled dropdown issue on catchment page for superreporting when triggered twice
 
 v3.7 | 25th of Aug 2017
  - Fixed child counter

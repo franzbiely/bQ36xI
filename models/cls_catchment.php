@@ -210,7 +210,12 @@ class Catchment extends DB{
           			});
           		}
           		element += "</select></div>";
-          		$(that).parent().after(element);
+          		if($('#by_detail').length == 0) {
+          			$(that).parent().after(element);	
+          		}
+          		else {
+          			$('#by_detail').replaceWith(element);
+          		}
 			});
 		}
 		</script>

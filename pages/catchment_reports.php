@@ -29,12 +29,18 @@
                 <label class="sr-only" for="exampleInputPassword2"></label>
                 <input type="text" class="form-control" name="end_date" id="end_date" placeholder="Enter End Date" value="<?php echo isset($_POST["end_date"])?$_POST["end_date"]:""; ?>" required>
               </div>
-              <div class="form-group">
-                <select class="form-control" id="healthFacility" required>
-                  <option value="">--[Choose Health Facility]--</option>
-                  <?php $catchment->get_office_options(); ?>
-                </select>
-              </div>
+                <?php if(enablea_and_disable_ele($_SESSION['type'], "generate_all_hc", $_SESSION['consultation_reports']) == true || $_SESSION['type'] == 'superreporting') : ?>
+                  <div class="form-group">
+                    <select class="form-control" id="healthFacility" required>
+                      <option value="">--[Choose Health Facility]--</option>
+                      <?php $catchment->get_office_options(); ?>
+                    </select>
+                  </div>
+                <?php else : ?>
+                  <div class="form-group">
+                    <span id="clinic-dropdown">&nbsp;</span>
+                  </div>
+                <?php endif; ?>
               <input type="submit" value="Generate Report" name="btnGenReport" class="btn btn-default" style="margin-top: 5px;" />
             </form>      
           </div> 

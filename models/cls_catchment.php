@@ -189,25 +189,28 @@ class Catchment extends DB{
 		?>
 		<script>
 		$(document).ready(function(){ 
-			get_clinics();
+			<?php if(enablea_and_disable_ele($_SESSION['type'], "generate_all_hc", $_SESSION['consultation_reports']) == true || $_SESSION['type'] == 'superreporting') : ?>
+				$('#healthFacility').on('change',function(){
+					get_clinics($(this), $(this).find('option:selected').val());
+				});
+			<?php else : ?>
+				get_clinics($('#clinic-dropdown'), <?php echo $_SESSION['office_id'] ?>);
+			<?php endif; ?>
 		});
 		// =============== Catchment Page > get clinic names by health facility
-		function get_clinics() {
-			$('#healthFacility').on('change',function(){
-				var that = $(this);
-				// request data sa backend based sa this.value
-				_data = 'class=catchment&func=get_clinic_lists&health_facility='+$(this).find('option:selected').val();
-				$.post( window.location.href, _data, function( data ) {
-					element = "<div class='form-group' id='by_detail'><select class='form-control' name='clinic_id' id='clinic_id' required>";
-					element += "<option value=''>--[Choose clinic]--</option>";
-              		if(data!='false') {
-              			JSON.parse(data).forEach(function( elem ) {
-              				element += "<option value='"+ elem.ID +"'>"+ elem.clinic_name +"</option>";
-              			});
-              		}
-              		element += "</select></div>";
-              		$(that).parent().after(element);
-				});
+		function get_clinics(that, hf) {
+			// request data sa backend based sa this.value
+			_data = 'class=catchment&func=get_clinic_lists&health_facility='+hf;
+			$.post( window.location.href, _data, function( data ) {
+				element = "<div class='form-group' id='by_detail'><select class='form-control' name='clinic_id' id='clinic_id' required>";
+				element += "<option value=''>--[Choose clinic]--</option>";
+          		if(data!='false') {
+          			JSON.parse(data).forEach(function( elem ) {
+          				element += "<option value='"+ elem.ID +"'>"+ elem.clinic_name +"</option>";
+          			});
+          		}
+          		element += "</select></div>";
+          		$(that).parent().after(element);
 			});
 		}
 		</script>

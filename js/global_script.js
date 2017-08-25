@@ -1,7 +1,7 @@
 $(document).ready(function (){
 	show_loading_in_pagination();
 	show_loading_in_search();
-	// autologout($);
+	autologout($);
 
 });
 

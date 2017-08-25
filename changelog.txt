@@ -5,6 +5,9 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.8 | 25th of Aug 2017
+ - Fixed catchment reports dropdown for non superreporting users
+
 v3.7 | 25th of Aug 2017
  - Fixed child counter
 

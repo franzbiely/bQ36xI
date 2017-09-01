@@ -261,12 +261,36 @@ class Reports extends DB{
         if(!isset(${"visit_Child_{$key}"})) ${"visit_Child_{$key}"}=0;
        
         if($total_consultation!=0)  $overall = round(${"visit_{$key}"}/$total_consultation * 100,1,PHP_ROUND_HALF_DOWN); 
+
         if($total_male!=0) $male = round(${"visit_male_{$key}"}/$total_male * 100, 1,PHP_ROUND_HALF_DOWN); 
         if($total_female!=0) $female =  round(${"visit_female_{$key}"}/$total_female * 100, 1,PHP_ROUND_HALF_DOWN) ;
         if($total_Child!=0) $Child =  round(${"visit_Child_{$key}"}/$total_Child * 100, 1,PHP_ROUND_HALF_DOWN) ;
 
-        $rows[] = array($data, $overall. "%",${"visit_{$key}"}, $male ."%", ${"visit_male_{$key}"},
-                $female ."%", ${"visit_female_{$key}"}, $Child ."%", ${"visit_Child_{$key}"});                             
+        switch($_POST['client_type']) {
+          case "Male" : 
+            $rows[] = array(
+                    $data, $overall. "%",${"visit_{$key}"}, 
+                    $male ."%", ${"visit_male_{$key}"});                             
+            break;
+          case "Female" :
+            $rows[] = array(
+                    $data, $overall. "%",${"visit_{$key}"}, 
+                    $female ."%", ${"visit_female_{$key}"});                           
+            break;
+          case "Child" : 
+            $rows[] = array(
+                    $data, $overall. "%",${"visit_{$key}"}, 
+                    $Child ."%", ${"visit_Child_{$key}"});                             
+            break;
+          default : {
+            $rows[] = array(
+                    $data, $overall. "%",${"visit_{$key}"}, 
+                    $male ."%", ${"visit_male_{$key}"},
+                    $female ."%", ${"visit_female_{$key}"}, 
+                    $Child ."%", ${"visit_Child_{$key}"});                                 
+          }
+        }
+        
         endforeach; endif;     
 
         return $rows;
@@ -341,24 +365,42 @@ class Reports extends DB{
                               //$sheet->setCellValue('D9', $this->count_report($data,array("record_type"=>"followup")));
                               $sheet->setCellValue('A11', 'Client Reports');
                               $sheet->setCellValue('A12', 'Client Type Totals');
+                            if($_POST['client_type']==="Male" || $_POST['client_type']==="") {
                               $sheet->setCellValue('C12', 'Male');
+                            }
+                            if($_POST['client_type']==="Female" || $_POST['client_type']==="") {
                               $sheet->setCellValue('c13', 'Female');
+                            }
+                            if($_POST['client_type']==="Child" || $_POST['client_type']==="") {
                               $sheet->setCellValue('C14', 'Child');
+                            }
                               $sheet->setCellValue('C15', 'Under 1 Year Old');
                               $sheet->setCellValue('C16', 'Between 1 - 4 years old');
                               $sheet->setCellValue('C17', 'Between 5 - 14 years old');
+                              $sheet->setCellValue('C18', 'Between 15 - 19 years old');
+                              $sheet->setCellValue('C19', 'Between 20 - 24 years old');
+
+                            if($_POST['client_type']==="Male" || $_POST['client_type']==="") {
                               $sheet->setCellValue('E12', $this->count_report($data,array("client_type"=>"Male")));
+                            }
+                            if($_POST['client_type']==="Female" || $_POST['client_type']==="") {
                               $sheet->setCellValue('E13', $this->count_report($data,array("client_type"=>"Female")));
+                            }
+                            if($_POST['client_type']==="Child" || $_POST['client_type']==="") {
                               $sheet->setCellValue('E14', $this->count_report($data,array("client_type"=>"Child")));
+                            }
                               $sheet->setCellValue('E15', $this->count_age_under_1_year_old($data));
                               $sheet->setCellValue('E16', $this->count_age_between($data, 1, 4));
                               $sheet->setCellValue('E17', $this->count_age_between($data, 5, 14));
-                              $sheet->setCellValue('A18', 'Client Reports');
-                              $sheet->setCellValue('A19', 'Visit Type Totals');
-                              $sheet->fromArray($visit_type_reports_header , null, 'E19');
-                              $sheet->fromArray($visit_type_report , null, 'E21');
-                              $sheet->fromArray($client_record_header, null, 'A35');
-                              $sheet->fromArray($client_row, null, 'A36');
+                              $sheet->setCellValue('E18', $this->count_age_between($data, 15, 19));
+                              $sheet->setCellValue('E19', $this->count_age_between($data, 20, 24));
+
+                              $sheet->setCellValue('A20', 'Client Reports');
+                              $sheet->setCellValue('A21', 'Visit Type Totals');
+                              $sheet->fromArray($visit_type_reports_header , null, 'E21');
+                              $sheet->fromArray($visit_type_report , null, 'E23');
+                              $sheet->fromArray($client_record_header, null, 'A37');
+                              $sheet->fromArray($client_row, null, 'A38');
                              // $sheet->fromArray($client_row, null, 'A33');
                           
 
@@ -983,7 +1025,7 @@ class Reports extends DB{
   }
 
    
-  function visit_type_reports($rep_data){
+  function visit_type_reports($rep_data, $c_type){
       global $type;
       $visit_reasons = array();
       $client_type = array();
@@ -1047,12 +1089,18 @@ class Reports extends DB{
             <td><?php echo $data ?></td>
             <td><?php if($total_consultation!=0) echo round(${"visit_{$key}"}/$total_consultation * 100,1,PHP_ROUND_HALF_DOWN); ?>%</td>
             <td><?php echo ${"visit_{$key}"} ?></td>
-            <td><?php if($total_male!=0) echo round(${"visit_male_{$key}"}/$total_male * 100, 1,PHP_ROUND_HALF_DOWN) ?>%</td>
-            <td><?php echo ${"visit_male_{$key}"}; ?></td> 
-            <td><?php if($total_female!=0) echo round(${"visit_female_{$key}"}/$total_female * 100, 1,PHP_ROUND_HALF_DOWN) ?>%</td>
-            <td><?php echo ${"visit_female_{$key}"} ?></td>
-            <td><?php if($total_Child!=0) echo round(${"visit_Child_{$key}"}/$total_Child * 100, 1,PHP_ROUND_HALF_DOWN) ?>%</td>
-            <td><?php echo ${"visit_Child_{$key}"} ?></td>                               
+            <?php if($c_type==="Male" || $c_type === "") : ?>
+              <td><?php if($total_male!=0) echo round(${"visit_male_{$key}"}/$total_male * 100, 1,PHP_ROUND_HALF_DOWN) ?>%</td>
+              <td><?php echo ${"visit_male_{$key}"}; ?></td> 
+            <?php endif; ?>
+            <?php if($c_type==="Female" || $c_type === "") : ?>
+              <td><?php if($total_female!=0) echo round(${"visit_female_{$key}"}/$total_female * 100, 1,PHP_ROUND_HALF_DOWN) ?>%</td>
+              <td><?php echo ${"visit_female_{$key}"} ?></td>
+            <?php endif; ?>
+            <?php if($c_type==="Child" || $c_type === "") : ?>
+              <td><?php if($total_Child!=0) echo round(${"visit_Child_{$key}"}/$total_Child * 100, 1,PHP_ROUND_HALF_DOWN) ?>%</td>
+              <td><?php echo ${"visit_Child_{$key}"} ?></td>                               
+            <?php endif; ?>
         </tr>
         <?php
         endforeach; endif;   

@@ -143,35 +143,41 @@
             <tr>
               <label><h4>Client Reports</h4></label> 
               <td rowspan="8"><b>Client Type Totals</b></td>  
-              <td>Male</td>
-              <td></td>
-              <td><?php echo $reports->count_report($data2,array("client_type"=>"Male")) ?></td>
-            </tr>      
-            <tr>
-              <td>Female</td>
-              <td></td>
-              <td><?php echo $reports->count_report($data2,array("client_type"=>"Female")) ?></td>
-            </tr>
-            <tr>
-              <td>Child</td>
-              <td></td>
-              <td><?php echo $reports->count_age_between($data2,0,14) ?></td>
-            </tr>
-            <tr>
-              <td></td>
-              <td>< 12 months of Age</td>
-              <td><?php echo $reports->count_age_under_1_year_old($data2) ?></td>
+              <?php if($c_type === "Male" || $c_type === "") : ?>
+                <td>Male</td>
+                <td></td>
+                <td><?php echo $reports->count_report($data2,array("client_type"=>"Male")) ?></td>
+              <?php endif; ?>
             </tr>  
-            <tr>
-              <td></td>
-              <td>1 - 4 years of Age</td>
-              <td><?php echo $reports->count_age_between($data2, 1, 4) ?></td>
-            </tr>  
-            <tr>
-              <td></td>
-              <td>5 - 14 years of Age</td>
-              <td><?php echo $reports->count_age_between($data2, 5, 14) ?></td>
-            </tr>
+            <?php if($c_type === "Female" || $c_type === "") : ?>    
+              <tr>
+                <td>Female</td>
+                <td></td>
+                <td><?php echo $reports->count_report($data2,array("client_type"=>"Female")) ?></td>
+              </tr>
+            <?php endif; ?>
+            <?php if($c_type === "Child" || $c_type === "") : ?>
+              <tr>
+                <td>Child</td>
+                <td></td>
+                <td><?php echo $reports->count_age_between($data2,0,14) ?></td>
+              </tr>
+            <?php endif; ?>
+              <tr>
+                <td></td>
+                <td>< 12 months of Age</td>
+                <td><?php echo $reports->count_age_under_1_year_old($data2) ?></td>
+              </tr>  
+              <tr>
+                <td></td>
+                <td>1 - 4 years of Age</td>
+                <td><?php echo $reports->count_age_between($data2, 1, 4) ?></td>
+              </tr>  
+              <tr>
+                <td></td>
+                <td>5 - 14 years of Age</td>
+                <td><?php echo $reports->count_age_between($data2, 5, 14) ?></td>
+              </tr>
             <tr>
               <td></td>
               <td>15 - 19 years of Age</td>
@@ -193,13 +199,19 @@
             <tr>
               <th><b>Type</b></th>
               <th colspan="2"><b>Overall</b></th>
-              <th colspan="2"><b>Male</b></th>
-              <th colspan="2"><b>Female</b></th>
-              <th colspan="2"><b>Child</b></th>                    
+              <?php if($c_type === "Male" || $c_type === "") : ?>
+                <th colspan="2"><b>Male</b></th>
+              <?php endif; ?>
+              <?php if($c_type === "Female" || $c_type === "") : ?>
+                <th colspan="2"><b>Female</b></th>
+              <?php endif; ?>
+              <?php if($c_type === "Child" || $c_type === "") : ?>
+                <th colspan="2"><b>Child</b></th>              
+              <?php endif; ?>      
             </tr> 
             <?php 
 
-            $reports->visit_type_reports($data2) ?>
+            $reports->visit_type_reports($data2, $c_type) ?>
           </tbody> 
         </table>  
         <div class="btn-group">

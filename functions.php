@@ -89,7 +89,19 @@ function export_client(){
       }
      
       $visit_type_report = $reports->visit_type_reports_excel($data2);
-      $visit_type_reports_header =  array("Type", "Overall", " ", "Male", " ", "Female", " ", "Childs");  
+
+      switch($_POST['client_type']) {
+        case "Male" : 
+          $visit_type_reports_header =  array("Type", "Overall", " ", "Male", " "); break;
+        case "Female" :
+          $visit_type_reports_header =  array("Type", "Overall", " ", "Female", " "); break;
+        case "Child" : 
+          $visit_type_reports_header =  array("Type", "Overall", " ", "Childs", " "); break;
+        default : {
+          $visit_type_reports_header =  array("Type", "Overall", " ", "Male", " ", "Female", " ", "Childs");  
+        }
+      }
+      
       $client_record_header = array("Record Number", "Full Name", "Province", "District", "LLG", "Health Facility", "Clinic", "Consultation");
 
       

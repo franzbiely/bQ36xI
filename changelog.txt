@@ -5,6 +5,11 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+
+v3.9 | 1st of Sept 2017
+ - Hides other client type when a specified type is generated in the client reports
+ - Updates the changes to the Export functionalities as well
+
 v3.8 | 25th of Aug 2017
  - Fixed catchment reports dropdown for non superreporting users
  - Fix browser bug on modal for login page

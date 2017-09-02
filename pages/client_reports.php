@@ -105,15 +105,14 @@
         else:  
           if($_POST['visit_type'] != ""){
               $data = $reports->get_client_record($_POST['start_date'], $_POST['end_date'], $_POST['client_type'], $_POST['visit_type'], $_POST['clinic']);
+
               $data2 = $reports->search_by_visit_reason($data, $_POST['visit_type']);   
           }else{
               $data2 = $reports->get_client_record($_POST['start_date'], $_POST['end_date'], $_POST['client_type'], $_POST['visit_type'], $_POST['clinic']);
           }
-          
           if($data2==false):
             echo "<p>No Record Found in the specified date or filter.</p>";
           else:
-           
         ?>
         </br>
         <table class="table table-bordered table-striped table-hover table-condensed">
@@ -135,8 +134,7 @@
          
 
           </tbody>
-        </table>  
-
+        </table> 
 
         <table class="table  table-striped table-hover table-condensed"> 
           <tbody>
@@ -162,7 +160,7 @@
                 <td></td>
                 <td><?php echo $reports->count_age_between($data2,0,14) ?></td>
               </tr>
-            <?php endif; ?>
+            
               <tr>
                 <td></td>
                 <td>< 12 months of Age</td>
@@ -178,6 +176,7 @@
                 <td>5 - 14 years of Age</td>
                 <td><?php echo $reports->count_age_between($data2, 5, 14) ?></td>
               </tr>
+            <?php endif; ?>
             <tr>
               <td></td>
               <td>15 - 19 years of Age</td>
@@ -241,6 +240,7 @@
         <table class="table  table-striped table-hover table-condensed" style="margin-top: 20px; margin-bottom: 70px;">
           <thead>
             <tr>
+              <th><b>&nbsp;</b></th>
               <th><b>Record Number</b></th>
               <th><b>Full Name</b></th>
               <th><b>Province</b></th>
@@ -250,20 +250,26 @@
               <th><b>Clinic</b></th>
               <th><b>Date</b></th>
               <th><b>Consultation</b></th>
+              <th><b>Age</b></th>
+              <th><b>Type</b></th>
             </tr>
           </thead>
           <tbody>
             <?php
+
             if($_POST['visit_type'] != ""){
               $data = $reports->get_client_record_details($_POST['start_date'], $_POST['end_date'], $_POST['client_type'], $_POST['visit_type'], $_POST['clinic']);
               $data2 = $reports->search_visit_reason_details($data, $_POST['visit_type']);   
           }else{
               $data2 = $reports->get_client_record_details($_POST['start_date'], $_POST['end_date'], $_POST['client_type'], $_POST['visit_type'], $_POST['clinic']);
           }
-            if($data2!=false): foreach($data2 as $data ): ?>
-            <tr>       
+            if($data2!=false): $x=0; foreach($data2 as $key=>$data ): $x++; 
+            ?>
+            <tr>  
+              <td class="counter"><?php echo $x; ?></td>     
               <td class="id record_number"><?php echo $data['record_number']; ?></td>
               <td class="fullname"><?php echo $data['fullname']; ?></td>
+              
               <td class="province"><?php echo $data['province']; ?></td>
               <td class="district"><?php echo $data['district']; ?></td>
              <!--  <td class="llg"><?php //echo $data['llg']; ?></td> -->
@@ -271,6 +277,8 @@
               <td class="clinic"><?php echo $data['clinic_name']; ?></td>
               <td class="clinic"><?php echo $data['date']; ?></td>
               <td class="consultation"><?php echo $data['ctr_consultation']; ?></td>
+              <td class="current_age"><?php echo $data['current_age']; ?></td>
+              <td class="gender"><?php echo $data['client_type']; ?></td>
             </tr>                             
           <?php endforeach; endif; ?>
           </tbody>

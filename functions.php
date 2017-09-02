@@ -102,7 +102,7 @@ function export_client(){
         }
       }
       
-      $client_record_header = array("Record Number", "Full Name", "Province", "District", "LLG", "Health Facility", "Clinic", "Consultation");
+      $client_record_header = array("Record Number", "Client Type", "Full Name", "Province", "District", "Health Facility", "Clinic", "Date","Visit Reasons", "Consultation", "Review Date", "Current Age");
 
       
 

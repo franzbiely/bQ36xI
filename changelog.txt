@@ -5,6 +5,11 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.10 | 2nd of Sept 2017
+ - When Male record is generated, will check the current age of the Male person, and only show Male that has greater or equal 15 years old, same goes with Female.
+ - added age column in client reports table
+ - added client type column in client reports table
+ - Updated Export functionality for the changes.
 
 v3.9 | 1st of Sept 2017
  - Hides other client type when a specified type is generated in the client reports

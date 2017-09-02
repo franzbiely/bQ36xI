@@ -387,7 +387,7 @@ class Reports extends DB{
                               $sheet->setCellValue('E13', $this->count_report($data,array("client_type"=>"Female")));
                             }
                             if($_POST['client_type']==="Child" || $_POST['client_type']==="") {
-                              $sheet->setCellValue('E14', $this->count_report($data,array("client_type"=>"Child")));
+                              $sheet->setCellValue('E14', $this->count_age_between($data,0,14));
                             }
                               $sheet->setCellValue('E15', $this->count_age_under_1_year_old($data));
                               $sheet->setCellValue('E16', $this->count_age_between($data, 1, 4));
@@ -500,6 +500,9 @@ class Reports extends DB{
 
         if(array_key_exists("client_type", $_data)){
           $where .= "b.client_type =  :client_type AND ";
+          if($_data['client_type'] === "Male" || $_data['client_type'] === "Female") {
+            $where .= "floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) > 14 AND ";
+          }
           $bind_query['client_type']=$_data['client_type'];
         }
 
@@ -521,7 +524,8 @@ class Reports extends DB{
               c.clinic_name,   
               MAX(a.date) AS date, 
               a.visit_reasons,        
-              COUNT(*) AS ctr_consultation            
+              COUNT(*) AS ctr_consultation,
+              floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) as current_age    
               FROM tbl_records AS a
               JOIN tbl_client AS b ON a.client_id = b.ID
               JOIN tbl_clinic AS c ON a.clinic_id = c.ID
@@ -543,7 +547,8 @@ class Reports extends DB{
                       c.clinic_name,
                       MAX(a.date) AS date,  
                       a.visit_reasons,        
-                      COUNT(*) AS ctr_consultation            
+                      COUNT(*) AS ctr_consultation,
+                      floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) as current_age
                       FROM tbl_records AS a
                       JOIN tbl_client AS b ON a.client_id = b.ID
                       JOIN tbl_clinic AS c ON a.clinic_id = c.ID
@@ -558,7 +563,6 @@ class Reports extends DB{
                       $bind_query['office_id'] = $_SESSION['office_id'];
           }
         // $bind_array = array("start_date"=>$start_date, "end_date"=>$end_date);
-
         $stmt = $this->query($query,$bind_query);
         $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach($array as $key=>$val){
@@ -626,7 +630,11 @@ class Reports extends DB{
             $bind_query = array();
 
             if(array_key_exists("client_type", $_data)){
+
               $where .= "b.client_type =  :client_type AND ";
+              if($_data['client_type'] === "Male" || $_data['client_type'] === "Female") {
+                $where .= "floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) > 14 AND ";
+              }
               $bind_query['client_type']=$_data['client_type'];
             }
             
@@ -641,7 +649,7 @@ class Reports extends DB{
             $bind_query['end_date']= $_data['end_date'];
 
               if($_SESSION['type'] == 'superreporting'){
-                 $query = "SELECT  DISTINCT b.record_number,
+                 $query = "SELECT DISTINCT b.record_number, b.client_type,
                   CONCAT(b.fname,' ',b.lname) AS fullname,
                   province.area_name AS province,
                   district.area_name AS district,
@@ -650,7 +658,8 @@ class Reports extends DB{
                   a.date,
                   a.visit_reasons,  
                   COUNT(*) AS ctr_consultation,
-                  a.review_date
+                  a.review_date,
+                  floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) as current_age
                   FROM tbl_records AS a
                   JOIN tbl_client AS b ON a.client_id = b.ID
                   JOIN tbl_clinic AS c ON a.clinic_id = c.ID
@@ -662,7 +671,7 @@ class Reports extends DB{
                   AND a.record_type='consultation'
                   GROUP BY a.client_id";
               }else{
-                   $query = "SELECT  DISTINCT b.record_number,
+                   $query = "SELECT  DISTINCT b.record_number, b.client_type,
                       CONCAT(b.fname,' ',b.lname) AS fullname,
                       province.area_name AS province,
                       district.area_name AS district,
@@ -671,7 +680,8 @@ class Reports extends DB{
                       a.date,  
                       a.visit_reasons,  
                       COUNT(*) AS ctr_consultation,
-                      a.review_date            
+                      a.review_date,
+                      floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) as current_age
                       FROM tbl_records AS a
                       JOIN tbl_client AS b ON a.client_id = b.ID
                       JOIN tbl_clinic AS c ON a.clinic_id = c.ID
@@ -974,7 +984,24 @@ class Reports extends DB{
     foreach($data as $key=>$val){
       foreach($arr as $k=>$v){
         if($operation=="=="){
-          if($val[$k]==$v) $ctr++;    
+          if($val[$k]==$v) {
+            // Special Conditions
+            if($k==="client_type") {
+              if($v==="Male" || $v==="Female") {
+                if( $val['current_age'] > 14) {
+                  $ctr++;
+                }
+              }
+              if($v==="Child") {
+                if( $val['current_age'] <= 14) { 
+                  $ctr++;
+                }
+              }
+            }
+            else {
+              $ctr++;
+            }
+          }
         }
         elseif($operation=="<"){
           if($val[$k]<$v) $ctr++;   

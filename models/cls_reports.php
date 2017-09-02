@@ -499,11 +499,16 @@ class Reports extends DB{
         $bind_query = array();
 
         if(array_key_exists("client_type", $_data)){
-          $where .= "b.client_type =  :client_type AND ";
+          
           if($_data['client_type'] === "Male" || $_data['client_type'] === "Female") {
+            $where .= "b.client_type =  :client_type AND ";
             $where .= "floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) > 14 AND ";
+            $bind_query['client_type']=$_data['client_type'];
           }
-          $bind_query['client_type']=$_data['client_type'];
+          else if($_data['client_type'] === "Child") {
+            $where .= "floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) < 15 AND "; 
+          }
+          
         }
 
         if(array_key_exists("clinic", $_data)){
@@ -631,11 +636,16 @@ class Reports extends DB{
 
             if(array_key_exists("client_type", $_data)){
 
-              $where .= "b.client_type =  :client_type AND ";
+              
               if($_data['client_type'] === "Male" || $_data['client_type'] === "Female") {
+                $where .= "b.client_type =  :client_type AND ";
                 $where .= "floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) > 14 AND ";
+                $bind_query['client_type']=$_data['client_type'];
               }
-              $bind_query['client_type']=$_data['client_type'];
+              else if($_data['client_type'] === "Child") {
+                $where .= "floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) < 15 AND "; 
+              }
+              
             }
             
             if(array_key_exists("clinic", $_data)){

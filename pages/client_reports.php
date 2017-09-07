@@ -114,6 +114,9 @@
             echo "<p>No Record Found in the specified date or filter.</p>";
           else:
         ?>
+      <?php
+      $data2_by_gender = $reports->separate_by_gender($data2);
+      ?>
         </br>
         <table class="table table-bordered table-striped table-hover table-condensed">
           <tbody>
@@ -140,53 +143,147 @@
           <tbody>
             <tr>
               <label><h4>Client Reports</h4></label> 
-              <td rowspan="8"><b>Client Type Totals</b></td>  
+              <td rowspan="40"><b>Client Type Totals</b></td>  
               <?php if($c_type === "Male" || $c_type === "") : ?>
+
                 <td>Male</td>
                 <td></td>
-                <td><?php echo $reports->count_report($data2,array("client_type"=>"Male")) ?></td>
+                <td><?php echo count($data2_by_gender['Male']) ?></td>
               <?php endif; ?>
             </tr>  
+            
+            <?php if($c_type === "Male" || $c_type === "") : ?>
+            <!-- AGE GROPUINGS FOR MALE -->
+            <tr><td></td>
+              <td>< 12 months of Age</td><td><?php echo $reports->count_age_under_1_year_old($data2_by_gender['Male']) ?></td>
+            </tr>  
+            <tr>
+              <td></td><td>1 - 4 years of Age</td>
+              <td><?php echo $reports->count_age_between($data2_by_gender['Male'], 1, 4) ?></td>
+            </tr>  
+            <tr>
+              <td></td><td>5 - 14 years of Age</td>
+              <td><?php echo $reports->count_age_between($data2_by_gender['Male'], 5, 14) ?></td>
+            </tr>
+            <tr>
+              <td></td><td>15 - 19 years of Age</td>
+              <td><?php echo $reports->count_age_between($data2_by_gender['Male'], 15, 19) ?></td>
+            </tr>                                  
+            <tr>
+              <td></td><td>20 - 24 years of Age</td>
+              <td><?php echo $reports->count_age_between($data2_by_gender['Male'], 20, 24) ?></td>
+            </tr> 
+            <tr>
+              <td></td><td>25 - 30 years of Age</td>
+              <td><?php echo $reports->count_age_between($data2_by_gender['Male'], 25, 30) ?></td>
+            </tr>   
+            <tr>
+              <td></td><td>31 - 39 years of Age</td>
+              <td><?php echo $reports->count_age_between($data2_by_gender['Male'], 31, 39) ?></td>
+            </tr>   
+            <tr>
+              <td></td><td>Older than 40</td>
+              <td><?php echo $reports->count_age_between($data2_by_gender['Male'], 40, 200) ?></td>
+            </tr>   
+            <tr>
+              <td></td><td>Unkown</td>
+              <td><?php echo $data2_by_gender['male_unknown_counter'] ?></td>
+            </tr>  
+            <!-- / -->
+            <?php endif; ?>
+
             <?php if($c_type === "Female" || $c_type === "") : ?>    
               <tr>
                 <td>Female</td>
                 <td></td>
-                <td><?php echo $reports->count_report($data2,array("client_type"=>"Female")) ?></td>
+                <td><?php echo count($data2_by_gender['Female']) ?></td>
               </tr>
+
+              <!-- AGE GROPUINGS FOR FEMALE -->
+              <tr><td></td>
+                <td>< 12 months of Age</td><td><?php echo $reports->count_age_under_1_year_old($data2_by_gender['Female']) ?></td>
+              </tr>  
+              <tr>
+                <td></td><td>1 - 4 years of Age</td>
+                <td><?php echo $reports->count_age_between($data2_by_gender['Female'], 1, 4) ?></td>
+              </tr>  
+              <tr>
+                <td></td><td>5 - 14 years of Age</td>
+                <td><?php echo $reports->count_age_between($data2_by_gender['Female'], 5, 14) ?></td>
+              </tr>
+              <tr>
+                <td></td><td>15 - 19 years of Age</td>
+                <td><?php echo $reports->count_age_between($data2_by_gender['Female'], 15, 19) ?></td>
+              </tr>                                  
+              <tr>
+                <td></td><td>20 - 24 years of Age</td>
+                <td><?php echo $reports->count_age_between($data2_by_gender['Female'], 20, 24) ?></td>
+              </tr> 
+              <tr>
+                <td></td><td>25 - 30 years of Age</td>
+                <td><?php echo $reports->count_age_between($data2_by_gender['Female'], 25, 30) ?></td>
+              </tr>   
+              <tr>
+                <td></td><td>31 - 39 years of Age</td>
+                <td><?php echo $reports->count_age_between($data2_by_gender['Female'], 31, 39) ?></td>
+              </tr>   
+              <tr>
+                <td></td><td>Older than 40</td>
+                <td><?php echo $reports->count_age_between($data2_by_gender['Female'], 40, 200) ?></td>
+              </tr>   
+              <tr>
+                <td></td><td>Unkown</td>
+                <td><?php echo $data2_by_gender['female_unknown_counter'] ?></td>
+              </tr>  
+            <!-- / -->
+
             <?php endif; ?>
             <?php if($c_type === "Child" || $c_type === "") : ?>
               <tr>
-                <td>Child</td>
+                <td>Unknown</td>
                 <td></td>
-                <td><?php echo $reports->count_age_between($data2,0,14) ?></td>
+                <td><?php echo count($data2_by_gender['Unknown']) ?></td>
               </tr>
             
-              <tr>
-                <td></td>
-                <td>< 12 months of Age</td>
-                <td><?php echo $reports->count_age_under_1_year_old($data2) ?></td>
+              <!-- AGE GROPUINGS FOR UNKOWWN -->
+              <tr><td></td>
+                <td>< 12 months of Age</td><td><?php echo $reports->count_age_under_1_year_old($data2_by_gender['Unknown']) ?></td>
               </tr>  
               <tr>
-                <td></td>
-                <td>1 - 4 years of Age</td>
-                <td><?php echo $reports->count_age_between($data2, 1, 4) ?></td>
+                <td></td><td>1 - 4 years of Age</td>
+                <td><?php echo $reports->count_age_between($data2_by_gender['Unknown'], 1, 4) ?></td>
               </tr>  
               <tr>
-                <td></td>
-                <td>5 - 14 years of Age</td>
-                <td><?php echo $reports->count_age_between($data2, 5, 14) ?></td>
+                <td></td><td>5 - 14 years of Age</td>
+                <td><?php echo $reports->count_age_between($data2_by_gender['Unknown'], 5, 14) ?></td>
               </tr>
+              <tr>
+                <td></td><td>15 - 19 years of Age</td>
+                <td><?php echo $reports->count_age_between($data2_by_gender['Unknown'], 15, 19) ?></td>
+              </tr>                                  
+              <tr>
+                <td></td><td>20 - 24 years of Age</td>
+                <td><?php echo $reports->count_age_between($data2_by_gender['Unknown'], 20, 24) ?></td>
+              </tr> 
+              <tr>
+                <td></td><td>25 - 30 years of Age</td>
+                <td><?php echo $reports->count_age_between($data2_by_gender['Unknown'], 25, 30) ?></td>
+              </tr>   
+              <tr>
+                <td></td><td>31 - 39 years of Age</td>
+                <td><?php echo $reports->count_age_between($data2_by_gender['Unknown'], 31, 39) ?></td>
+              </tr>   
+              <tr>
+                <td></td><td>Older than 40</td>
+                <td><?php echo $reports->count_age_between($data2_by_gender['Unknown'], 40, 200) ?></td>
+              </tr>   
+              <tr>
+                <td></td><td>Unkown</td>
+                <td><?php echo $data2_by_gender['unknown_unknown_counter'] ?></td>
+              </tr>  
+            <!-- / -->
             <?php endif; ?>
-            <tr>
-              <td></td>
-              <td>15 - 19 years of Age</td>
-              <td><?php echo $reports->count_age_between($data2, 15, 19) ?></td>
-            </tr>                                  
-            <tr>
-              <td></td>
-              <td>20 - 24 years of Age</td>
-              <td><?php echo $reports->count_age_between($data2, 20, 24) ?></td>
-            </tr>                                  
+                                             
           </tbody> 
         </table>           
         <table class="table  table-striped table-hover table-condensed"> 

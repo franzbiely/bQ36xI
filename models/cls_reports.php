@@ -499,16 +499,8 @@ class Reports extends DB{
         $bind_query = array();
 
         if(array_key_exists("client_type", $_data)){
-          
-          if($_data['client_type'] === "Male" || $_data['client_type'] === "Female") {
-            $where .= "b.client_type =  :client_type AND ";
-            $where .= "floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) > 14 AND ";
-            $bind_query['client_type']=$_data['client_type'];
-          }
-          else if($_data['client_type'] === "Child") {
-            $where .= "floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) < 15 AND "; 
-          }
-          
+          $where .= "b.client_type =  :client_type AND ";
+          $bind_query['client_type']=$_data['client_type'];
         }
 
         if(array_key_exists("clinic", $_data)){
@@ -1398,4 +1390,35 @@ class Reports extends DB{
     </script>
     <?php
   }
+
+  // Create array that separates format per gender
+  function separate_by_gender($arr) {
+    $res['Female'] = [];
+    $res['Male'] = [];
+    $res['Unknown'] = [];
+    $res['female_unknown_counter'] = 0;
+    $res['male_unknown_counter'] = 0;
+    $res['unknown_unknown_counter'] = 0;
+
+    foreach($arr as $val) {
+      switch($val['client_type']) {
+        case "Male" : 
+          array_push($res['Male'], $val); 
+          if($val['date_birth'] == '0000-00-00') $res['male_unknown_counter']++;
+          break;
+        case "Female" : 
+          array_push($res['Female'], $val); 
+          if($val['date_birth'] == '0000-00-00') $res['female_unknown_counter']++;
+          break;
+        case "Child" : 
+          array_push($res['Unknown'], $val); 
+          if($val['date_birth'] == '0000-00-00') $res['unknown_unknown_counter']++;
+          break;
+      }
+    }
+
+
+    return $res;
+  }
+
 }

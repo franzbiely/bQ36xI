@@ -98,12 +98,11 @@ function export_client(){
         case "Child" : 
           $visit_type_reports_header =  array("Type", "Overall", " ", "Childs", " "); break;
         default : {
-          $visit_type_reports_header =  array("Type", "Overall", " ", "Male", " ", "Female", " ", "Childs");  
+          $visit_type_reports_header =  array("Type", "Overall", " ", "Male", " ", "Female", " ", "Unknown");  
         }
       }
       
       $client_record_header = array("Record Number", "Client Type", "Full Name", "Province", "District", "Health Facility", "Clinic", "Date","Visit Reasons", "Consultation", "Review Date", "Current Age");
-
       
 
       if ($param1 == "excel") {

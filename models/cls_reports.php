@@ -345,7 +345,9 @@ class Reports extends DB{
 
           if (PHP_SAPI == 'cli')
            die('This example should only be run from a Web Browser');
-        
+          
+          $data2_by_gender = $this->separate_by_gender($data);
+
           /** Create a new PHPExcel object 1.0 */
           $objPHPExcel = new PHPExcel();
           $sheet = $objPHPExcel->getActiveSheet();
@@ -365,42 +367,82 @@ class Reports extends DB{
                               //$sheet->setCellValue('D9', $this->count_report($data,array("record_type"=>"followup")));
                               $sheet->setCellValue('A11', 'Client Reports');
                               $sheet->setCellValue('A12', 'Client Type Totals');
-                            if($_POST['client_type']==="Male" || $_POST['client_type']==="") {
-                              $sheet->setCellValue('C12', 'Male');
-                            }
-                            if($_POST['client_type']==="Female" || $_POST['client_type']==="") {
-                              $sheet->setCellValue('c13', 'Female');
-                            }
-                            if($_POST['client_type']==="Child" || $_POST['client_type']==="") {
-                              $sheet->setCellValue('C14', 'Child');
-                            }
-                              $sheet->setCellValue('C15', 'Under 1 Year Old');
-                              $sheet->setCellValue('C16', 'Between 1 - 4 years old');
-                              $sheet->setCellValue('C17', 'Between 5 - 14 years old');
-                              $sheet->setCellValue('C18', 'Between 15 - 19 years old');
-                              $sheet->setCellValue('C19', 'Between 20 - 24 years old');
 
-                            if($_POST['client_type']==="Male" || $_POST['client_type']==="") {
-                              $sheet->setCellValue('E12', $this->count_report($data,array("client_type"=>"Male")));
+                            $ROW = 12;
+                            if($_POST['client_type']=="Male" || $_POST['client_type']=="") {
+                              $sheet->setCellValue('C'.$ROW, 'Male');
+                              $sheet->setCellValue('E'.$ROW,count($data2_by_gender['Male']));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Under 1 Year Old');
+                              $sheet->setCellValue('E'.$ROW, $this->count_age_under_1_year_old($data2_by_gender['Male']));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Between 1 - 4 years old');
+                              $sheet->setCellValue('E'.$ROW, $this->count_age_between($data2_by_gender['Male'], 1, 4));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Between 5 - 14 years old');
+                              $sheet->setCellValue('E'.$ROW, $this->count_age_between($data2_by_gender['Male'], 5, 14));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Between 15 - 19 years old');
+                              $sheet->setCellValue('E'.$ROW, $this->count_age_between($data2_by_gender['Male'], 15, 19));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Between 20 - 24 years old');
+                              $sheet->setCellValue('E'.$ROW, $this->count_age_between($data2_by_gender['Male'], 20, 24));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Between 25 - 30 years old');
+                              $sheet->setCellValue('E'.$ROW, $this->count_age_between($data2_by_gender['Male'], 25, 30));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Between 31 - 39 years old');
+                              $sheet->setCellValue('E'.$ROW, $this->count_age_between($data2_by_gender['Male'], 31, 39));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Older than 40');
+                              $sheet->setCellValue('E'.$ROW, $this->count_age_between($data2_by_gender['Male'], 40, 200));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Unknown');
+                              $sheet->setCellValue('E'.$ROW, $data2_by_gender['male_unknown_counter']);
                             }
-                            if($_POST['client_type']==="Female" || $_POST['client_type']==="") {
-                              $sheet->setCellValue('E13', $this->count_report($data,array("client_type"=>"Female")));
+                            if($_POST['client_type']=="Female" || $_POST['client_type']=="") {
+                              
+                              $sheet->setCellValue('C'.$ROW+=1,'Female');
+                              $sheet->setCellValue('E'.$ROW,count($data2_by_gender['Female']));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Under 1 Year Old');
+                              $sheet->setCellValue('E'.$ROW, $this->count_age_under_1_year_old($data2_by_gender['Female']));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Between 1 - 4 years old');
+                              $sheet->setCellValue('E'.$ROW, $this->count_age_between($data2_by_gender['Female'], 1, 4));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Between 5 - 14 years old');
+                              $sheet->setCellValue('E'.$ROW, $this->count_age_between($data2_by_gender['Female'], 5, 14));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Between 15 - 19 years old');
+                              $sheet->setCellValue('E'.$ROW, $this->count_age_between($data2_by_gender['Female'], 15, 19));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Between 20 - 24 years old');
+                              $sheet->setCellValue('E'.$ROW, $this->count_age_between($data2_by_gender['Female'], 20, 24));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Between 25 - 30 years old');
+                              $sheet->setCellValue('E'.$ROW, $this->count_age_between($data2_by_gender['Female'], 25, 30));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Between 31 - 39 years old');
+                              $sheet->setCellValue('E'.$ROW, $this->count_age_between($data2_by_gender['Female'], 31, 39));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Older than 40');
+                              $sheet->setCellValue('E'.$ROW, $this->count_age_between($data2_by_gender['Female'], 40, 200));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Unknown');
+                              $sheet->setCellValue('E'.$ROW, $data2_by_gender['female_unknown_counter']);
                             }
-                            if($_POST['client_type']==="Child" || $_POST['client_type']==="") {
-                              $sheet->setCellValue('E14', $this->count_age_between($data,0,14));
+                            if($_POST['client_type']=="Child" || $_POST['client_type']=="") {
+                              $sheet->setCellValue('C'.$ROW+=1, 'Unknown');
+                              $sheet->setCellValue('E'.$ROW, count($data2_by_gender['Unknown']));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Under 1 Year Old');
+                              $sheet->setCellValue('E'.$ROW, $this->count_age_under_1_year_old($data2_by_gender['Unknown']));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Between 1 - 4 years old');
+                              $sheet->setCellValue('E'.$ROW, $this->count_age_between($data2_by_gender['Unknown'], 1, 4));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Between 5 - 14 years old');
+                              $sheet->setCellValue('E'.$ROW, $this->count_age_between($data2_by_gender['Unknown'], 5, 14));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Between 15 - 19 years old');
+                              $sheet->setCellValue('E'.$ROW, $this->count_age_between($data2_by_gender['Unknown'], 15, 19));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Between 20 - 24 years old');
+                              $sheet->setCellValue('E'.$ROW, $this->count_age_between($data2_by_gender['Unknown'], 20, 24));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Between 25 - 30 years old');
+                              $sheet->setCellValue('E'.$ROW, $this->count_age_between($data2_by_gender['Unknown'], 25, 30));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Between 31 - 39 years old');
+                              $sheet->setCellValue('E'.$ROW, $this->count_age_between($data2_by_gender['Unknown'], 31, 39));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Older than 40');
+                              $sheet->setCellValue('E'.$ROW, $this->count_age_between($data2_by_gender['Unknown'], 40, 200));
+                              $sheet->setCellValue('D'.($ROW+=1), 'Unknown');
+                              $sheet->setCellValue('E'.$ROW, $data2_by_gender['unknown_unknown_counter']);
                             }
-                              $sheet->setCellValue('E15', $this->count_age_under_1_year_old($data));
-                              $sheet->setCellValue('E16', $this->count_age_between($data, 1, 4));
-                              $sheet->setCellValue('E17', $this->count_age_between($data, 5, 14));
-                              $sheet->setCellValue('E18', $this->count_age_between($data, 15, 19));
-                              $sheet->setCellValue('E19', $this->count_age_between($data, 20, 24));
 
-                              $sheet->setCellValue('A20', 'Client Reports');
-                              $sheet->setCellValue('A21', 'Visit Type Totals');
-                              $sheet->fromArray($visit_type_reports_header , null, 'E21');
-                              $sheet->fromArray($visit_type_report , null, 'E23');
-                              $sheet->fromArray($client_record_header, null, 'A37');
-                              $sheet->fromArray($client_row, null, 'A38');
+                              $sheet->setCellValue('A'.($ROW+=1), 'Client Reports');
+                              $sheet->setCellValue('A'.($ROW+=1), 'Visit Type Totals');
+                              $sheet->fromArray($visit_type_reports_header , null, 'E'.($ROW));
+                              $sheet->fromArray($visit_type_report , null, 'E'.($ROW+=2));
+                              $sheet->fromArray($client_record_header, null, 'A'.($ROW+=14));
+                              $sheet->fromArray($client_row, null, 'A'.($ROW+=1));
                              // $sheet->fromArray($client_row, null, 'A33');
                           
 

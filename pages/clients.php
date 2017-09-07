@@ -28,7 +28,7 @@
               <th>First Name</th>
               <th>Last Name</th>
               <th>Birth Date</th>
-              <th>Client Type</th>
+              <th>Gender</th>
               <th <?php if (enablea_and_disable_ele($_SESSION['type'], "view_con_records", $_SESSION['records']) == false) { echo 'class="hide"'; }?>>Records</th>
               <th>Action</th>
             </tr>
@@ -43,7 +43,7 @@
                   <td class="fname"><?php echo $data['fname']; ?></td>
                   <td class="lname"><?php echo $data['lname']; ?></td>
                   <td class="date_birth" data-date-death="<?php echo $data['date_death']; ?>"><?php echo $data['date_birth']; ?></td>   
-                  <td class="type"><?php echo $data['client_type']; ?></td>
+                  <td class="type"><?php echo ($data['client_type'] != 'Child') ? $data['client_type'] : "Unknown"; ?></td>
                   <td class="phone hide"><?php echo $data['phone']; ?></td>
                   <td class="place_of_birth hide"><?php echo $data['place_of_birth']; ?></td>
                   <td class="province hide"><?php echo $data['province']; ?></td>

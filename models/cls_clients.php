@@ -564,13 +564,13 @@ class Client extends DB{
           	<!-- End added code here -->
           </div> 
           <div class="form-group">
-            <label for="clinictype">Type</label><span class="required_field">*</span>
+            <label for="clinictype">Gender</label><span class="required_field">*</span>
             <select class="form-control" name="client_type" id="client_type" required>
-              <option value="">Select Client Type</option>
+              <option value="">Select Client Gender</option>
               	<?php 
               	$_data = $type->get_all('client');
           		if($_data!=false): foreach($_data['value'] as $data ): ?>
-          			<option value="<?php echo $data ?>"><?php echo $data ?></option>	
+          			<option value="<?php echo $data ?>"><?php echo ($data != 'Child') ? $data : 'Unknown' ?></option>	
           		<?php endforeach; endif; ?>
             </select>
             <span style="font-size:11px"></span>

@@ -106,8 +106,8 @@ function autologout($) {
     });
     function timerIncrement() {
 	    idleTime = idleTime + 1;
-	    if (idleTime > 4) { // 5 minutes
-	        alert('You have been idle for longer than 5 minutes on the client database. \nPlease login again.');
+	    if (idleTime > 10) { // 11 minutes
+	        alert('You have been idle for longer than 10 minutes on the client database. \nPlease login again.');
 	        window.location.href = '/?c=user&f=logout';
 	    }
 	}

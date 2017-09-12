@@ -686,53 +686,18 @@ class Client extends DB{
 		          }
 		      });
 		      //End added code here
-
-			$("#client_type").on( 'change', function(){
-
-				if($("#date_birth").val()==""){
-					$(this).val('');
-					alert("Please set a birthdate first");
-					return false;
-				}
-
+		    $('#date_birth').on('change', function() {
 		    	var dob = new Date($("#date_birth").val());
 				var ageDifMs = Date.now() - dob.getTime();
 				var ageDate = new Date(ageDifMs); // miliseconds from epoch
 				var age = Math.abs(ageDate.getUTCFullYear() - 1970);
-
-		    	if($(this).val() == 'Child'){
-					//show_loader($,"#newClientModal");
-					//_data = "class=client&func=get_mother";
-					//console.log()
-					//$.post(window.location.href,_data, function(data){
-							
-					//	var _district = $.parseJSON(data);
-					//	var element = '';
-					//		if ( _district.length > 0) {
-					//			element += '<option value="">Select Mother Relationship</option>';
-					//			for (var i = _district.length - 1; i >= 0; i--) {
-					//				element += '<option value='+_district[i]['record_number']+'>'+_district[i]['fname']+' ' +_district[i]['lname']+ '('+_district[i]['record_number']+ ')</option>';
-					//			}; 								
-					//			$('#relationship').html(element);
-					//		}else{								
-					//			$(".showonchildtype").fadeIn().html('No Mother on record.');
-								
-					//		}
-					//		close_loader($,"#newClientModal");
-							
-					//});
-		    		$(".showonchildtype").css("display", "block");
-
-		    		//if(age <= 2){
-					//	$("#relationship").attr("required");
-					//}else{
-					//	$("#relationship").removeAttr("required");
-					//}
-
-		      	}else{
-		      		$(".showonchildtype").css("display", "none");
+				if(age <= 15) { // for child only
+					$(".showonchildtype").css("display", "block");
+				}
+				else {
+					$(".showonchildtype").css("display", "none");
 					$("#relationship").removeAttr("required");
-		      	}
+				}
 		    });
 
 			$(document).on('submit',".col-md-9 form",function(){

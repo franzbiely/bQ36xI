@@ -302,7 +302,7 @@
                 <th colspan="2"><b>Female</b></th>
               <?php endif; ?>
               <?php if($c_type === "Child" || $c_type === "") : ?>
-                <th colspan="2"><b>Child</b></th>              
+                <th colspan="2"><b>Unknown</b></th>              
               <?php endif; ?>      
             </tr> 
             <?php 
@@ -348,7 +348,7 @@
               <th><b>Date</b></th>
               <th><b>Consultation</b></th>
               <th><b>Age</b></th>
-              <th><b>Type</b></th>
+              <th><b>Gender</b></th>
             </tr>
           </thead>
           <tbody>
@@ -375,7 +375,7 @@
               <td class="clinic"><?php echo $data['date']; ?></td>
               <td class="consultation"><?php echo $data['ctr_consultation']; ?></td>
               <td class="current_age"><?php echo $data['current_age']; ?></td>
-              <td class="gender"><?php echo $data['client_type']; ?></td>
+              <td class="gender"><?php echo ($data['client_type']=="Child") ? "Unknown" : $data['client_type']; ?></td>
             </tr>                             
           <?php endforeach; endif; ?>
           </tbody>

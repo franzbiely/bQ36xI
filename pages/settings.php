@@ -33,7 +33,7 @@
               <div class="col-md-6">
                 <div class="list-group">
                   <a class="list-group-item" href="?page=client_type">
-                    <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-user" style="margin-right: 10px;"></span>Client Type</h4>
+                    <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-user" style="margin-right: 10px;"></span>Client Gender</h4>
                     <!-- <p class="list-group-item-text">Sed et a quis turpis nisi auctor non tempor aenean nec in tristique urna, augue velit, in, nunc!</p> -->
                   </a>
                   <a class="list-group-item" href="?page=clinic_type">

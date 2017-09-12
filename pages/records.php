@@ -104,22 +104,22 @@
                 $addClass=""; 
                 $note = "";
                 if($date_birth!="0000-00-00" && $date_birth!=null) {
-                  if($record->get_age($date_birth) < 15 && $client_info['client_type']!="Child"){
+                  // if($record->get_age($date_birth) < 15 && $client_info['client_type']!="Child"){
+                  //   $addClass=" redme";
+                  //   $note = "Are you sure this is not a \"Child\" client type?";
+                  // }
+                  if($record->get_age($date_birth) >= 15 && $client_info['client_type']=="Child"){
                     $addClass=" redme";
-                    $note = "Are you sure this is not a \"Child\" client type?";
-                  }
-                  elseif($record->get_age($date_birth) >= 15 && $client_info['client_type']=="Child"){
-                    $addClass=" redme";
-                    $note = "Please adjust the client type.";
+                    $note = "Please adjust the client gender.";
                   }  
                 }
                              
                 ?>
 
                <div class="form-group<?php echo $addClass ?>" style="position: relative;">
-               <label for="clinictype">Client Type</label><span class="required_field <?php if($_GET['p']!="update") echo "hide"; ?>">*</span>
+               <label for="clinictype">Client Gender</label><span class="required_field <?php if($_GET['p']!="update") echo "hide"; ?>">*</span>
                 <select class="form-control" name="client_type" id="client_type" required>
-                  <option value="">Select Client Type</option>
+                  <option value="">Select Client Gender</option>
                     <?php 
                     $_data = $type->get_all('client');
                   if($_data!=false): foreach($_data['value'] as $data ): ?>
@@ -186,11 +186,10 @@
                     <div class="relationship-container">
                       <p>This client doesn't have any related clients within this system.</p>
                       <?php
-                        if($client_info['client_type']=='Child'){                          
-                            echo "<p style='color:red; font-weight:bold;'>Record is a child. Please set a mother relationship.</p>";
-                          
-                        }
+                        // if($client_info['client_type']=='Child'){                          
+                        //     echo "
                       ?>
+                      <p style='color:red; font-weight:bold;'>Record is a child. Please set a mother relationship.</p>
                     </div>
                   <?php endif; ?>
                 <?php else: ?>                  

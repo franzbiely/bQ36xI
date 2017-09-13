@@ -1,4 +1,4 @@
-<?php header_nav_bar("user", "Client Types", "settings") ?>
+<?php header_nav_bar("user", "Client Gender", "settings") ?>
 
   <div class="container">    
     <div class="row">
@@ -8,8 +8,8 @@
       <div class="col-md-9" role="main">
         <?php are_you_sure_delete(); ?>
         <div class="page-header">
-          <h1 id="overview" style="width: 100%; padding-top: 10px; margin-top: 20px;">Client Types
-            <a id="addClient" type="button" class="btn btn-default btn_client_type" style="float: right;"data-toggle="modal" href="#newClientModal">Add New Client Type</a> 
+          <h1 id="overview" style="width: 100%; padding-top: 10px; margin-top: 20px;">Client Gender
+            <a id="addClient" type="button" class="btn btn-default btn_client_type" style="float: right;"data-toggle="modal" href="#newClientModal">Add New Client Gender</a> 
             <!-- Modal -->
             <?php $type->modal("client"); ?>              
           </h1> 
@@ -39,7 +39,7 @@
 					  </td>  
 				  </tr>
 				  <?php endforeach; else: ?>
-          <tr><td colspan="7">No Client Type record found.</td></tr>
+          <tr><td colspan="7">No Client Gender record found.</td></tr>
           <?php endif; ?>                                         
 			  </tbody>
 			</table>

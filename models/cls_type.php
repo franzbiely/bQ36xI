@@ -170,7 +170,7 @@ class Type extends DB{
 		}
 		function add_field_placeholder(){
 			$('.btn_client_type').click(function(){
-				$('.type_description').attr('placeholder','Enter Client Type Description');
+				$('.type_description').attr('placeholder','Enter Client Gender Description');
 			});
 			$('.btn_clinic_type').click(function(){
 				$('.type_description').attr('placeholder','Enter Clinic Type Description');

@@ -54,7 +54,7 @@
                     </a>
                       <a class="list-group-item" href="?page=settings">
                         <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-cog" style="margin-right: 10px;"></span>Settings</h4>
-                        <p class="list-group-item-text">This section allows you to add a new client type, feeding type, visiting type, and clinic type.</p>
+                        <p class="list-group-item-text">This section allows you to add a new client gender, feeding type, visiting type, and clinic type.</p>
                       </a>
                     <?php else: ?>
                        <a class="list-group-item <?php if (enablea_and_disable_ele($_SESSION['type'], "view", $_SESSION['clinic']) == false) { echo "hide"; }?>" href="?page=clinics">
@@ -67,7 +67,7 @@
                       </a>
                      <!--  <a class="list-group-item" href="?page=settings">
                         <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-cog" style="margin-right: 10px;"></span>Settings</h4>
-                        <p class="list-group-item-text">This section allows you to add a new client type, feeding type, visiting type, and clinic type.</p>
+                        <p class="list-group-item-text">This section allows you to add a new client gender, feeding type, visiting type, and clinic type.</p>
                       </a> -->
                     <?php endif ?>
                   </div>

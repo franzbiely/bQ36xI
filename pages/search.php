@@ -41,7 +41,7 @@
             <th>Last Name</th>
             <th>Last Consulted Clinic</th>
             <th>Last Consulted Date</th>
-            <th>Client Type</th>
+            <th>Gender</th>
             <th>Records</th>
            <?php if ($_SESSION['type'] != 'superadmin'): ?>
              <th>Remarks</th>

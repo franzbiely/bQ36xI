@@ -47,7 +47,7 @@
                 <h4>Filter by:</h4>
                 <div class="form-group ">
                   <select class="form-control" name="client_type">
-                    <option value="">[Client Type]</option>
+                    <option value="">[Client Gender]</option>
                         <?php $_data = $type->get_all('client');
                         if($_data!=false): foreach($_data['value'] as $data ): ?>
                           <option value="<?php echo $data ?>" 
@@ -143,7 +143,7 @@
           <tbody>
             <tr>
               <label><h4>Client Reports</h4></label> 
-              <td rowspan="40"><b>Client Type Totals</b></td>  
+              <td rowspan="40"><b>Client Gender Totals</b></td>  
               <?php if($c_type === "Male" || $c_type === "") : ?>
 
                 <td>Male</td>

@@ -102,7 +102,7 @@ function export_client(){
         }
       }
       
-      $client_record_header = array("Record Number", "Client Type", "Full Name", "Province", "District", "Health Facility", "Clinic", "Date","Visit Reasons", "Consultation", "Review Date", "Current Age");
+      $client_record_header = array("Record Number", "Gender", "Full Name", "Province", "District", "Health Facility", "Clinic", "Date","Visit Reasons", "Consultation", "Review Date", "Current Age");
       
 
       if ($param1 == "excel") {
@@ -239,7 +239,7 @@ function export_search(){
 	global $reports;
 	extract($_POST);
      $client_record_header = array("Record Number", "First Name", "Last Name","Last Consulted Clinic",
-                                   "Last Consulted Date", "Client Type");    
+                                   "Last Consulted Date", "Gender");    
      $client_details = json_decode($result);                     
        if ($param1 == "excel") {
            $reports-> generate_report_search($client_record_header, $client_details, 'Excel2007','Search Report.xlsx');

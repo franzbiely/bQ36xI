@@ -167,7 +167,7 @@
                         <?php echo 'disabled'; ?>
                      <?php endif ?>
                         >
-                        <option value="">Choose Client Type</option>
+                        <option value="">Choose Client Gender</option>
                         <?php $_data = $type->get_all('client');
                         if($_data!=false): foreach($_data['value'] as $data ): ?>
                           <option value="<?php echo $data ?>"><?php echo $data ?></option>  

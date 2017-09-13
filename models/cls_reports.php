@@ -303,7 +303,8 @@ class Reports extends DB{
 
           if (PHP_SAPI == 'cli')
            die('This example should only be run from a Web Browser');
-        
+          
+          $type = ($type == 'Child') ? 'Unknown' : $type;
           /** Create a new PHPExcel object 1.0 */
           $objPHPExcel = new PHPExcel();
           $sheet = $objPHPExcel->getActiveSheet();
@@ -318,7 +319,7 @@ class Reports extends DB{
                               $sheet->setCellValue('A4', 'Name:');
                               $sheet->setCellValue('A5', 'Birth Date: ');
                               $sheet->setCellValue('A6', 'Date Death: ');
-                              $sheet->setCellValue('A7', 'Client Type: ');
+                              $sheet->setCellValue('A7', 'Client Gender: ');
                               $sheet->setCellValue('A8', 'Phone Number: ');
                               //$sheet->setCellValue('A9', 'Total No. of Followups'); // hide for now will be use in the future development
                               $sheet->setCellValue('B4', $name);
@@ -366,7 +367,7 @@ class Reports extends DB{
                               $sheet->setCellValue('D8', $this->count_no_consultation($data));
                               //$sheet->setCellValue('D9', $this->count_report($data,array("record_type"=>"followup")));
                               $sheet->setCellValue('A11', 'Client Reports');
-                              $sheet->setCellValue('A12', 'Client Type Totals');
+                              $sheet->setCellValue('A12', 'Client Gender Totals');
 
                             $ROW = 12;
                             if($_POST['client_type']=="Male" || $_POST['client_type']=="") {
@@ -693,7 +694,7 @@ class Reports extends DB{
             $bind_query['end_date']= $_data['end_date'];
 
               if($_SESSION['type'] == 'superreporting'){
-                 $query = "SELECT DISTINCT b.record_number, b.client_type,
+                 $query = "SELECT DISTINCT b.record_number, IF(b.client_type <> 'Child', b.client_type, 'Unknown') as client_type,
                   CONCAT(b.fname,' ',b.lname) AS fullname,
                   province.area_name AS province,
                   district.area_name AS district,
@@ -715,7 +716,7 @@ class Reports extends DB{
                   AND a.record_type='consultation'
                   GROUP BY a.client_id";
               }else{
-                   $query = "SELECT  DISTINCT b.record_number, b.client_type,
+                   $query = "SELECT  DISTINCT b.record_number, IF(b.client_type <> 'Child', b.client_type, 'Unknown') as client_type,
                       CONCAT(b.fname,' ',b.lname) AS fullname,
                       province.area_name AS province,
                       district.area_name AS district,

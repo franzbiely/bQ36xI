@@ -569,9 +569,10 @@ class Client extends DB{
               <option value="">Select Client Gender</option>
               	<?php 
               	$_data = $type->get_all('client');
-          		if($_data!=false): foreach($_data['value'] as $data ): ?>
-          			<option value="<?php echo $data ?>"><?php echo ($data != 'Child') ? $data : 'Unknown' ?></option>	
-          		<?php endforeach; endif; ?>
+          		if($_data!=false): foreach($_data['value'] as $data ): 
+          			if($data != 'Child') : ?>
+          			<option value="<?php echo $data ?>"><?php echo $data ?></option>	
+          		<?php endif; endforeach; endif; ?>
             </select>
             <span style="font-size:11px"></span>
           </div>

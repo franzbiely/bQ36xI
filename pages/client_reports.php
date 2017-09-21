@@ -12,6 +12,7 @@
      }
      //End added code here
    }
+
   
    ?>
    <?php header_nav_bar("user", "Client Reports","reports") ?>
@@ -49,6 +50,7 @@
                   <select class="form-control" name="client_type">
                     <option value="">[Client Gender]</option>
                         <?php $_data = $type->get_all('client');
+                        unset($_data['value'][2]);
                         if($_data!=false): foreach($_data['value'] as $data ): ?>
                           <option value="<?php echo $data ?>" 
                           <?php if(isset($_POST["client_type"]))

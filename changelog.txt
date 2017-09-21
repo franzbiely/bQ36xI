@@ -17,6 +17,7 @@ v3.11 | 21st of Sept 2017
  - Renamed Client Type to Gender across the entire site
  - Hiding the Unknown option in Modal > Gender
  - Updated changelog.txt and footer version
+ - Unset client option in client report advance search
 
 v3.10 | 2nd of Sept 2017
  - When Male record is generated, will check the current age of the Male person, and only show Male that has greater or equal 15 years old, same goes with Female.

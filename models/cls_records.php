@@ -375,7 +375,7 @@ class Records extends DB{
 
             <div class="row">
               
-                <?php if($client_info['client_type']=="Child") : ?>
+                <?php if($client->get_age($client_info['date_birth']) <= 14) : ?>
                   <?php if($client_info['date_birth']=="0000-00-00" ||
                            $client->get_age($client_info['date_birth']) <= 2) : ?>
                     <div class="col-xs-12 col-sm-6">

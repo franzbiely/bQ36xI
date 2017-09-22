@@ -9,9 +9,9 @@ class Client extends DB{
 	function get_age($date_birth){
 		// GETTING THE AGE from birth date
         if($date_birth!=null || $date_birth!=""){
-        $tmp = explode('-',$date_birth);
-        $age = date("Y")-$tmp[0];
-        return $age; 
+	        $tmp = explode('-',$date_birth);
+	        $age = date("Y")-$tmp[0];
+	        return $age; 
         }
         else
         return "undefined";

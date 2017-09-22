@@ -5,6 +5,9 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.12 | 22nd of Sept 2017
+ - Fixed consultation client feeding.
+
 v3.11 | 21st of Sept 2017
  - Updated client reports for changes in v3.10
  - Updated Export functionality for changes in v3.10

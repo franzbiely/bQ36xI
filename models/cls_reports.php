@@ -225,9 +225,9 @@ class Reports extends DB{
                 if($temp!=","){
                    $visit_reason = explode(",", $temp);
                    for ($i=0; $i < count($visit_reason) ; $i++) { 
-                        $total_consultation++;
+                      $total_consultation++;
 
-                       foreach($_data['value'] as $key => $value ){
+                      foreach($_data['value'] as $key => $value ){
                           if($visit_reason[$i] == $value) {
                             ${"visit_{$key}"}++;
                           }
@@ -240,6 +240,7 @@ class Reports extends DB{
                 } //if($temp!=",")
              }else{
                 $visit_reason = explode(",", $data['visit_reasons']);
+
                 for ($i=0; $i < count($visit_reason) ; $i++) { 
                    $total_consultation++;
                    foreach($_data['value'] as $key => $value ){
@@ -255,6 +256,7 @@ class Reports extends DB{
 
         }
        if($_data!=false): foreach($_data['value'] as $key => $data ): 
+        if($data === 'Sick') $data = 'Sick (block)';
         if(!isset(${"visit_{$key}"})) ${"visit_{$key}"}=0;
         if(!isset(${"visit_male_{$key}"})) ${"visit_male_{$key}"}=0;
         if(!isset(${"visit_female_{$key}"})) ${"visit_female_{$key}"}=0;

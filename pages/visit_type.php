@@ -26,6 +26,7 @@
               <?php 
               $_data = $type->get_all('visit');
               if($_data!=false): foreach($_data['value'] as $data ):
+                if($data === "Sick") continue;
                   ?>
                 <tr>
                   <td class="id description" data-id="<?php echo $_data['ID']; ?>" 

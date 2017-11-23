@@ -1156,6 +1156,7 @@ class Reports extends DB{
         if(!isset(${"visit_male_{$key}"})) ${"visit_male_{$key}"}=0;
         if(!isset(${"visit_female_{$key}"})) ${"visit_female_{$key}"}=0;
         if(!isset(${"visit_Child_{$key}"})) ${"visit_Child_{$key}"}=0;
+        if($data === 'Sick') $data = 'Sick (block)';
         ?>
          <tr>
             <td><?php echo $data ?></td>

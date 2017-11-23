@@ -360,6 +360,7 @@ class Records extends DB{
                   <?php  
                   $_data = $type->get_all('visit');
                   if($_data!=false): foreach($_data['value'] as $data ):
+                    if($data === 'Sick') continue;
                     ?>
                     <label class="checkbox-inline">
                         <input type="checkbox" name="visit_reasons[]"id="visit_id" value="<?php echo $data; ?>" multiple>  <?php echo $data ?>

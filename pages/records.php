@@ -77,7 +77,16 @@
                   <label for="lastname">Last Name</label><span class="required_field <?php if($_GET['p']!="update") echo "hide"; ?>">*</span>
                   <input type="text" id="disabledTextInput" class="form-control" autocapitalize="off" autocorrect="off" class="form-control" name="lname" id="lname" placeholder="Disabled input" value="<?php echo $client_info['lname'] ?>" required>
                 </div>  
-                <div class="form-group ">
+
+                <?php 
+                $addClass=""; 
+                $note = "";
+                if($client_info['date_birth']=="0000-00-00" || $client_info['date_birth']==null) {
+                  $addClass=" redme";
+                  $note = "Please adjust the birth date.";
+                }         
+                ?>
+                <div class="form-group<?php echo $addClass ?>">
                   <label for="birthdate">Birth Date</label><span class="required_field <?php if($_GET['p']!="update") echo "hide"; ?> " >*</span>
 
                   <?php
@@ -90,6 +99,7 @@
                   }
                   ?>
                   <div class="alert alert-warning birthdate-warning"><strong></strong></div>
+                  <?php echo $note ?>
                 </div>  
                     
               </div>
@@ -103,15 +113,15 @@
                 <?php 
                 $addClass=""; 
                 $note = "";
-                if($date_birth!="0000-00-00" && $date_birth!=null) {
-                  // if($record->get_age($date_birth) < 15 && $client_info['client_type']!="Child"){
-                  //   $addClass=" redme";
-                  //   $note = "Are you sure this is not a \"Child\" client type?";
-                  // }
-                  if($record->get_age($date_birth) >= 15 && $client_info['client_type']=="Child"){
-                    $addClass=" redme";
-                    $note = "Please adjust the client gender.";
-                  }  
+                // if($date_birth!="0000-00-00" && $date_birth!=null) {
+                //   if($record->get_age($date_birth) >= 15 && $client_info['client_type']=="Child"){
+                //     $addClass=" redme";
+                //     $note = "Please adjust the client gender.";
+                //   }
+                // }
+                if($client_info['client_type'] != 'Male' && $client_info['client_type'] != 'Female' ) {
+                  $addClass = " redme";
+                  $note = "Please adjust the client gender.";
                 }
                              
                 ?>

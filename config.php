@@ -43,6 +43,6 @@ switch (ENV) {
 		define("DBUSER","root");
 		define("DBPASS","");
 		define("DBNAME","susumama");
-		define("SITE_URL","http://susumama.dev");
+		define("SITE_URL","http://susumama.local");
         break;
 }

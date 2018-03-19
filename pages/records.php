@@ -23,9 +23,10 @@
       <div class="col-md-9" role="main" style="margin-bottom:30px;">
         <div class="row">
           <?php  success_message($_GET['page'], $_GET['p']); ?>
-          
+           
           <div class="page-header" style="margin-top: 45px;margin-bottom: 50px;">
             <h1 id="overview" style="width: 100%; padding-top: 10px;">Personal Info<?php if($client_info['is_archived']=="1") echo " <span>- (Archived - <span style='font-size: 18px;'>".$client_info['date_archived']."</span>)</span>"; ?></h1> 
+
               <?php if($_GET['p']=="delete") : ?>
                   <div class="delete-options-entry" style="margin: 0 125px 45px 0;">
                     <form id="frm_client_personal_info_update" role="form" action="" method="post">
@@ -40,7 +41,7 @@
                   </div>
                    <?php $record->transfer_record_modal($_GET['cid']); ?>
               <?php endif; ?>  
-              
+              <p class="yellowme"><strong>Notice : </strong><br />Visit Reasons for Consultations prior to the <strong>1st of April, 2018</strong> have been deprecated and cannot be displayed. <br />Please refer to Client paper Record.</p>
               <form id="frm_client_personal_info_update" role="form" action="" method="post">
                 <input type="hidden" name="class" value="client" />
                 <input type="hidden" name="func" value="edit" />
@@ -63,7 +64,7 @@
                     <?php } ?>  
            
               <span class="required_field <?php if($_GET['p']!="update") echo "hide"; ?>" style="position: absolute; top: 70px;">* <span class="required_label">required fields.</span></span>
- 
+
               <div class="col-xs-4">
                 <div class="form-group">
                   <label for="recordnumber">Record Number</label><span class="required_field <?php if($_GET['p']!="update") echo "hide"; ?>">*</span>
@@ -274,7 +275,14 @@
                 <td class="id record hide" data-id="<?php echo $data['ID']; ?>"><?php echo $data['ID'] ?></td>
                 <td><?php echo $data['date'] ?></td>
                 <td><?php echo $data['clinic_name'] ?></td>
-                <td><?php echo $record->display_visit_reasons($data['visit_reasons']) ?></td>
+                <td><?php 
+                  if( strtotime($data['date']) < strtotime('2018-04-01') ) {
+                    echo "<em class='yellowme'>Deprecated</em>";
+                  }
+                  else {
+                    echo $record->display_visit_reasons($data['visit_reasons']);
+                  }
+                ?></td>
                 <?php if($client_info['client_type']=="Child" && 
                         ($client_info['date_birth']=="0000-00-00" || 
                          $client->get_age($client_info['date_birth']) <= 2) ) {

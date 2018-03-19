@@ -5,6 +5,9 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.14 | 4th of March 2018
+ - New Visit Reasons Prior to April 1, 2018
+
 v3.13 | 4th of March 2018
  - Fixed consultation client feeding.
 

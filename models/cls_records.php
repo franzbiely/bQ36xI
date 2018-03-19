@@ -247,6 +247,7 @@ class Records extends DB{
       
     </div>
 		<div class='consultation_modal_box'>
+      <p class="yellowme"><strong>Notice : </strong><br />Visit Reasons for Consultations prior to the <strong>1st of April, 2018</strong> have been deprecated and cannot be displayed. Please refer to Client paper Record.</p>
       <form id="frmconsultation" role="form" action="" method="post">
           <input type="hidden" name="class" value="records" />
           <input type="hidden" name="func" value="add" />
@@ -352,8 +353,9 @@ class Records extends DB{
            </div>
 
 
-          <div class="form-group">
-              <label for="visittype">Visit Reason(s)</label><span class="required_field">*</span>
+          <div class="form-group visitreasonsdiv" style="color:lightgrey;">
+              <p class="yellowme">Visit Reasons will be enabled starting on the 1st of April, 2018</p>
+              <label for="visittype">Visit Reason(s)</label><span class="required_field" style="color:lightgrey;">*</span>
               <br>
                <!--  <select name="visit_reasons[]" class="form-control" id="visit_id" multiple required> -->
              <!--   <option value="<?php //echo $data ?>"><?php //echo $data ?></option> -->
@@ -363,7 +365,7 @@ class Records extends DB{
                     if($data === 'Sick') continue;
                     ?>
                     <label class="checkbox-inline">
-                        <input type="checkbox" name="visit_reasons[]"id="visit_id" value="<?php echo $data; ?>" multiple>  <?php echo $data ?>
+                        <input disabled="true" title="Notice : Visit Reasons for Consultations prior to the 1st of April, 2018</strong> have been deprecated and cannot be displayed. Please refer to Client paper Record." type="checkbox" name="visit_reasons[]"id="visit_id" value="<?php echo $data; ?>" multiple>  <?php echo $data ?>
                     </label>
                   
                   <?php endforeach; endif;

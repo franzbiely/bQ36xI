@@ -71,7 +71,7 @@ else{
 
 <?php endif; ?>
 
-	<link rel="stylesheet" type="text/css" href="<?php echo SITE_URL ?>/style.css" />
+	<link rel="stylesheet" type="text/css" href="<?php echo SITE_URL ?>/style.css?v=1" />
 
 	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!--[if lt IE 9]>

@@ -14,7 +14,10 @@ class Records extends DB{
         if($temp==",") return "";
          else return $temp;
      }else{
-      return $reasons;
+      if($reasons != 'null')
+        return $reasons;
+      else
+        return '';
      }
    
   }

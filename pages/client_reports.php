@@ -292,7 +292,7 @@
           <tbody>
             <tr>
               <label><h4>Visit Type Reports</h4></label>
-              <td rowspan="20"><b>Visit Type Totals</b></td>      
+              <td rowspan="31"><b>Visit Type Totals</b></td>      
             </tr>      
             <tr>
               <th><b>Type</b></th>
@@ -308,8 +308,17 @@
               <?php endif; ?>      
             </tr> 
             <?php 
-
-            $reports->visit_type_reports($data2, $c_type) ?>
+            $showDeprecatedMessage = false;
+            foreach($data2 as $data) {
+              if( strtotime($data['date']) < strtotime('2018-04-01') ) {
+                $showDeprecatedMessage = true;
+              }
+            }
+            ?>
+            <?php if($showDeprecatedMessage) : ?>
+              <p class="yellowme"><strong>Notice : </strong><br />Visit Reasons for Consultations prior to the <strong>1st of April, 2018</strong> have been deprecated and cannot be displayed. <br />Please refer to Client paper Record.</p>
+            <?php endif; ?>
+            <?php $reports->visit_type_reports($data2, $c_type) ?>
           </tbody> 
         </table>  
         <div class="btn-group">

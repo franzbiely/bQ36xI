@@ -446,7 +446,7 @@ class Reports extends DB{
                               $sheet->setCellValue('A'.($ROW+=1), 'Visit Type Totals');
                               $sheet->fromArray($visit_type_reports_header , null, 'E'.($ROW));
                               $sheet->fromArray($visit_type_report , null, 'E'.($ROW+=2));
-                              $sheet->fromArray($client_record_header, null, 'A'.($ROW+=14));
+                              $sheet->fromArray($client_record_header, null, 'A'.($ROW+=31));
                               $sheet->fromArray($client_row, null, 'A'.($ROW+=1));
                              // $sheet->fromArray($client_row, null, 'A33');
                           
@@ -1119,8 +1119,8 @@ class Reports extends DB{
            ${"visit_Child_{$key}"} = 0;
          }  
         foreach($rep_data as $k => $data ){
+            $temp = json_decode($data['visit_reasons'], true);
 
-           $temp = json_decode($data['visit_reasons'], true);
            if ($temp != false) {
                 $temp = implode(",",  $temp); 
                 if($temp!=","){

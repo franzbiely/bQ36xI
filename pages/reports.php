@@ -11,11 +11,6 @@
             <div class="page-header">
               <h1>Reports Management</h1>
             </div>
-              <?php
-              if( strtotime('now') < strtotime('2018-04-01') ) :
-                echo "<h1 style='line-height:1.5; color: grey;'><center>Sorry, reporting will be re-enabled <br />on the 1st of April, 2018.</center></h1>";
-              else :
-              ?>
               <div class="col-md-6">
 
                 <div class="list-group">
@@ -60,9 +55,6 @@
                   </a>
                 </div>
               </div>
-              <?php
-              endif; 
-              ?>
             </div>       
           </div>
       </div><!--/span-->           

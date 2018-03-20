@@ -11,9 +11,17 @@
     if (isset($client_info['date_birth'])){ $date_birth = $client_info['date_birth']; }else{ $date_birth = "Unset"; }
     if (isset($client_info['date_death'])){ $date_death = $client_info['date_death']; }else{ $date_death = "Unset"; }
     if (isset($client_info['phone'])){ $phone = $client_info['phone']; }else{ $phone = "Unset"; }
-   ?>
                
-
+if($_GET['p'] != "update") { 
+ $datas = $record->get_consultation_records(); 
+} 
+$showDeprecatedMessage = false;
+foreach($datas as $data) {
+  if( strtotime($data['date']) < strtotime('2018-04-01') ) {
+    $showDeprecatedMessage = true;
+  }
+}
+?>  
 
   <div class="container">
     <div class="row">
@@ -41,7 +49,9 @@
                   </div>
                    <?php $record->transfer_record_modal($_GET['cid']); ?>
               <?php endif; ?>  
-              <p class="yellowme"><strong>Notice : </strong><br />Visit Reasons for Consultations prior to the <strong>1st of April, 2018</strong> have been deprecated and cannot be displayed. <br />Please refer to Client paper Record.</p>
+              <?php if($showDeprecatedMessage) : ?>
+                <p class="yellowme"><strong>Notice : </strong><br />Visit Reasons for Consultations prior to the <strong>1st of April, 2018</strong> have been deprecated and cannot be displayed. <br />Please refer to Client paper Record.</p>
+              <?php endif; ?>
               <form id="frm_client_personal_info_update" role="form" action="" method="post">
                 <input type="hidden" name="class" value="client" />
                 <input type="hidden" name="func" value="edit" />
@@ -222,7 +232,6 @@
           </form>  
           <?php if($_GET['p'] != "update"){ ?>  
            <!-- this should only appear when purpose is viewing record--> 
-           <?php  $datas = $record->get_consultation_records(); ?>  
              <?php are_you_sure_delete(); ?>
         <div class="page-header" style="margin-top: 75px; ">
           <h1 id="overview" style="width: 100%; padding-top: 10px;">Consultation Records

@@ -5,6 +5,14 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.15 | 21st of March 2018
+ - Fix issue on consultation reports ( missing column header )
+ - Updated Reports for new Visit Reason adjustments
+ - Show up "Deprated Texts" on records with consultation dates before april 1, 2018
+ - Allow to pick New Visit Reasons in Form
+ - Tested more than one visit reasons output when all is selected
+ - Re-enabled the Reports but added Note in visit Reasons regarding deprecated when there is consultation dates before April 1, 2018
+
 v3.14 | 4th of March 2018
  - New Visit Reasons Prior to April 1, 2018
 

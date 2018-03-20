@@ -129,15 +129,17 @@ class Reports extends DB{
                               $sheet->setCellValue('E9', $overview_row["total_no_referrals"]);
                               $sheet->setCellValue('E10', $overview_row["ave_no_consul"]);
                               $sheet->setCellValue('A15', 'Record Number');
-                              $sheet->setCellValue('B15', 'Full Name');
-                              $sheet->setCellValue('C15', 'Province');  
-                              $sheet->setCellValue('D15', 'District');  
-                              $sheet->setCellValue('E15', 'Health Facility');  
-                              $sheet->setCellValue('F15', 'Clinic');  
-                              $sheet->setCellValue('G15', 'Date'); 
-                              $sheet->setCellValue('H15', 'Visit Reasons '); 
-                              $sheet->setCellValue('I15', 'Consultation');  
-                              $sheet->setCellValue('J15', 'Review Date');  
+                              $sheet->setCellValue('B15', 'Gender');
+                              $sheet->setCellValue('C15', 'Full Name');
+                              $sheet->setCellValue('D15', 'Province');  
+                              $sheet->setCellValue('E15', 'District');  
+                              $sheet->setCellValue('F15', 'Health Facility');  
+                              $sheet->setCellValue('G15', 'Clinic');  
+                              $sheet->setCellValue('H15', 'Date'); 
+                              $sheet->setCellValue('I15', 'Visit Reasons '); 
+                              $sheet->setCellValue('J15', 'Consultation');  
+                              $sheet->setCellValue('K15', 'Review Date');  
+                              $sheet->setCellValue('L15', 'Current Age');  
 
                               //$sheet->fromArray($client_record_header, null, 'A15'); 
                               $sheet->fromArray($client_details, null, 'A16');  

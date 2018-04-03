@@ -5,6 +5,9 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.16 | 3rd of April 2018
+ - Fix HB level dialogue box in Reports page for ANC types
+
 v3.15 | 21st of March 2018
  - Fix issue on consultation reports ( missing column header )
  - Updated Reports for new Visit Reason adjustments

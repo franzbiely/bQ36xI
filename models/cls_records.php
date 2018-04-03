@@ -25,7 +25,7 @@ class Records extends DB{
     $has_ANC = false;
     foreach($datas as $data) {
       $temp = json_decode( $data['visit_reasons'], true );
-      if(in_array('ANC',$temp)) {
+      if(in_array(array('ANC 1stvisit', 'ANC 4th visit', 'ANC Other visit'),$temp)) {
         $has_ANC = true;
       }
     }

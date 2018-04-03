@@ -300,7 +300,7 @@ foreach($datas as $data) {
                 <?php 
                 if($client_info['client_type']=="Female" && $record->has_ANC_visits($datas)) {
                   $temp = json_decode($data['visit_reasons'], true);
-                  if(in_array('ANC', $temp)) {
+                  if(in_array(array('ANC 1stvisit', 'ANC 4th visit', 'ANC Other visit'), $temp)) {
                     echo '<td>'.$data['hb_level'].'</td>';
                   }
                   else {
@@ -336,8 +336,12 @@ foreach($datas as $data) {
 <script type="text/javascript" src="/js/moment.js"></script>
 <script type="text/javascript">
   $(document).ready(function() {
-    $('input[value="ANC"]').on('change', function() {
-      if($('input[value="ANC"]').prop('checked')) {
+
+    $(document).on('change','input[value="ANC 1stvisit"], input[value="ANC 4th visit"], input[value="ANC Other visit"]', function() {
+      if($('input[value="ANC 1stvisit"]').prop('checked') || 
+         $('input[value="ANC 4th visit"]').prop('checked') || 
+         $('input[value="ANC Other visit"]').prop('checked')
+         ) {
         $('#hb-form').show();
       } else {
         $('#hb-form').hide();
@@ -347,17 +351,19 @@ foreach($datas as $data) {
         }
       }
     })
+
     $('#add-consultation-btn').on('click', function() {
 	  
       console.log($('#client_type').val());
       if($('#client_type').val() == "Female") {
-        $('#newClientModal').find('input[value="ANC"]').parent().show()
+        $('#newClientModal').find('input[value="ANC 1stvisit"], input[value="ANC 4th visit"], input[value="ANC Other visit"]').parent().show()
       } else {
-        $('#newClientModal').find('input[value="ANC"]').parent().hide()
+        $('#newClientModal').find('input[value="ANC 1stvisit"], input[value="ANC 4th visit"], input[value="ANC Other visit"]').parent().hide()
       }
       $('#newClientModal').modal('show');
 	  $('#hb-warning').hide();
     })
+
     $('#hb_level').on('change', function() {
       if($(this).val() == '8-') {
         $('#referral_id').val(1);

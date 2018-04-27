@@ -41,7 +41,7 @@ switch (ENV) {
         // Database
 		define("DBHOST","localhost");
 		define("DBUSER","root");
-		define("DBPASS","");
+		define("DBPASS","root");
 		define("DBNAME","susumama");
 		define("SITE_URL","http://susumama.local");
         break;

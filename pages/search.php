@@ -55,7 +55,7 @@
               <?php $client_details[] = array($data['record_number'], $data['fname'], $data['lname'],
                                      $data['last_clinic'], $data['last_date'], $data['client_type']);  
               ?>
-                <tr>
+                <tr <?php if($data['is_archived']==1) echo 'class="is_archived" data-archived-date="'.$data['date_archived'].'"'; ?>>
                 <td class="id record" data-id="<?php echo $data['ID']; ?>"><?php echo $data['record_number']; ?></td>
                 <td class="fname"><?php echo $data['fname']; ?></td>
                 <td class="lname"><?php echo $data['lname']; ?></td>

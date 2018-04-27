@@ -11,16 +11,18 @@
     if (isset($client_info['date_birth'])){ $date_birth = $client_info['date_birth']; }else{ $date_birth = "Unset"; }
     if (isset($client_info['date_death'])){ $date_death = $client_info['date_death']; }else{ $date_death = "Unset"; }
     if (isset($client_info['phone'])){ $phone = $client_info['phone']; }else{ $phone = "Unset"; }
-               
+
+$showDeprecatedMessage = false;               
 if($_GET['p'] != "update") { 
  $datas = $record->get_consultation_records(); 
-} 
-$showDeprecatedMessage = false;
-foreach($datas as $data) {
+ foreach($datas as $data) {
   if( strtotime($data['date']) < strtotime('2018-04-01') ) {
     $showDeprecatedMessage = true;
   }
-}
+ }
+} 
+
+
 ?>  
 
   <div class="container">

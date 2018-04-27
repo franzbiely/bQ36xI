@@ -5,6 +5,18 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.18 | 27th of April 2018
+ - Add Client functionality storing but not returning correct value.
+ - Archive notification not showing on Search results
+ - Fix invalid datetime format
+ - Fix feeding type, district, office_id, current_address issue, accept null from db
+ - set db variable sql_mode to NO_ENGINE_SUBSTITUTION
+ 
+v3.17 | 26th of April 2018
+ - Fix issues on PDO db transaction
+ - Fix issue on PHP string to function bug
+ - Fix issue on mysql Variable by sql_mode = ONLY_FULL_GROUP_BY disabled
+
 v3.16 | 3rd of April 2018
  - Fix HB level dialogue box in Reports page for ANC types
 

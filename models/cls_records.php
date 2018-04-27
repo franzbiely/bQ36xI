@@ -787,7 +787,6 @@ class Records extends DB{
             $("#errormessage").fadeIn().html("Oops! Record # Already Used!");
           }
           else{
-           console.log(data);
            $("#errormessage").fadeIn().html("Oops! Record number not found!");
           }
           close_loader($,"#relationshipModal");                    
@@ -802,11 +801,9 @@ class Records extends DB{
 
         //console.log($(this).attr('data-rid'));
         _data = "class=Relationship&func=unlink&id="+$(this).attr('data-rid')+"&cid="+$("#r_id").val()+"&rid="+$("#r_recno").val();
-        console.log(_data);
 
         $.post(window.location.href,_data, function(data){
           if($.trim(data)=="error"){
-            console.log(data);
             alert('An error occured.');
           }
           else{
@@ -844,7 +841,6 @@ class Records extends DB{
             $("#r_age").val( _relation['age'] );
             $(".record_link").attr('href','?page=records&cid='+_relation['ID']+'&p=view');
             $(".remove_link").attr( 'data-rid', $(that).data('relationship-id') );
-            console.log(_relation);
           }
           close_loader($,"#relationshipDetailModal");  
           $("#newClientModal").modal('hide');                  
@@ -867,7 +863,6 @@ class Records extends DB{
             
             $('#hb-form').hide()
             $('.btn-success').prop('disabled', false);
-            console.log(data);
             $('.btn-success').prop('disabled', false);
             if($(_this).find("input[name='func']").val()=="add")
               show_alert_info("New Record Successfully Added!",$);
@@ -907,7 +902,6 @@ class Records extends DB{
             $(".btn_submit_modal").val('Submit');
             $("#btn_submit_modal").removeClass("disabled");
           }else{
-           console.log(data);
            $("#errormessage").fadeIn().html("Oops! Record number not found!");
             $(".btn_submit_modal").val('Submit');
             $("#btn_submit_modal").removeClass("disabled");

@@ -3,14 +3,16 @@
 
 if(isset($_POST['func']) && isset($_POST['class'])){
     $class = new $_POST['class']();
-    $class->$_POST['func']();    
+    $func = $_POST['func'];
+    $class->$func();    
 }
 else if(isset($_POST['func']) && function_exists($_POST['func'])) {
 	$_POST['func']();
 }
 if(isset($_GET['f']) && isset($_GET['c'])){
     $class = new $_GET['c']();
-    $class->$_GET['f']();    
+    $f = $_GET['f'];
+    $class->$f();    
 }
 
 // GENERAL FUNCTIONS

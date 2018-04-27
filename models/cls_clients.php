@@ -150,7 +150,10 @@ class Client extends DB{
 			if($_data['client_type']=='Child'){
 				$mother = $_data['relation_to'];								
 			}
-			unset($_data['relation_to']);			
+			unset($_data['relation_to']);	
+			if($_data['date_death']=='') {
+				unset($_data['date_death']);
+			}		
 
 			$data = $this->save($_data, array(), "tbl_client", "lastInsertId");
 			
@@ -168,10 +171,9 @@ class Client extends DB{
 											'type' => 1
 										);
 						$data = $this->save($_mother_data);
-						
 					}
-					echo "success";
 				}
+				echo "success";
 			}
 			exit();
 		}		
@@ -359,7 +361,7 @@ class Client extends DB{
 
 
 			if($_SESSION['type'] == 'superadmin' || check_permission("search_other_hc", $_SESSION['search_client'])){
-				$query = "SELECT DISTINCT b.ID, b.record_number, b.fname, b.lname, b.client_type, a.date AS last_date, c.clinic_name AS last_clinic
+				$query = "SELECT DISTINCT b.ID, b.record_number, b.fname, b.lname, b.client_type, a.date AS last_date, c.clinic_name AS last_clinic, is_archived, date_archived
 					FROM tbl_records AS a
 					JOIN tbl_client AS b ON a.client_id = b.ID
 					JOIN tbl_clinic AS c ON a.clinic_id = c.ID
@@ -372,7 +374,7 @@ class Client extends DB{
 			}
 			else{
 				if (check_permission("advanced_search", $_SESSION['search_client'])) {
-					$query = "SELECT DISTINCT b.ID, b.record_number, b.fname, b.lname, b.client_type, a.date AS last_date, c.clinic_name AS last_clinic
+					$query = "SELECT DISTINCT b.ID, b.record_number, b.fname, b.lname, b.client_type, a.date AS last_date, c.clinic_name AS last_clinic, is_archived, date_archived
 						FROM tbl_records AS a
 						JOIN tbl_client AS b ON a.client_id = b.ID
 						JOIN tbl_clinic AS c ON a.clinic_id = c.ID

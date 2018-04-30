@@ -154,7 +154,7 @@ class Clinic extends DB{
            <span class="required_field">* <span class="required_label">required fields.</span></span>
           <div class="form-group">
             <label for="clinicname">Name</label><span class="required_field">*</span>
-            <input type="text" autocapitalize="off" autocorrect="off" class="form-control" id="clinic_name" name="clinic_name" placeholder="Enter Clinic Name" required>
+            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="clinic_name" name="clinic_name" placeholder="Enter Clinic Name" required>
           </div>                      
           <div class="form-group">
             <label for="clinic_type">Type</label><span class="required_field">*</span>
@@ -183,11 +183,11 @@ class Clinic extends DB{
           </div> 
           <div class="form-group">
             <label for="officer_in_charge">Person In Charge</label><span class="required_field">*</span>
-            <input type="text" autocapitalize="off" autocorrect="off" class="form-control" id="officer_in_charge" name="officer_in_charge" placeholder="Enter Clinic Person In Charge" required>
+            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="officer_in_charge" name="officer_in_charge" placeholder="Enter Clinic Person In Charge" required>
           </div> 
           <div class="form-group">
             <label for="clinictype">Contact Number</label>
-            <input type="text" autocapitalize="off" autocorrect="off" class="form-control" id="contact" name="contact" placeholder="Enter Clinic Contact Number">
+            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="contact" name="contact" placeholder="Enter Clinic Contact Number">
           </div>                                                              
           <input style="margin-top: 20px;" type="submit" name="btn-add-clinic" id="btn-add-clinic" class="btn btn-success btn-default">
         </form>

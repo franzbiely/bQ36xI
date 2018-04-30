@@ -197,16 +197,16 @@ class User extends DB{
 	          <span class="required_field">* <span class="required_label">required fields.</span></span>
 	          <div class="form-group">
 	            <label for="full_name">Fullname</label>
-	            <input type="text" autocapitalize="off" autocorrect="off" class="form-control" id="fullname" name="fullname" placeholder="Enter User Full Name">
+	            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="fullname" name="fullname" placeholder="Enter User Full Name">
 	          </div>                      
 	          <div class="form-group">
 	            <label for="uname">Username</label> <span class="required_field">*</span>
-	            <input type="text" autocapitalize="off" autocorrect="off" class="form-control" id="username" placeholder="Enter User Userame" name="username" required>
+	            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="username" placeholder="Enter User Userame" name="username" required>
 	            <div class="error_message_username alert alert-warning">Username not available!</div>
 	          </div>
 	          <div class="form-group">
 	            <label for="password">Password</label> <span class="required_field">*</span>
-	            <input type="password" autocapitalize="off" autocorrect="off" class="form-control" id="password" placeholder="Enter User Password" name="password"required>
+	            <input type="password" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="password" placeholder="Enter User Password" name="password"required>
 	          </div>
 	          <div class="form-group">
 	          	 <div id="div_edit_pass" class="div_edit_pass hide">
@@ -214,21 +214,21 @@ class User extends DB{
 	            	<button type="button" id="password_edit_cancel" class="btn btn-default btn-xs pull-right password_edit_cancel hide">cancel</button>
 	            </div>
 	            <label for="password_repeat">Repeat Password </label> <span class="required_field">*</span>
-	            <input type="password" autocapitalize="off" autocorrect="off" class="form-control" id="password_repeat" name="password_repeat" placeholder="Repeat User Password" required>
+	            <input type="password" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="password_repeat" name="password_repeat" placeholder="Repeat User Password" required>
 	            <div class="error_message_pass alert alert-warning">Password don't match!</div>
 	          </div>  
 	           <div class="form-group">
 	            <label for="email">Email Address</label>
-	            <input type="email" autocapitalize="off" autocorrect="off" class="form-control" id="email" name="email" placeholder="Enter User Email Address">
+	            <input type="email" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="email" name="email" placeholder="Enter User Email Address">
 	              <div class="error_message_email alert alert-warning">Email not available!</div>
 	          </div>  
 	         <div class="form-group">
 	            <label for="clinictype">Phone Number</label>
-	            <input type="text" autocapitalize="off" autocorrect="off" class="form-control" id="phone" name="phone" placeholder="Enter User Phone Number">
+	            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="phone" name="phone" placeholder="Enter User Phone Number">
 	          </div>
 	          <div class="form-group">
 	            <label for="current_address">Current Address</label>
-	            <input type="text" autocapitalize="off" autocorrect="off" class="form-control" id="address" placeholder="Enter User current address" name="address">
+	            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="address" placeholder="Enter User current address" name="address">
 	          </div>
 	           <div class="form-group">
 	            <label for="office">Health Facility</label> <span class="required_field hc_required">*</span>

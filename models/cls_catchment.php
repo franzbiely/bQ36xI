@@ -146,15 +146,15 @@ class Catchment extends DB{
            <span class="required_field">* <span class="required_label">required fields.</span></span>
           <div class="form-group">
             <label for="catchment_area">Catchment Area</label><span class="required_field">*</span>
-            <input type="text" autocapitalize="off" autocorrect="off" class="form-control catchment_area" id="catchment_area" name="catchment_area" placeholder="Enter Catchment Area" required>
+            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control catchment_area" id="catchment_area" name="catchment_area" placeholder="Enter Catchment Area" required>
           </div>  
 		<!-- <div class="form-group">
             <label for="internal_record_no">Internal Record No</label><span class="required_field">*</span>
-            <input type="text" autocapitalize="off" autocorrect="off" class="form-control" id="internal_record_no" name="internal_record_no" placeholder="Enter Internal Record No">
+            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="internal_record_no" name="internal_record_no" placeholder="Enter Internal Record No">
           </div> -->
           <div class="form-group">
             <label for="national_health_facility_code">National Health Facility Code</label><span class="required_field">*</span>
-            <input type="text" autocapitalize="off" autocorrect="off" class="form-control" id="national_health_facility_code" name="national_health_facility_code" placeholder="Enter National Health Facility Code" required>
+            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="national_health_facility_code" name="national_health_facility_code" placeholder="Enter National Health Facility Code" required>
           </div>  
 		  
           <div class="form-group">

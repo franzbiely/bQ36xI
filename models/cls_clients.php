@@ -541,26 +541,26 @@ class Client extends DB{
           <span class="required_field">* <span class="required_label">required fields.</span></span>
           <div class="form-group">
             <label for="recordnumber">Record Number</label><span class="required_field">*</span>
-            <input type="text" autocapitalize="off" autocorrect="off" class="form-control" id="record_number" name="record_number" placeholder="Enter Client Record Number" required>
+            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="record_number" name="record_number" placeholder="Enter Client Record Number" required>
           </div>                      
           <div class="form-group">
             <label for="firstname">First Name</label><span class="required_field">*</span>
-            <input type="text" autocapitalize="off" autocorrect="off" class="form-control" id="fname" placeholder="Enter Client First Name" name="fname" required>
+            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="fname" placeholder="Enter Client First Name" name="fname" required>
           </div>
           <div class="form-group">
             <label for="lastname">Last Name</label><span class="required_field">*</span>
-            <input type="text" autocapitalize="off" autocorrect="off" class="form-control" id="lname" placeholder="Enter Client Last Name" name="lname" required>
+            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="lname" placeholder="Enter Client Last Name" name="lname" required>
           </div>
           <div class="form-group">
             <label for="birthdate">Birth Date</label><span class="required_field">*</span>
-            <input type="text" autocapitalize="off" autocorrect="off" class="form-control" id="date_birth" name="date_birth" placeholder="Enter Client Birth Date" required>
+            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="date_birth" name="date_birth" placeholder="Enter Client Birth Date" required>
           	<!-- Code added by Eric -->
           	<div class="alert alert-warning birthdate-warning"><strong></strong></div> 
           	<!-- End added code here -->
           </div>  
           <div class="form-group">
             <label for="deathdate">Date of Death</label>
-            <input type="text" autocapitalize="off" autocorrect="off" class="form-control datepicker bdeath" id="date_death" name="date_death" placeholder="Enter Client Date of Death">
+            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control datepicker bdeath" id="date_death" name="date_death" placeholder="Enter Client Date of Death">
           	<!-- Code added by Eric -->
           	<div class="alert alert-warning deathdate-warning"><strong></strong></div> 
           	<!-- End added code here -->
@@ -584,11 +584,11 @@ class Client extends DB{
           </div>  
          <div class="form-group">
             <label for="clinictype">Phone Number</label>
-            <input type="text" autocapitalize="off" autocorrect="off" class="form-control" id="phone" name="phone" placeholder="Enter Client Phone Number">
+            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="phone" name="phone" placeholder="Enter Client Phone Number">
           </div>
           <div class="form-group">
             <label for="place_of_birth">Place of birth</label>
-            <input type="text" autocapitalize="off" autocorrect="off" class="form-control" id="place_of_birth" placeholder="Enter Client Place of birth" name="place_of_birth">
+            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="place_of_birth" placeholder="Enter Client Place of birth" name="place_of_birth">
           </div>
            <div class="form-group">
             <label for="area_name">Client Province (where client currently resides)</label> <span class="required_field">*</span>
@@ -607,7 +607,7 @@ class Client extends DB{
           </div> 
            <div class="form-group">
             <label for="current_address">Client Address (where client currently resides)</label>
-            <input type="text" autocapitalize="off" autocorrect="off" class="form-control" id="current_address" placeholder="Enter Client current address" name="current_address">
+            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="current_address" placeholder="Enter Client current address" name="current_address">
           </div>
 
           <div class="form-group" style="border-top: 1px solid #eee;margin-top: 20px;">            

@@ -100,21 +100,21 @@ class Office extends DB{
           <span class="required_field">* <span class="required_label">required fields.</span></span>
           <div class="form-group">
             <label for="area_name">Name</label><span class="required_field">*</span>
-            <input type="text" autocapitalize="off" autocorrect="off" class="form-control" id="area_name" name="area_name" placeholder="Enter Health Faciltiiy Name" required>
+            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="area_name" name="area_name" placeholder="Enter Health Faciltiiy Name" required>
           </div>               
           <div class="form-group">
             <label for="province_name">Address</label>
-            <input type="text" autocapitalize="off" autocorrect="off" class="form-control" id="address1" name="office_address" placeholder="Enter Health Faciltiiy Address">
+            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="address1" name="office_address" placeholder="Enter Health Faciltiiy Address">
           </div>       
           <?php /*                       
           <div class="form-group">
             <label for="office_description">Office Secondary Address</label>
-            <input type="text" autocapitalize="off" autocorrect="off" class="form-control" id="address2" placeholder="Enter Office Secondary Address" name="address2">
+            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="address2" placeholder="Enter Office Secondary Address" name="address2">
           </div> 
           */ ?>
           <div class="form-group">
             <label for="office">Phone Number</label>
-            <input type="text" autocapitalize="off" autocorrect="off" class="form-control" id="phone1" name="contact" placeholder="Enter Health Faciltiiy Phone Number">
+            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="phone1" name="contact" placeholder="Enter Health Faciltiiy Phone Number">
           </div>
           <div class="form-group">
             <label for="area_name">Province</label><span class="required_field">*</span>
@@ -147,7 +147,7 @@ class Office extends DB{
           <?php /*  
           <div class="form-group">
             <label for="office">Office Secondary Phone Number</label>
-            <input type="text" autocapitalize="off" autocorrect="off" class="form-control" id="phone1" name="phone2" placeholder="Enter Office Secondary Phone Number">
+            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="phone1" name="phone2" placeholder="Enter Office Secondary Phone Number">
           </div>  
           */ ?>                                                                                  
           <input style="margin-top: 20px;" type="submit" class="btn btn-success btn-default">

@@ -102,7 +102,7 @@ class Type extends DB{
 				            <input type="hidden" name="type" value="<?php echo $type ?>" />   
 	              <div class="form-group">
 	                <label for="firstname" class="type_label">Description</label><span class="required_field">*</span>
-	                <input type="text" autocapitalize="off" autocorrect="off" class="form-control type_description" id="value" name="value" required>
+	                <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control type_description" id="value" name="value" required>
 	              </div>                    
 	              <input style="margin-top: 20px;" type="submit" class="btn btn-success btn-default">
 	            </form>

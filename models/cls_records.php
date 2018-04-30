@@ -170,7 +170,7 @@ class Records extends DB{
         </div>
         <div class="form-group">
           <label for="related_rec_num">Record Number</label><span class="required_field">*</span>
-          <input type="text" autocapitalize="off" autocorrect="off" class="form-control" id="related_rec_num" name="related_rec_num" placeholder="Enter Related Record Number" required>
+          <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="related_rec_num" name="related_rec_num" placeholder="Enter Related Record Number" required>
         </div>
        <input style="margin-top: 20px;" type="submit" class="btn btn-success btn-default"> 
       </form>
@@ -190,29 +190,29 @@ class Records extends DB{
         <input id="r_id" type="hidden" value="-">
         <div class="form-group">
           <label for="related_rec_num">Record Number</label>
-          <input id="r_recno" type="text" autocapitalize="off" autocorrect="off" class="form-control" value="-" disabled>
+          <input id="r_recno" type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" value="-" disabled>
         </div>
         <div class="form-group">
           <label for="related_rec_num">First Name</label>
-          <input id="r_fname" type="text" autocapitalize="off" autocorrect="off" class="form-control" value="-" disabled>
+          <input id="r_fname" type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" value="-" disabled>
         </div>
         <div class="form-group">
           <label for="related_rec_num">Last Name</label>
-          <input id="r_lname" type="text" autocapitalize="off" autocorrect="off" class="form-control" value="-" disabled>
+          <input id="r_lname" type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" value="-" disabled>
         </div>
       </div>
       <div class="pull-right">
         <div class="form-group">
           <label for="related_rec_num">Relationship</label>
-          <input id="r_type" type="text" autocapitalize="off" autocorrect="off" class="form-control" value="Mother" disabled>
+          <input id="r_type" type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" value="Mother" disabled>
         </div>
         <div class="form-group">
           <label for="related_rec_num">Birthdate</label>
-          <input id="r_bdate" type="text" autocapitalize="off" autocorrect="off" class="form-control" value="-" disabled>
+          <input id="r_bdate" type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" value="-" disabled>
         </div>
         <div class="form-group">
           <label for="related_rec_num">Age</label>
-          <input id="r_age" type="text" autocapitalize="off" autocorrect="off" class="form-control" value="-" disabled>
+          <input id="r_age" type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" value="-" disabled>
         </div>        
       </div>
       <br style="clear:both;"/>
@@ -292,7 +292,7 @@ class Records extends DB{
             <div class="col-xs-12 col-sm-6">
               <div class="form-group">
                 <label for="consultationdate">Consultation Date</label><span class="required_field">*</span>
-                <input type="text" autocapitalize="off" autocorrect="off" class="form-control" id="datepicker3" name="date" placeholder="Enter Consultation Date" required>
+                <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="datepicker3" name="date" placeholder="Enter Consultation Date" required>
               </div>
             </div>
             <div class="col-xs-12 col-sm-6">
@@ -315,7 +315,7 @@ class Records extends DB{
             <div class="col-xs-12 col-sm-6">
               <div class="form-group">
                 <label for="review_date">Review Date</label>
-                <input  type="text" autocapitalize="off" autocorrect="off" class="form-control" id="datepicker-review_date" name="review_date" placeholder="Enter Review Date" >
+                <input  type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="datepicker-review_date" name="review_date" placeholder="Enter Review Date" >
               </div>  
             </div>
             <div class="col-xs-12 col-sm-6">
@@ -480,7 +480,7 @@ class Records extends DB{
           </div>       
           <div class="form-group">
             <label for="deathdate">Recommended Date</label><span class="required_field">*</span>
-            <input type="text" autocapitalize="off" autocorrect="off" class="form-control" id="followup_date" name="date" placeholder="Enter Date of Death">
+            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="followup_date" name="date" placeholder="Enter Date of Death">
           </div>   
           <div class="form-group">
             <label for="clienttype">Clinic</label><span class="required_field">*</span>
@@ -566,7 +566,7 @@ class Records extends DB{
         <br>
         <div class="form-group">
           <label for="recordnumber">Record Number</label><span class="required_field">*</span>
-          <input type="text" autocapitalize="off" autocorrect="off" class="form-control" id="record_number" name="record_number" placeholder="Enter Record Number" required>
+          <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="record_number" name="record_number" placeholder="Enter Record Number" required>
         </div>                      
         <input style="margin-top: 20px;" type="submit" id="btn_submit_modal" class="btn btn-success btn-default btn_submit_modal" value="Submit">
       </form>

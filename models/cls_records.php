@@ -603,21 +603,22 @@ class Records extends DB{
           exit();
       }
       else{
-        if($_data2['type'] == 'Mother'){
-          $mother =  $this->select("*", array("base_client"=>$_data2['base_client'], "type"=>"Mother"),false, "tbl_relationship" );
-          if ($mother) {
-            echo "mother_doubled";
-            exit();
-          }
-        }
-        if($_data2['type'] == 'Father'){
+        if($_data2['type'] == 0){ // father
           $father =  $this->select("*", array("base_client"=>$_data2['base_client'], "type"=>"Father"),false, "tbl_relationship" );
           if ($father) {
             echo "father_doubled";
             exit();
           }
         }
-        if($_data2['type'] == 'Husband'){
+        if($_data2['type'] == 1){ // mother
+          $mother =  $this->select("*", array("base_client"=>$_data2['base_client'], "type"=>"Mother"),false, "tbl_relationship" );
+          if ($mother) {
+            echo "mother_doubled";
+            exit();
+          }
+        }
+        // no need to check for child and sibling. 
+        if($_data2['type'] == 4){ // husband
           $husband =  $this->select("*", array("base_client"=>$_data2['base_client'], "type"=>"Husband"),false, "tbl_relationship" );
           if ($husband) {
             echo "husband_doubled";
@@ -944,11 +945,13 @@ class Records extends DB{
         })
         return false;
       });
-      $("#frm_client_personal_info_update").on('submit',function(){
+      $("#frm_client_personal_info_update").on('submit',function(e){
+        e.preventDefault();
         show_loader($);
         $('.required_field').hide();  
         _data = $(this).serialize();  
         _this = $(this);
+        console.log(_data);
         $.post(window.location.href,_data, function(data){
          if($.trim(data)!="success"){
            console.log(data);

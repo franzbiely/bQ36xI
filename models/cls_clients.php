@@ -40,45 +40,14 @@ class Client extends DB{
 		if ($_SESSION['type'] == 'superadmin' || $_SESSION['type'] == 'superreporting') {
 			$data = $this->select("*"); 
 		}else{
-			if ($_SESSION['office_id'] == 9 || $_SESSION['office_id'] == 65) {
-				$end = ITEM_DISPLAY_COUNT;
-				//Code Modified by Joe [to fixed existing bug that is not getting the value relation_to from the databse using LEFT JOIN sql statement will retrieve the value field of relation_to]
-				// $query = "SELECT c.* , r.relation_to
-				//	FROM tbl_client c LEFT JOIN tbl_relationship r ON c.ID = r.base_client
-				//	WHERE c.office_id = :office_id
-				//	ORDER BY c.ID DESC
-				//	LIMIT $start, $end;";
-				$query = "SELECT c.* , r.relation_to
-					FROM tbl_client c INNER JOIN tbl_relationship r ON c.ID = r.base_client
-					WHERE c.office_id = :office_id
-					ORDER BY c.ID DESC
-					LIMIT $start, $end;";	
-					
-					
-					$bind_array= array("office_id"=>$_SESSION['office_id']);
-					$stmt = $this->query($query,$bind_array);
-					$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			}else{
-				$end = ITEM_DISPLAY_COUNT;
-			//	$query = "SELECT c.* , r.relation_to
-			//		FROM tbl_client c LEFT JOIN tbl_relationship r ON c.ID = r.base_client
-			//		WHERE c.office_id = :office_id
-			//		ORDER BY c.ID DESC
-			//		LIMIT $start, $end;";
-					//End added code here
-					
-				$query = "SELECT c.* , r.relation_to
-					FROM tbl_client c INNER JOIN tbl_relationship r ON c.ID = r.base_client
-					WHERE c.office_id = :office_id
-					ORDER BY c.ID DESC
-					LIMIT $start, $end;";	
-
-					//$bind_array= array("office_id"=>$_SESSION['office_id'], 'district'=>$_SESSION['district_id']);
-					// OR district = :district
-					$bind_array= array("office_id"=>$_SESSION['office_id']);
-					$stmt = $this->query($query,$bind_array);
-					$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			}
+			$end = ITEM_DISPLAY_COUNT;
+				
+			$query = "SELECT c.* FROM tbl_client c WHERE c.office_id = :office_id
+				ORDER BY c.ID DESC
+				LIMIT $start, $end;";	
+				$bind_array= array("office_id"=>$_SESSION['office_id']);
+				$stmt = $this->query($query,$bind_array);
+				$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 			/*$d1 = $this->select("*",array("office_id"=>$_SESSION['office_id']), 
 					false,"",false,"ID","DESC",$start,ITEM_DISPLAY_COUNT);
@@ -199,7 +168,7 @@ class Client extends DB{
 			$review_date=new DateTime($d[0] . ' ' . $d[1]);
 			$_data['review_date'] = $review_date->getTimestamp();
 		}*/
-
+		
 		$relation_to = $_data['relation_to'];
 
 		$query = "DELETE FROM tbl_relationship WHERE base_client = '$id'";
@@ -219,8 +188,9 @@ class Client extends DB{
 		if($data==false){
 			echo "error";
 		}
-		else
+		else{
 			echo "success";
+		}
 
 		if($_data['client_type']=='Child') {
 			$_mother_data = array(

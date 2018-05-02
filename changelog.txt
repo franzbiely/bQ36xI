@@ -5,6 +5,12 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.20 | 2nd of May 2018
+ - Fix issues in client record results
+
+v3.19 | 30th of April 2018
+ - Added autocorrect="off" on all input fields with autocapitalize and autocorrect
+
 v3.18 | 27th of April 2018
  - Add Client functionality storing but not returning correct value.
  - Archive notification not showing on Search results

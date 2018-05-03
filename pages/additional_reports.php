@@ -26,11 +26,11 @@
             <form method="POST" action="?page=additional_reports" id="frmFeedingReport" class="form-inline" role="form" style="float: right; margin-top: -5px;">
               <div class="form-group">
                 <label class="sr-only" for="startdate"></label>
-                <input type="text" class="form-control" name="start_date" id="start_date" placeholder="Enter Start Date" value="<?php echo isset($_POST["start_date"])?$_POST["start_date"]:""; ?>" required>
+                <input type="text" autocorrect="off" autocomplete="off" class="form-control" name="start_date" id="start_date" placeholder="Enter Start Date" value="<?php echo isset($_POST["start_date"])?$_POST["start_date"]:""; ?>" required>
               </div>
               <div class="form-group">
                 <label class="sr-only" for="exampleInputPassword2"></label>
-                <input type="text" class="form-control" name="end_date" id="end_date" placeholder="Enter End Date" value="<?php echo isset($_POST["end_date"])?$_POST["end_date"]:""; ?>" required>
+                <input type="text" autocorrect="off" autocomplete="off" class="form-control" name="end_date" id="end_date" placeholder="Enter End Date" value="<?php echo isset($_POST["end_date"])?$_POST["end_date"]:""; ?>" required>
               </div>
               <div class="form-group">
                 <select class="form-control" name="by" id="by" required>

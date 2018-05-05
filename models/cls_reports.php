@@ -822,7 +822,8 @@ class Reports extends DB{
                   JOIN tbl_catchment AS d ON d.ID = a.catchment
                   WHERE a.date >= :start_date AND a.date <= :end_date 
                   AND d.clinic_id = :clinic_id 
-                  GROUP BY a.client_id";      
+                  GROUP BY a.ID 
+                ORDER BY a.client_id";      
         $bind_array = array("start_date"=>$start_date, "end_date"=>$end_date, "clinic_id"=>$id);
         break;
       case "clinic":
@@ -832,7 +833,8 @@ class Reports extends DB{
                   JOIN tbl_clinic AS c ON c.ID = a.clinic_id
                   WHERE a.date >= :start_date AND a.date <= :end_date 
                   AND a.clinic_id = :clinic_id 
-                  GROUP BY a.client_id";      
+                  GROUP BY a.ID 
+                ORDER BY a.client_id";      
         $bind_array = array("start_date"=>$start_date, "end_date"=>$end_date, "clinic_id"=>$id);
         
         break;
@@ -879,7 +881,8 @@ class Reports extends DB{
               JOIN tbl_area AS office ON office.ID = a.office_id
               WHERE a.date >= :start_date AND a.date <= :end_date
               AND llg.ID = :llg_id
-              GROUP BY a.client_id";        
+              GROUP BY a.ID 
+                ORDER BY a.client_id";        
         $bind_array = array("start_date"=>$start_date, "end_date"=>$end_date, "llg_id"=>$id);
         break;
       case "district":
@@ -892,7 +895,8 @@ class Reports extends DB{
               JOIN tbl_area AS office ON office.ID = a.office_id
               WHERE a.date >= :start_date AND a.date <= :end_date
               AND district.ID = :district_id
-              GROUP BY a.client_id";      
+              GROUP BY a.ID 
+                ORDER BY a.client_id";      
         $bind_array = array("start_date"=>$start_date, "end_date"=>$end_date, "district_id"=>$id);
         break;
       case "province":
@@ -905,7 +909,8 @@ class Reports extends DB{
               JOIN tbl_area AS office ON office.ID = a.office_id
               WHERE a.date >= :start_date AND a.date <= :end_date
               AND province.ID = :province_id
-              GROUP BY a.client_id";     
+              GROUP BY a.ID 
+                ORDER BY a.client_id";     
         $bind_array = array("start_date"=>$start_date, "end_date"=>$end_date, "province_id"=>$id);
         break;
       default:

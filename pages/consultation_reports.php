@@ -107,6 +107,7 @@
         <table class="table  table-striped table-hover table-condensed" style="margin-top: 20px; margin-bottom: 70px;">
           <thead>
             <tr>
+              <th><b>&nbsp;</b></th>
               <th><b>Record Number</b></th>
               <th><b>Full Name</b></th>
               <?php if(isset($_POST['by'])) { ?>
@@ -130,7 +131,8 @@
             // print_r($data);
            if($data!=false): 
             foreach($data as $_data ): ?>
-            <tr>              
+            <tr>             
+              <td class="counter"><?php echo $x; ?></td>      
               <td class="id record_number"><?php echo $_data['record_number']; ?></td>
               <td class="fullname"><?php echo $_data['fullname']; ?></td>
               <td class="clinic"><?php echo $_data['name']; ?></td>

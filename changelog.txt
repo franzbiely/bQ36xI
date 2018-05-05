@@ -5,6 +5,9 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.21 | 6th of May 2018
+ - Fix issues on Report query not working properly for fetching consultation records
+ 
 v3.20 | 2nd of May 2018
  - Fix issues in client record results
 

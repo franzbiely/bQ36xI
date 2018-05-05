@@ -389,7 +389,7 @@
               <td class="consultation"><?php echo $data['ctr_consultation']; ?></td>
               <td class="current_age"><?php echo $data['current_age']; ?></td>
               <td class="gender"><?php echo ($data['client_type']=="Child") ? "Unknown" : $data['client_type']; ?></td>
-              <td class="visit_reasons"><?php echo $records->display_visit_reasons($data['visit_reasons']); ?></td>
+              <td class="visit_reasons"><?php echo $reports->display_visit_reasons($data['visit_reasons']); ?></td>
             </tr>                             
           <?php endforeach; endif; ?>
           </tbody>

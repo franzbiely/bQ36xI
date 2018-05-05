@@ -10,7 +10,7 @@ class Records extends DB{
       //json_decode( stripslashes( $post_data ) );
      $temp = json_decode($reasons, true);
      if ($temp != false) {
-        $temp = implode(",",  $temp); 
+        $temp = implode(", ",  $temp); 
         if($temp==",") return "";
          else return $temp;
      }else{

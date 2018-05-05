@@ -360,6 +360,7 @@
               <th><b>Consultation</b></th>
               <th><b>Age</b></th>
               <th><b>Gender</b></th>
+              <th><b>Visit Reasons</b></th>
             </tr>
           </thead>
           <tbody>
@@ -371,6 +372,7 @@
           }else{
               $data2 = $reports->get_client_record_details($_POST['start_date'], $_POST['end_date'], $_POST['client_type'], $_POST['visit_type'], $_POST['clinic']);
           }
+
             if($data2!=false): $x=0; foreach($data2 as $key=>$data ): $x++; 
             ?>
             <tr>  
@@ -387,6 +389,7 @@
               <td class="consultation"><?php echo $data['ctr_consultation']; ?></td>
               <td class="current_age"><?php echo $data['current_age']; ?></td>
               <td class="gender"><?php echo ($data['client_type']=="Child") ? "Unknown" : $data['client_type']; ?></td>
+              <td class="visit_reasons"><?php echo $records->display_visit_reasons($data['visit_reasons']); ?></td>
             </tr>                             
           <?php endforeach; endif; ?>
           </tbody>

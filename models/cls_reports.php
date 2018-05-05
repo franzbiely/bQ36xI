@@ -1470,5 +1470,19 @@ class Reports extends DB{
 
     return $res;
   }
-
+  function display_visit_reasons($reasons){
+      //json_decode( stripslashes( $post_data ) );
+     $temp = json_decode($reasons, true);
+     if ($temp != false) {
+        $temp = implode(", ",  $temp); 
+        if($temp==",") return "";
+         else return $temp;
+     }else{
+      if($reasons != 'null')
+        return $reasons;
+      else
+        return '';
+     }
+   
+  }
 }

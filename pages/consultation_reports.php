@@ -57,7 +57,6 @@
           $by = $_POST['by'];
           $id = $_POST['id'];
         }
-         
           if($data==false):
             echo "<p>No Record Found in the specified date and \"By\" field.</p>";
           else:
@@ -121,23 +120,28 @@
               <th><b>Consultation</b></th>
               <th><b>Referrals</b></th>
               <th><b>Review Date</b></th>
+              <th style="width: 150px;"><b>Visit Reasons</b></th>
             </tr>
           </thead>
           <tbody>
             <?php 
             //$data = $reports->get_consultation_record_details($_POST['start_date'], $_POST['end_date'],$_POST['by'],$_POST['id']);
             $_referral = $type->get_all('referral');
-           if($data!=false): foreach($data as $data ):  ?>
+            // print_r($data);
+           if($data!=false): 
+            foreach($data as $_data ): ?>
             <tr>              
-              <td class="id record_number"><?php echo $data['record_number']; ?></td>
-              <td class="fullname"><?php echo $data['fullname']; ?></td>
-              <td class="clinic"><?php echo $data['name']; ?></td>
-              <td class="clinic"><?php echo $data['date']; ?></td>
-              <td class="consultation"><?php echo $data['ctr_consultation']; ?></td> 
-              <td class="referrals"><?php  echo $_referral['value'][$data['referral_id']]; ?> </td> 
-              <td class="review-date"><?php echo $data['review_date']; ?></td>
+              <td class="id record_number"><?php echo $_data['record_number']; ?></td>
+              <td class="fullname"><?php echo $_data['fullname']; ?></td>
+              <td class="clinic"><?php echo $_data['name']; ?></td>
+              <td class="clinic"><?php echo $_data['date']; ?></td>
+              <td class="consultation"><?php echo $_data['ctr_consultation']; ?></td> 
+              <td class="referrals"><?php  echo $_referral['value'][$_data['referral_id']]; ?> </td> 
+              <td class="review-date"><?php echo $_data['review_date']; ?></td>
+              <td class="visit_reasons"><?php echo $reports->display_visit_reasons($_data['visit_reasons']); ?></td>
             </tr>                             
-          <?php endforeach; endif; ?>
+          <?php endforeach; 
+          endif; ?>
           </tbody>
         </table>
           <?php endif; ?>

@@ -849,7 +849,8 @@ class Reports extends DB{
                 JOIN tbl_area AS office ON office.ID = a.office_id
                 WHERE a.date >= :start_date AND a.date <= :end_date
                 AND  a.office_id = :office_id
-                GROUP BY a.client_id";      
+                GROUP BY a.ID 
+                ORDER BY a.client_id";      
         $bind_array = array("start_date"=>$start_date, "end_date"=>$end_date, "office_id"=>$id);
         }else{
           /* user choose to generate report from all HC/Office */
@@ -861,7 +862,8 @@ class Reports extends DB{
                 JOIN tbl_area AS province ON district.parent_ids = province.ID 
                 JOIN tbl_area AS office ON office.ID = a.office_id
                 WHERE a.date >= :start_date AND a.date <= :end_date
-                GROUP BY a.client_id";       
+                GROUP BY a.ID
+                ORDER BY a.client_id";       
         $bind_array = array("start_date"=>$start_date, "end_date"=>$end_date);
         }
       

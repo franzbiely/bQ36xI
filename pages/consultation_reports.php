@@ -129,8 +129,8 @@
             //$data = $reports->get_consultation_record_details($_POST['start_date'], $_POST['end_date'],$_POST['by'],$_POST['id']);
             $_referral = $type->get_all('referral');
             // print_r($data);
-           if($data!=false): 
-            foreach($data as $_data ): ?>
+           if($data!=false):  $x=0;
+            foreach($data as $_data ): $x++;  ?>
             <tr>             
               <td class="counter"><?php echo $x; ?></td>      
               <td class="id record_number"><?php echo $_data['record_number']; ?></td>

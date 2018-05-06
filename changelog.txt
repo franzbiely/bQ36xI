@@ -7,6 +7,7 @@
 ******************************************************************************************
 v3.21 | 6th of May 2018
  - Fix issues on incorrect datas displaying on Client reports
+ - Fix clinic lists in kagamuga and hagen
  
 v3.21 | 6th of May 2018
  - Fix issues on Report query not working properly for fetching consultation records

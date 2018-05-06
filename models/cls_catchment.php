@@ -181,7 +181,20 @@ class Catchment extends DB{
 	    modal_container("Catchment",$output);
 	}	
 	function get_clinic_lists() {
-		$data = $this->select("*",array("office_id"=>$_POST['health_facility']), false, "tbl_clinic");
+		if ($_SESSION['office_id'] == 65 OR $_SESSION['office_id'] == 9) {
+			$query = "SELECT * 
+				FROM tbl_clinic
+				WHERE office_id = :kagamuga
+				OR office_id = :hagen
+				ORDER BY ID DESC";
+			$bind_array= array("kagamuga"=>65, 'hagen'=>9);
+			$stmt = $this->query($query,$bind_array);
+			$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		}
+		else {
+			$data = $this->select("*",array("office_id"=>$_POST['health_facility']), false, "tbl_clinic");	
+		}
+		
 		echo json_encode($data);
 		exit();
 	}	

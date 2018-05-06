@@ -6,6 +6,9 @@
 *                                                                                        *
 ******************************************************************************************
 v3.21 | 6th of May 2018
+ - Fix issues on incorrect datas displaying on Client reports
+ 
+v3.21 | 6th of May 2018
  - Fix issues on Report query not working properly for fetching consultation records
  - added counter for table in consultation reports
  - Applied query fix for other filters for consultation reports

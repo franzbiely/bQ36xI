@@ -107,16 +107,16 @@
         else:  
           if($_POST['visit_type'] != ""){
               $data = $reports->get_client_record($_POST['start_date'], $_POST['end_date'], $_POST['client_type'], $_POST['visit_type'], $_POST['clinic']);
-
-              $data2 = $reports->search_by_visit_reason($data, $_POST['visit_type']);   
+              $data2 = $reports->search_by_visit_reason($data, $_POST['visit_type']);
           }else{
-              $data2 = $reports->get_client_record($_POST['start_date'], $_POST['end_date'], $_POST['client_type'], $_POST['visit_type'], $_POST['clinic']);
+              $data2 = $reports->get_unique_client_record($_POST['start_date'], $_POST['end_date'], $_POST['client_type'], $_POST['visit_type'], $_POST['clinic']);
           }
           if($data2==false):
             echo "<p>No Record Found in the specified date or filter.</p>";
           else:
         ?>
       <?php
+      $data2 = $reports->array_key_unique($data2, 'record_number');
       $data2_by_gender = $reports->separate_by_gender($data2);
       ?>
         </br>
@@ -364,13 +364,13 @@
           </thead>
           <tbody>
             <?php
-
-            if($_POST['visit_type'] != ""){
-              $data = $reports->get_client_record_details($_POST['start_date'], $_POST['end_date'], $_POST['client_type'], $_POST['visit_type'], $_POST['clinic']);
-              $data2 = $reports->search_visit_reason_details($data, $_POST['visit_type']);   
-          }else{
-              $data2 = $reports->get_client_record_details($_POST['start_date'], $_POST['end_date'], $_POST['client_type'], $_POST['visit_type'], $_POST['clinic']);
-          }
+            // print_r($data2);
+          //   if($_POST['visit_type'] != ""){
+          //     $data = $reports->get_client_record_details($_POST['start_date'], $_POST['end_date'], $_POST['client_type'], $_POST['visit_type'], $_POST['clinic']);
+          //     $data2 = $reports->search_visit_reason_details($data, $_POST['visit_type']);   
+          // }else{
+          //     $data2 = $reports->get_client_record_details($_POST['start_date'], $_POST['end_date'], $_POST['client_type'], $_POST['visit_type'], $_POST['clinic']);
+          // }
 
             if($data2!=false): $x=0; foreach($data2 as $key=>$data ): $x++; 
             ?>

@@ -494,8 +494,24 @@ class Reports extends DB{
     }
     return $content;
   }
+  function array_key_unique($arr, $key) {
+    $uniquekeys = array();
+    $output     = array();
+    foreach ($arr as $item) {
+        if (!in_array($item[$key], $uniquekeys)) {
+            $uniquekeys[] = $item[$key];
+            $output[]     = $item;
+        }
+        else {
+          $_key = array_search($item[$key], $uniquekeys);
+          $output[$_key]['ctr_consultation']++;
+        }
+    }
+    return $output;
+}
   function search_by_visit_reason($rep_data, $visit){
     // if user search client reports by visit_reason
+    // print_r($rep_data);
       $content = array();
       foreach($rep_data as $k => $data ){
 
@@ -506,7 +522,21 @@ class Reports extends DB{
                      $visit_reason = explode(",", $temp);
                      for ($i=0; $i < count($visit_reason) ; $i++) { 
                             if($visit_reason[$i] == $visit){
-                                $content[] = array("ID"=>$data['ID'], "client_id"=>$data['client_id'], "clinic_id"=>$data['clinic_id'],
+                                $content[] = array(
+                                              'record_number' => $data['record_number'],
+                                              'date_birth' => $data['date_birth'],
+                                              'client_type' => $data['client_type'],
+                                              'fullname' => $data['fullname'],
+                                              'province' => $data['province'],
+                                              'district' => $data['district'],
+                                              'office' => $data['office'],
+                                              'clinic_name' => $data['clinic_name'],
+                                              'date' => $data['date'],
+                                              'visit_reasons' => $data['visit_reasons'],
+                                              'ctr_consultation' => $data['ctr_consultation'],
+                                              'current_age' => $data['current_age'],
+                                              'age' => $data['age'],
+                                              "ID"=>$data['ID'], "client_id"=>$data['client_id'], "clinic_id"=>$data['clinic_id'],
                                               "date"=>$data['date'], "feeding_type"=>$data['feeding_type'], "visit_reasons"=>$visit,
                                               "followup_type"=>$data['followup_type'], "record_type"=>$data['record_type'], "office_id"=>$data['office_id'],
                                               "record_number"=>$data['record_number'], "fname"=>$data['fname'], "lname"=>$data['lname'], 
@@ -522,7 +552,21 @@ class Reports extends DB{
                   $visit_reason = explode(",", $data['visit_reasons']);
                   for ($i=0; $i < count($visit_reason) ; $i++) { 
                     if($visit_reason[$i] == $visit){
-                        $content[] = array("ID">$data['ID'], "client_id"=>$data['client_id'], "clinic_id"=>$data['clinic_id'],
+                        $content[] = array(
+                                      'record_number' => $data['record_number'],
+                                      'date_birth' => $data['date_birth'],
+                                      'client_type' => $data['client_type'],
+                                      'fullname' => $data['fullname'],
+                                      'province' => $data['province'],
+                                      'district' => $data['district'],
+                                      'office' => $data['office'],
+                                      'clinic_name' => $data['clinic_name'],
+                                      'date' => $data['date'],
+                                      'visit_reasons' => $data['visit_reasons'],
+                                      'ctr_consultation' => $data['ctr_consultation'],
+                                      'current_age' => $data['current_age'],
+                                      'age' => $data['age'],
+                                      "ID">$data['ID'], "client_id"=>$data['client_id'], "clinic_id"=>$data['clinic_id'],
                                       "date"=>$data['date'], "feeding_type"=>$data['feeding_type'], "visit_reasons"=>$visit,
                                       "followup_type"=>$data['followup_type'], "record_type"=>$data['record_type'], "office_id"=>$data['office_id'],
                                       "record_number"=>$data['record_number'], "fname"=>$data['fname'], "lname"=>$data['lname'], 
@@ -536,7 +580,100 @@ class Reports extends DB{
     }
     return $content;
   }
+  function get_unique_client_record($sDate,$eDate,$client_type,$visit_type,$clinic){
+        $temp = array("start_date"=>$sDate,"end_date"=>$eDate, "client_type"=>$client_type,
+                     "visit_type"=>$visit_type,"clinic"=>$clinic);
 
+        $_data = array_filter($temp);
+        $where = "";
+        $bind_query = array();
+
+        if(array_key_exists("client_type", $_data)){
+          $where .= "b.client_type =  :client_type AND ";
+          $bind_query['client_type']=$_data['client_type'];
+        }
+
+        if(array_key_exists("clinic", $_data)){
+          //if ($_data['clinic'] != 'all') {
+            $where .= "a.clinic_id =  :clinic AND ";
+            $bind_query['clinic']=$_data['clinic'];
+         // }
+        }
+        $bind_query['start_date']= $_data['start_date'];
+        $bind_query['end_date']= $_data['end_date'];
+
+       if($_SESSION['type'] == 'superreporting'){
+          $query = "SELECT  b.record_number, b.date_birth, b.client_type,
+               CONCAT(b.fname,' ',b.lname) AS fullname,
+              province.area_name AS province,
+              district.area_name AS district,
+              office.area_name AS office, 
+              c.clinic_name,   
+              MAX(a.date) AS date, 
+              a.visit_reasons,      
+              a.date,        
+              COUNT(*) AS ctr_consultation,
+              floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) as current_age    
+              FROM tbl_records AS a
+              JOIN tbl_client AS b ON a.client_id = b.ID
+              JOIN tbl_clinic AS c ON a.clinic_id = c.ID
+              JOIN tbl_area AS district ON c.llg_id = district.ID
+              JOIN tbl_area AS province ON district.parent_ids = province.ID 
+              JOIN tbl_area AS office ON office.ID = a.office_id
+              WHERE $where a.date >= :start_date AND a.date <= :end_date
+              AND b.ID = a.client_id
+              AND a.record_type='consultation'
+              GROUP BY a.client_id";
+        }
+        else{
+
+             $query = "SELECT  b.record_number, b.date_birth, b.client_type,
+                      CONCAT(b.fname,' ',b.lname) AS fullname,
+                      province.area_name AS province,
+                      district.area_name AS district,
+                      office.area_name AS office, 
+                      c.clinic_name,
+                      MAX(a.date) AS date,  
+                      a.visit_reasons, 
+                      a.date,               
+                      COUNT(*) AS ctr_consultation,
+                      floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) as current_age
+                      FROM tbl_records AS a
+                      JOIN tbl_client AS b ON a.client_id = b.ID
+                      JOIN tbl_clinic AS c ON a.clinic_id = c.ID
+                      JOIN tbl_area AS district ON c.llg_id = district.ID
+                      JOIN tbl_area AS province ON district.parent_ids = province.ID 
+                      JOIN tbl_area AS office ON office.ID = a.office_id
+                      WHERE $where a.date >= :start_date AND a.date <= :end_date
+                      AND b.ID = a.client_id
+                      AND a.record_type='consultation'
+                      AND a.office_id = :office_id
+                      GROUP BY a.client_id";
+                      $bind_query['office_id'] = $_SESSION['office_id'];
+          }
+        // $bind_array = array("start_date"=>$start_date, "end_date"=>$end_date);
+        $stmt = $this->query($query,$bind_query);
+        $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach($array as $key=>$val){
+          // GETTING THE AGE from birth date and visit date
+          if($val['date_birth']!=null || $val['date_birth']!=""){
+            //$tmp = explode('-',$val['date_birth']);
+            //$age = date("Y")-$tmp[0];
+
+            $dob = new DateTime($val['date_birth']);
+            $visit_date = new DateTime($val['date']);
+            $interval = $dob->diff($visit_date)->y;
+            //echo $val['date'].' - '.$val['date_birth'].' = '.$interval;
+            //echo "<br/>";
+
+            $array[$key]['age']=$interval; 
+          }
+          else 
+            $array[$key]['age']="undefined";
+        }
+        return $array;
+
+  }
   function get_client_record($sDate,$eDate,$client_type,$visit_type,$clinic){
         $temp = array("start_date"=>$sDate,"end_date"=>$eDate, "client_type"=>$client_type,
                      "visit_type"=>$visit_type,"clinic"=>$clinic);
@@ -567,7 +704,8 @@ class Reports extends DB{
               office.area_name AS office, 
               c.clinic_name,   
               MAX(a.date) AS date, 
-              a.visit_reasons,        
+              a.visit_reasons,      
+              a.date,        
               COUNT(*) AS ctr_consultation,
               floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) as current_age    
               FROM tbl_records AS a
@@ -579,7 +717,8 @@ class Reports extends DB{
               WHERE $where a.date >= :start_date AND a.date <= :end_date
               AND b.ID = a.client_id
               AND a.record_type='consultation'
-              GROUP BY a.client_id";
+              GROUP BY a.ID
+              ORDER BY a.client_id";
         }
         else{
 
@@ -590,7 +729,8 @@ class Reports extends DB{
                       office.area_name AS office, 
                       c.clinic_name,
                       MAX(a.date) AS date,  
-                      a.visit_reasons,        
+                      a.visit_reasons, 
+                      a.date,               
                       COUNT(*) AS ctr_consultation,
                       floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) as current_age
                       FROM tbl_records AS a
@@ -603,7 +743,8 @@ class Reports extends DB{
                       AND b.ID = a.client_id
                       AND a.record_type='consultation'
                       AND a.office_id = :office_id
-                      GROUP BY a.client_id";
+                      GROUP BY a.ID
+                      ORDER BY a.client_id";
                       $bind_query['office_id'] = $_SESSION['office_id'];
           }
         // $bind_array = array("start_date"=>$start_date, "end_date"=>$end_date);

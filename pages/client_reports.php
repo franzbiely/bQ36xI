@@ -109,13 +109,15 @@
               $data = $reports->get_client_record($_POST['start_date'], $_POST['end_date'], $_POST['client_type'], $_POST['visit_type'], $_POST['clinic']);
               $data2 = $reports->search_by_visit_reason($data, $_POST['visit_type']);
           }else{
-              $data2 = $reports->get_unique_client_record($_POST['start_date'], $_POST['end_date'], $_POST['client_type'], $_POST['visit_type'], $_POST['clinic']);
+              $data2 = $reports->get_client_record($_POST['start_date'], $_POST['end_date'], $_POST['client_type'], $_POST['visit_type'], $_POST['clinic']);
           }
           if($data2==false):
             echo "<p>No Record Found in the specified date or filter.</p>";
           else:
         ?>
       <?php
+
+      $visit_reports = $data2;
       $data2 = $reports->array_key_unique($data2, 'record_number');
       $data2_by_gender = $reports->separate_by_gender($data2);
       ?>
@@ -318,9 +320,10 @@
             <?php if($showDeprecatedMessage) : ?>
               <p class="yellowme"><strong>Notice : </strong><br />Visit Reasons for Consultations prior to the <strong>1st of April, 2018</strong> have been deprecated and cannot be displayed. <br />Please refer to Client paper Record.</p>
             <?php endif; ?>
-            <?php $reports->visit_type_reports($data2, $c_type) ?>
+            <?php $reports->visit_type_reports($visit_reports, $c_type) ?>
           </tbody> 
         </table>  
+        
         <div class="btn-group">
           <form method="POST">
             <input type="hidden" name="func" value="export_client" />

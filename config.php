@@ -34,7 +34,7 @@ switch (ENV) {
 		define("DBUSER","clientsu_ssmclsu");
 		define("DBPASS","hMD6QFrGELnL");
 		define("DBNAME","clientsu_ssmcldb");
-		define("SITE_URL","http://clients.susumamas.org.pg");
+		define("SITE_URL","https://clients.susumamas.org.pg");
         break;
 
     case 'local-franz':

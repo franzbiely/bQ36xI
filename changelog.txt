@@ -5,7 +5,10 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
-v3.21 | 6th of May 2018
+v3.23 | 6th of May 2018
+ - Fix issues on Visit Reason section from Client Reports page
+
+v3.22 | 6th of May 2018
  - Fix issues on incorrect datas displaying on Client reports
  - Fix clinic lists in kagamuga and hagen
  

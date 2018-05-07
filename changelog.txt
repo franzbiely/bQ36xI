@@ -5,7 +5,7 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
-v3.23 | 6th of May 2018
+v3.23 | 7th of May 2018
  - Fix issues on Visit Reason section from Client Reports page
  - Fix visit reason mandatory rule
 

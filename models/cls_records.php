@@ -851,6 +851,11 @@ class Records extends DB{
 
       /* ================== save consultation records */
       $(".consultation_modal_box form").on('submit',function(){
+        if($('.visitreasonsdiv :checkbox:checked').length <= 0) {
+          alert('Please select at least one (1) Visit Reason');
+          $('.visitreasonsdiv .help-block').show();
+          return false;
+        }
         $('#hb-warning').hide();
         show_loader($);
         _data = $(this).serialize();

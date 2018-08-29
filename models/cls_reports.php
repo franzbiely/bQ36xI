@@ -674,10 +674,9 @@ class Reports extends DB{
         return $array;
 
   }
-  function get_client_record($sDate,$eDate,$client_type,$visit_type,$clinic){
+  function get_client_record($sDate,$eDate,$client_type,$visit_type,$clinic, $province){
         $temp = array("start_date"=>$sDate,"end_date"=>$eDate, "client_type"=>$client_type,
-                     "visit_type"=>$visit_type,"clinic"=>$clinic);
-
+                     "visit_type"=>$visit_type,"clinic"=>$clinic, "province"=>$province);
         $_data = array_filter($temp);
         $where = "";
         $bind_query = array();
@@ -692,6 +691,10 @@ class Reports extends DB{
             $where .= "a.clinic_id =  :clinic AND ";
             $bind_query['clinic']=$_data['clinic'];
          // }
+        }
+        if(array_key_exists("province", $_data)){
+          $where .= "province.id =  :province AND ";
+          $bind_query['province']=$_data['province'];
         }
         $bind_query['start_date']= $_data['start_date'];
         $bind_query['end_date']= $_data['end_date'];

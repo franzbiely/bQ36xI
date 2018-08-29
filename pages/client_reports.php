@@ -5,7 +5,12 @@
        $c_type = $_POST['client_type'];
        $v_type = $_POST['visit_type'];
        $c_location = $_POST['clinic'];
-
+       $c_province = '';
+       if(isset($_POST['province'])) {
+        $c_province = $_POST['province']; 
+       }
+       
+       
        //Code added by Eric [to fix php error when checking if start_date is set]
      if($sDate == ""){
       unset($_POST['start_date']);
@@ -93,6 +98,25 @@
                     ?>  
                   </select>
                 </div>
+
+                <?php if($_SESSION['type'] == 'superreporting') : ?>
+                <div class="form-group">
+                  <select class="form-control client_report" name="province">
+                    <option value="">[Province]</option>
+                    <?php     
+                    foreach($province->get_all() as $data ){ 
+                      ?><option value="<?php echo $data['ID']; ?>"
+                      <?php if(isset($_POST["province"]))
+                            if($_POST["province"] == $data['ID'])
+                            echo "selected" ?>>
+                      <?php echo $data['area_name']; ?>
+                      </option>
+                      <?php echo "\n";
+                    }
+                    ?>  
+                  </select>
+                </div>
+                <?php endif; ?>
                 
              </div> 
              </form>         
@@ -106,10 +130,12 @@
           echo "<p>Please set start and end date.</p>";
         else:  
           if($_POST['visit_type'] != ""){
-              $data = $reports->get_client_record($_POST['start_date'], $_POST['end_date'], $_POST['client_type'], $_POST['visit_type'], $_POST['clinic']);
+
+              $data = $reports->get_client_record($_POST['start_date'], $_POST['end_date'], $_POST['client_type'], $_POST['visit_type'], $_POST['clinic'], $_POST['province']);
               $data2 = $reports->search_by_visit_reason($data, $_POST['visit_type']);
           }else{
-              $data2 = $reports->get_client_record($_POST['start_date'], $_POST['end_date'], $_POST['client_type'], $_POST['visit_type'], $_POST['clinic']);
+
+              $data2 = $reports->get_client_record($_POST['start_date'], $_POST['end_date'], $_POST['client_type'], $_POST['visit_type'], $_POST['clinic'], $_POST['province']);
           }
           if($data2==false):
             echo "<p>No Record Found in the specified date or filter.</p>";
@@ -333,6 +359,9 @@
             <input type="hidden" name="client_type" value="<?php echo $c_type ?>" />
             <input type="hidden" name="visit_type" value="<?php echo $v_type ?>" />
             <input type="hidden" name="clinic" value="<?php echo $c_location ?>" />
+            <?php if($_SESSION['type'] == 'superreporting') : ?>
+              <input type="hidden" name="province" value="<?php echo $c_province ?>" />
+            <?php endif; ?>
             <input type="submit" style="float:left;margin-top: 5px;" class="btn btn-info <?php if (enablea_and_disable_ele($_SESSION['type'], "export_excel", $_SESSION['client_reports']) == false) { echo "hide"; }?>" 
             value="Export to Excel" />
           </form>
@@ -344,6 +373,9 @@
             <input type="hidden" name="client_type" value="<?php echo $c_type ?>" />
             <input type="hidden" name="visit_type" value="<?php echo $v_type ?>" />
             <input type="hidden" name="clinic" value="<?php echo $c_location ?>" />
+            <?php if($_SESSION['type'] == 'superreporting') : ?>
+              <input type="hidden" name="province" value="<?php echo $c_province ?>" />
+            <?php endif; ?>
             <input type="submit" style="float:left;margin-top: 5px;" class="btn btn-warning <?php if (enablea_and_disable_ele($_SESSION['type'], "export_csv", $_SESSION['client_reports']) == false) { echo "hide"; }?>" 
             value="Export to CSV" />
           </form>

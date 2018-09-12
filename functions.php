@@ -132,7 +132,8 @@ function export_consultation(){
 	                        "ave_no_consul"=>round($ave_no_consul,1,PHP_ROUND_HALF_DOWN));
 
 	 $client_record_header = array("Record Number", "Full Name", "Clinic", "Consultation");
-	 $client_details= $reports->get_client_record_details($sDate, $eDate);
+
+	 $client_details= $reports->get_client_record_details($sDate, $eDate, $select_by, $select_id);
 	  if ($param1 == "excel") {
 	       $reports->generate_report_consultation($sDate, $eDate,   $overview_row, 
 	                  $client_record_header , $client_details, 'Excel2007','Consultation Report.xlsx');

@@ -5,6 +5,9 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.25 | 12th of Sept 2018
+ - Superreporting > Consultation Reports > Filter by Province fix
+
 v3.24 | 30th of Aug 2018
  - Superreporting > Client Reports > "Added province filter"
 

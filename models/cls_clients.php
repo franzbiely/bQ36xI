@@ -584,7 +584,11 @@ class Client extends DB{
             <input type="checkbox" name="is_archived" id="is_archived" style="top: 2px;position: relative;">
             <label for="is_archived" style="font-weight:normal;">Check this if you want to archive this client record. </label>
           </div>
-          <input style="margin-top: 20px;" type="submit" class="btn btn-success btn-default">
+          <input id="right_side_finger" type="hidden" class="input-group">
+          <input id="center_finger" type="hidden" class="input-group">
+          <input id="left_side_finger" type="hidden" class="input-group">
+          <button id="btn_input_finger" style="margin-top: 20px; float: right" type="submit" class="btn btn-success btn-default">Register Your Finger Print</button>
+          <input id="btn_add_client" disabled style="margin-top: 20px;" type="submit" class="btn btn-success btn-default">
         </form>
 		<!-- </div>  --><!-- ===== id: modal-body ===== -->
 		
@@ -598,7 +602,16 @@ class Client extends DB{
 		?>
 		<script>
 		$(document).ready(function(){
-
+			// finger print input
+			$("#btn_input_finger").click(function(){
+				var f1 = document.getElementById('right_side_finger').value;
+				var f2 = document.getElementById('center_finger').value;
+				var f3 = document.getElementById('left_side_finger').value;
+				//alert(f1 +" "+ f2 +" "+ f3 );
+				if ( !isEmpty(f1) && !isEmpty(f2) && !isEmpty(f3) ){
+					$('#btn_add_client').prop('disabled', false);
+				}
+			});
 			//Code added by Eric
 			var hold_dob = ""; //this will hold the previous birthdate value
 			$("#date_birth").click(function(){

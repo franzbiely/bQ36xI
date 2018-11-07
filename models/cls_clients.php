@@ -502,7 +502,7 @@ class Client extends DB{
 		global $district;
 		global $province;
 		ob_start();
-		?>
+				?>
 		<!-- <div id="modal-body"> -->
 		<form role="form" action="" method="post">
 		
@@ -587,8 +587,22 @@ class Client extends DB{
           <input id="right_side_finger" type="hidden" class="input-group">
           <input id="center_finger" type="hidden" class="input-group">
           <input id="left_side_finger" type="hidden" class="input-group">
-          <button id="btn_input_finger" style="margin-top: 20px; float: right" type="submit" class="btn btn-success btn-default">Register Your Finger Print</button>
-          <input id="btn_add_client" disabled style="margin-top: 20px;" type="submit" class="btn btn-success btn-default">
+          <div id="imgDiv" style="margin-top: 10px; float: right; padding: 2px; margin-right: 7px;">
+			<input name="es" type="text" id="es" value="Register Your Finger Here >>" readonly style = "border: 0px; font-size: 12px"/>
+			<span class = "image_id"> 
+				<small style="cursor: pointer; margin-left: 7px; margin-top: 18px; text-align: center; position: absolute; font-size: 10px;">&nbsp;Right</small>
+				<img id = "image1" alt="" width="45px" height="45px" style = "border-radius: 5px; cursor: pointer;"/>
+			</span>
+			<span class = "image_id"> 
+				<small style="cursor: pointer; margin-left: 5px; margin-top: 18px; text-align: center; position: absolute; font-size: 10px;">&nbsp;Center</small>
+				<img id = "image2" alt="" width="45px" height="45px" style = "border-radius: 5px; cursor: pointer;"/>
+			</span>
+			<span class = "image_id"> 
+				<small style="cursor:	 pointer; margin-left: 9px; margin-top: 18px; text-align: center; position: absolute; font-size: 10px;">&nbsp;Left</small>
+				<img id = "image3" alt="" width="45px" height="45px" style = "border-radius: 5px; cursor: pointer;"/>
+			</span>
+		  </div>
+		  <input id="btn_add_client" disabled style="margin-top: 20px;" type="submit" class="btn btn-success btn-default">
         </form>
 		<!-- </div>  --><!-- ===== id: modal-body ===== -->
 		
@@ -601,9 +615,182 @@ class Client extends DB{
 	function scripts(){
 		?>
 		<script>
+		var hidden = true;
+		var finger_value = 1;
 		$(document).ready(function(){
+		
 			// finger print input
+			$(".image_id").click(function(){
+				if (hidden == true){
+					$("#print_div").removeClass('hide');
+					$("#print_div").addClass('show');
+					hidden = false
+				}
+				else {
+					$("#print_div").removeClass('show');
+					$("#print_div").addClass('hide');
+					hidden = true
+				}
+				
+				// test if the browser supports web sockets
+				if ("WebSocket" in window) {
+					console.log("ready");
+					connect("ws://127.0.0.1:21187/fps");
+				} else {
+					$('#es').val('Browser does not support!');
+				};
+
+				// function to send data on the web socket
+				function ws_send(str) {
+					try {
+						ws.send(str);
+					} catch (err) {
+						$('#es').val('error');
+					}
+				}
+				
+				function connect(host) {
+
+				$('#es').val("Connecting to " + host + " ...");
+				try {
+					ws = new WebSocket(host); // create the web socket
+				} catch (err) {
+					$('#es').val('error');
+				}
+
+				ws.onopen = function () {
+					$('#es').val('Connected OK!');
+					EnrollTemplate();
+				};
+
+				ws.onmessage = function (evt) {
+					var obj = eval("("+evt.data+")");
+					var status = document.getElementById("es");
+					switch (obj.workmsg) {
+						case 1:
+							status.value = "Please Open Device";
+							break;
+						case 2:
+							status.value = "Place Finger";
+							break;
+						case 3:
+							status.value = "Lift Finger";
+							break;
+						case 4:
+							//status.value = "";
+							break;
+						case 5:
+							if (obj.retmsg == 1) {
+								status.value = "Get Template OK MAO NI";
+								if (obj.data2 != "null") {
+									attempt = obj.data2;
+									//MatchTemplate();
+								} else {
+									status.value = "Get Template Fail";
+								}
+							}else {
+								status.value = "Get Template Fail";
+							}
+							break;
+						case 6:
+							if (obj.retmsg == 1) {
+								if (obj.data1 != "null") {
+									status.value = "Success !";
+									
+									
+									if(finger_value == 1){
+										document.getElementById("right_side_finger").value = obj.data1;
+										finger_value = 2;
+										EnrollTemplate();
+									}else if (finger_value == 2){
+										document.getElementById("center_finger").value = obj.data1;
+										finger_value = 3;
+										EnrollTemplate();
+									}else if (finger_value == 3){
+										document.getElementById("left_side_finger").value = obj.data1;
+										finger_value = 0;
+										EnrollTemplate();
+										document.getElementById("btn_add_client").prop(disable = false);
+										status.value = "Registration Complete";
+									}
+									if(user != null){
+										$.ajax({
+											url: 'fpengine.php?fpengine=store&key='+obj.data1+'&name='+user,
+											method: 'get',
+											success: function(response){
+												console.log(response);
+											}
+										});
+									}
+								} else {
+									status.value = "Please Click Again !";    
+								}
+							} else {
+								status.value = "Enrol Template Fail";
+								EnrollTemplate();
+							}
+							break;
+						case 7:
+							if (obj.image == "null") {
+								alert("Please try again !")
+							} else {
+								if(finger_value == 1){
+									var img = document.getElementById("image1");
+									img.src = "data:image/png;base64,"+obj.image;
+								}else if (finger_value == 2){
+									var img = document.getElementById("image2");
+									img.src = "data:image/png;base64,"+obj.image;
+								}else if (finger_value == 3){
+									var img = document.getElementById("image3");
+									img.src = "data:image/png;base64,"+obj.image;
+								}
+							}
+							break;
+						case 8:
+							status.value = "Time Out";
+							break;
+						case 9:
+
+							if(obj.retmsg >= 100){
+								window.result = 1; 
+									
+							}
+								results.push(obj.retmsg); 
+								count_occur++;            
+							break;
+						}
+					};
+
+					ws.onclose = function () {
+						document.getElementById("es").value = "Closed!";
+					};
+				};
+			});
+			function EnrollTemplate (){
+				try {
+					//ws.send("enrol");
+					var cmd = "{\"cmd\":\"enrol\",\"data1\":\"\",\"data2\":\"\"}";
+					ws.send(cmd);
+				} catch (err) {
+				}
+				document.getElementById("es").value = "Place Finger";
+			}
+
+			$("#GetTemplate").click(function(){
+				alert()
+				try {
+					//ws.send("capture");
+					var cmd = "{\"cmd\":\"capture\",\"data1\":\"\",\"data2\":\"\"}";
+					ws.send(cmd);
+					console.log(cmd)
+				} catch (err) {
+				}
+				document.getElementById("es").value = "Place Finger";
+			});
 			$("#btn_input_finger").click(function(){
+				$("#print_div").removeClass('hide');
+				$("#print_div").addClass('show');
+
 				var f1 = document.getElementById('right_side_finger').value;
 				var f2 = document.getElementById('center_finger').value;
 				var f3 = document.getElementById('left_side_finger').value;

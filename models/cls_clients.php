@@ -87,10 +87,21 @@ class Client extends DB{
 	function add(){
 		$this->table = "tbl_client";
 		$_data = $_POST;
-		unset($_data['class']);
-		unset($_data['func']);		
 		$arr2 = array("office_id"=>$_SESSION['office_id']);		
 		$_data = array_merge($_data, $arr2);
+		
+		$finger_1 =  $_data['right_side_finger'];
+		$finger_2 =  $_data['center_finger'];
+		$finger_3 =  $_data['left_side_finger'];
+
+		unset($_data['class']);
+		unset($_data['func']);
+		unset($_data['right_side_finger']);
+		unset($_data['center_finger']);
+		unset($_data['left_side_finger']);
+		unset($_data['image_id']);
+		unset($_data['es']);
+
 		if(isset($_data['is_archived'])){
 			$_data['is_archived']=($_data['is_archived']=="on") ? 1 : 0;	
 			$_data['date_archived']=date("m.d.y");
@@ -98,7 +109,7 @@ class Client extends DB{
 		else{
 			$_data['is_archived'] = 0;
 		}
-
+		
 		$check_record_nuber =  $this->select("record_number", array("record_number"=>$_data['record_number']),true, "tbl_client" );
 		
 		if ($check_record_nuber!=false){
@@ -123,11 +134,20 @@ class Client extends DB{
 			if($_data['date_death']=='') {
 				unset($_data['date_death']);
 			}		
-
 			$data = $this->save($_data, array(), "tbl_client", "lastInsertId");
-			
+
+			$dataFinger['client_id'] = $data;
+			$dataFinger['finger_data'] = $finger_1;
+			$data1 = $this->save($dataFinger, array(), "tbl_fingerprint", "lastInsertId");
+			$dataFinger['client_id'] = $data;
+			$dataFinger['finger_data'] = $finger_2;
+			$data2 = $this->save($dataFinger, array(), "tbl_fingerprint", "lastInsertId");
+			$dataFinger['client_id'] = $data;
+			$dataFinger['finger_data'] = $finger_3;
+			$data3 = $this->save($dataFinger, array(), "tbl_fingerprint", "lastInsertId");
+
 			if($data==false){
-				echo "error";
+				echo "";
 			}else{
 				if($mother!=''){
 					if($_data['client_type']=='Child'){
@@ -523,7 +543,7 @@ class Client extends DB{
           </div>
           <div class="form-group">
             <label for="birthdate">Birth Date</label><span class="required_field">*</span>
-            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="date_birth" name="date_birth" placeholder="Enter Client Birth Date" required>
+            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="	" name="date_birth" placeholder="Enter Client Birth Date" required>
           	<!-- Code added by Eric -->
           	<div class="alert alert-warning birthdate-warning"><strong></strong></div> 
           	<!-- End added code here -->
@@ -571,7 +591,6 @@ class Client extends DB{
               ?>  
             </select>
           </div> 
-
           <div class="div-district">
           	<div class="alert alert-warning no-distirct"><strong></strong></div> 
           </div> 
@@ -579,27 +598,32 @@ class Client extends DB{
             <label for="current_address">Client Address (where client currently resides)</label>
             <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="current_address" placeholder="Enter Client current address" name="current_address">
           </div>
-
-          <div class="form-group" style="border-top: 1px solid #eee;margin-top: 20px;">            
+		  <div class="form-group" style="border-top: 1px solid #eee;margin-top: 20px;">            
             <input type="checkbox" name="is_archived" id="is_archived" style="top: 2px;position: relative;">
             <label for="is_archived" style="font-weight:normal;">Check this if you want to archive this client record. </label>
           </div>
-          <input id="right_side_finger" type="hidden" class="input-group">
-          <input id="center_finger" type="hidden" class="input-group">
-          <input id="left_side_finger" type="hidden" class="input-group">
+          <div class="form-group " style="margin-top: -2px;">            
+            <input type="checkbox" name="" id="image_id" style="top: 2px;position: relative;">
+            <label for="image_id" style="font-weight:normal;">Check this to register finger print !</label>
+          </div>
+		  <div class="form-group">
+		    <input name="right_side_finger" type="text" id="right_side_finger" value="" readonly style = " display: none; border: 0px; font-size: 12px"/>
+		    <input name="center_finger" type="text" id="center_finger" value="" readonly style = " display: none; border: 0px; font-size: 12px"/>
+		    <input name="left_side_finger" type="text" id="left_side_finger" value="" readonly style = " display: none; border: 0px; font-size: 12px"/>
+		  </div>
           <div id="imgDiv" style="margin-top: 10px; float: right; padding: 2px; margin-right: 7px;">
-			<input name="es" type="text" id="es" value="Register Your Finger Here >>" readonly style = "border: 0px; font-size: 12px"/>
-			<span class = "image_id"> 
-				<small style="cursor: pointer; margin-left: 7px; margin-top: 18px; text-align: center; position: absolute; font-size: 10px;">&nbsp;Right</small>
-				<img id = "image1" alt="" width="45px" height="45px" style = "border-radius: 5px; cursor: pointer;"/>
+		  <input name="es" type="text" id="es" value="Register Your Finger Here >>" readonly style = "border: 0px; font-size: 12px"/>
+			<span class = ""> 
+				<small style="margin-left: 7px; margin-top: 18px; text-align: center; position: absolute; font-size: 10px;">&nbsp;Right</small>
+				<img id = "image1" alt="" width="45px" height="45px" style = "border-radius: 5px;"/>
 			</span>
-			<span class = "image_id"> 
-				<small style="cursor: pointer; margin-left: 5px; margin-top: 18px; text-align: center; position: absolute; font-size: 10px;">&nbsp;Center</small>
-				<img id = "image2" alt="" width="45px" height="45px" style = "border-radius: 5px; cursor: pointer;"/>
+			<span class = ""> 
+				<small style="margin-left: 5px; margin-top: 18px; text-align: center; position: absolute; font-size: 10px;">&nbsp;Center</small>
+				<img id = "image2" alt="" width="45px" height="45px" style = "border-radius: 5px;"/>
 			</span>
-			<span class = "image_id"> 
-				<small style="cursor:	 pointer; margin-left: 9px; margin-top: 18px; text-align: center; position: absolute; font-size: 10px;">&nbsp;Left</small>
-				<img id = "image3" alt="" width="45px" height="45px" style = "border-radius: 5px; cursor: pointer;"/>
+			<span class = ""> 
+				<small style="margin-left: 9px; margin-top: 18px; text-align: center; position: absolute; font-size: 10px;">&nbsp;Left</small>
+				<img id = "image3" alt="" width="45px" height="45px" style = "border-radius: 5px;"/>
 			</span>
 		  </div>
 		  <input id="btn_add_client" disabled style="margin-top: 20px;" type="submit" class="btn btn-success btn-default">
@@ -620,18 +644,7 @@ class Client extends DB{
 		$(document).ready(function(){
 		
 			// finger print input
-			$(".image_id").click(function(){
-				if (hidden == true){
-					$("#print_div").removeClass('hide');
-					$("#print_div").addClass('show');
-					hidden = false
-				}
-				else {
-					$("#print_div").removeClass('show');
-					$("#print_div").addClass('hide');
-					hidden = true
-				}
-				
+			$("#image_id").click(function(){
 				// test if the browser supports web sockets
 				if ("WebSocket" in window) {
 					console.log("ready");
@@ -639,7 +652,6 @@ class Client extends DB{
 				} else {
 					$('#es').val('Browser does not support!');
 				};
-
 				// function to send data on the web socket
 				function ws_send(str) {
 					try {
@@ -648,21 +660,17 @@ class Client extends DB{
 						$('#es').val('error');
 					}
 				}
-				
 				function connect(host) {
-
 				$('#es').val("Connecting to " + host + " ...");
 				try {
 					ws = new WebSocket(host); // create the web socket
 				} catch (err) {
 					$('#es').val('error');
 				}
-
 				ws.onopen = function () {
 					$('#es').val('Connected OK!');
 					EnrollTemplate();
 				};
-
 				ws.onmessage = function (evt) {
 					var obj = eval("("+evt.data+")");
 					var status = document.getElementById("es");
@@ -681,7 +689,7 @@ class Client extends DB{
 							break;
 						case 5:
 							if (obj.retmsg == 1) {
-								status.value = "Get Template OK MAO NI";
+								status.value = "Get Template";
 								if (obj.data2 != "null") {
 									attempt = obj.data2;
 									//MatchTemplate();
@@ -695,9 +703,7 @@ class Client extends DB{
 						case 6:
 							if (obj.retmsg == 1) {
 								if (obj.data1 != "null") {
-									status.value = "Success !";
-									
-									
+									status.value = "Finger Print Save !";
 									if(finger_value == 1){
 										document.getElementById("right_side_finger").value = obj.data1;
 										finger_value = 2;
@@ -709,18 +715,8 @@ class Client extends DB{
 									}else if (finger_value == 3){
 										document.getElementById("left_side_finger").value = obj.data1;
 										finger_value = 0;
-										EnrollTemplate();
-										document.getElementById("btn_add_client").prop(disable = false);
-										status.value = "Registration Complete";
-									}
-									if(user != null){
-										$.ajax({
-											url: 'fpengine.php?fpengine=store&key='+obj.data1+'&name='+user,
-											method: 'get',
-											success: function(response){
-												console.log(response);
-											}
-										});
+										document.getElementById("btn_add_client").disabled = false;
+										document.getElementById("image_id").disabled = true;
 									}
 								} else {
 									status.value = "Please Click Again !";    

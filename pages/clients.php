@@ -9,7 +9,14 @@
         <div class="alert alert-info"><strong></strong></div>
         <div class="page-header">
           <h1 id="overview" style="width: 100%; padding-top: 10px; margin-top: 20px;">Clients Records
-            <?php $client->pagination() ?>   
+            <?php $client->pagination() ?>  
+             <a id="searchClientFingerPrint" type="button"  class="btn btn-success"
+              <?php if($_SESSION['type']!='superadmin') {
+                 if (enablea_and_disable_ele($_SESSION['type'], "add", $_SESSION['client_section']) == false) { echo "hide"; }
+               }else{  echo "hide"; }
+               ?>" 
+              style="margin-left: 10px; float: right;"data-toggle="modal" href="#"
+            ><i class ="glyphicon glyphicon-search"></i> Search By FingerPrint </a>
             <a id="addClient" type="button" class="btn btn-default
               <?php if($_SESSION['type']!='superadmin') {
                  if (enablea_and_disable_ele($_SESSION['type'], "add", $_SESSION['client_section']) == false) { echo "hide"; }
@@ -17,6 +24,12 @@
                ?>" 
               style="float: right;"data-toggle="modal" href="#newClientModal"
             >Add New Client </a> 
+            <div style="margin: 20px;">
+                <small class="hide" id = "image1_text" style="margin-left: 7px; margin-top: 18px; text-align: center; position: absolute; font-size: 12px;">F-Print</small>
+                <img class="hide" id = "image1" alt="" width="50px" height="57px" style = "float: center; border: 0.3px solid grey; border-radius: 50%;"/>
+                <input class="hide" name="es" type="text" id="es" value="Register Your Finger Here >>" readonly style = "border: 0px; font-size: 12px"/>
+            </div>
+              
             <?php $client->modal(); ?>             
           </h1> 
         </div>
@@ -75,7 +88,155 @@
   </div>
 
   <?php $client->scripts(); ?>
+    <script>
+      var hidden = true;
 
+      $("#searchClientFingerPrint").click(function(){
+        if(hidden == true){
+          $("#image1").removeClass('hide');
+          $("#image1").addClass('show');
+          $("#image1_text").removeClass('hide');
+          $("#image1_text").addClass('show');
+          $("#es").removeClass('hide');
+          $("#es").addClass('show');
+          hidden = false;
+        }else if(hidden == false){
+          $("#image1").removeClass('show');
+          $("#image1").addClass('hide');
+          $("#image1_text").removeClass('show');
+          $("#image1_text").addClass('hide');
+          $("#es").removeClass('show');
+          $("#es").addClass('hide');
+          hidden = true;
+        }
+        if ("WebSocket" in window) {
+					console.log("ready");
+					connect("ws://127.0.0.1:21187/fps");
+				} else {
+					$('#es').val('Browser does not support!');
+				};
+				// function to send data on the web socket
+				function ws_send(str) {
+					try {
+						ws.send(str);
+					} catch (err) {
+						$('#es').val('error');
+					}
+				}
+        function connect(host) {
+				$('#es').val("Connecting to " + host + " ...");
+				try {
+					ws = new WebSocket(host); // create the web socket
+				} catch (err) {
+					$('#es').val('error');
+				}
+				ws.onopen = function () {
+					$('#es').val('Connected OK!');
+					EnrollTemplate();
+				};
+				ws.onmessage = function (evt) {
+					var obj = eval("("+evt.data+")");
+					var status = document.getElementById("es");
+					switch (obj.workmsg) {
+						case 1:
+							status.value = "Please Open Device";
+							break;
+						case 2:
+							status.value = "Place Finger";
+							break;
+						case 3:
+							status.value = "Lift Finger";
+							break;
+						case 4:
+							//status.value = "";
+							break;
+						case 5:
+							if (obj.retmsg == 1) {
+								status.value = "Get Template";
+								if (obj.data2 != "null") {
+									attempt = obj.data2;
+									//MatchTemplate();
+								} else {
+									status.value = "Get Template Fail";
+								}
+							}else {
+								status.value = "Get Template Fail";
+							}
+							break;
+						case 6:
+							if (obj.retmsg == 1) {
+								if (obj.data1 != "null") {
+									status.value = "Finger Print Save !";
+									if(finger_value == 1){
+										document.getElementById("right_side_finger").value = obj.data1;
+										finger_value = 2;
+										EnrollTemplate();
+									}else if (finger_value == 2){
+										document.getElementById("center_finger").value = obj.data1;
+										finger_value = 3;
+										EnrollTemplate();
+									}else if (finger_value == 3){
+										document.getElementById("left_side_finger").value = obj.data1;
+										finger_value = 0;
+										document.getElementById("btn_add_client").disabled = false;
+										document.getElementById("image_id").disabled = true;
+									}
+								} else {
+									status.value = "Please Click Again !";    
+								}
+							} else {
+								status.value = "Enrol Template Fail";
+								EnrollTemplate();
+							}
+							break;
+						case 7:
+							if (obj.image == "null") {
+								alert("Please try again !")
+							} else {
+								if(finger_value == 1){
+									var img = document.getElementById("image1");
+									img.src = "data:image/png;base64,"+obj.image;
+								}else if (finger_value == 2){
+									var img = document.getElementById("image2");
+									img.src = "data:image/png;base64,"+obj.image;
+								}else if (finger_value == 3){
+									var img = document.getElementById("image3");
+									img.src = "data:image/png;base64,"+obj.image;
+								}
+							}
+							break;
+						case 8:
+							status.value = "Time Out";
+							break;
+						case 9:
+
+							if(obj.retmsg >= 100){
+								window.result = 1; 
+									
+							}
+								results.push(obj.retmsg); 
+								count_occur++;            
+							break;
+						}
+					};
+
+					ws.onclose = function () {
+						document.getElementById("es").value = "Closed!";
+					};
+				};
+        function EnrollTemplate (){
+				try {
+					//ws.send("enrol");
+					var cmd = "{\"cmd\":\"enrol\",\"data1\":\"\",\"data2\":\"\"}";
+					ws.send(cmd);
+				} catch (err) {
+				}
+				document.getElementById("es").value = "Place Finger";
+			}
+
+        
+      });
+    </script>
  <?php  
  if (isset($_GET['modal'])) {
   $modal = $_GET['modal'];  ?>
@@ -86,8 +247,6 @@
        $('#newClientModal').modal('show');
        $('.edit_or_add').html('Add New');
     };
-
-    
   });
 </script>
 <?php

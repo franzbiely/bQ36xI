@@ -57,6 +57,13 @@ Class Ajax extends DB {
 	    $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	    echo  json_encode($array);
 	}
+	function capture_data() {
+		$query = "SELECT *
+				  FROM tbl_fingerprint";
+		 $stmt = $this->query($query,['']);
+		 $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		 echo  json_encode($array);
+	}
 }
 
 
@@ -66,6 +73,10 @@ if(isset($_GET['func'])) {
 	if($func == 'count_anc_visit') {
 		$ajax->count_anc_visit($_GET['client_id']);
 	}
+}
+if(isset($_GET['capture'])) {
+		$ajax = new Ajax();
+		$ajax->capture_data();
 }
 
 ?>

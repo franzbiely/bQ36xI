@@ -60,6 +60,19 @@ class Client extends DB{
 		else return $data;
 		
 	}
+	public function search_finger_print(){
+		$query = "select * from tbl_fingerprint";
+		$bind_array= array("office_id"=>$_SESSION['office_id']);
+		$results = $this->query($query,$bind_array);
+		$object = array();
+		
+		if($results->num_rows > 0){
+			while($row = $results->fetch_assoc()){
+				$object[] = $row; 
+			}
+		}
+		echo json_encode($object);
+	}
 	function get_mother(){
 		$start = ($paged==1) ? 0 : $paged*ITEM_DISPLAY_COUNT;
 		if ($_SESSION['type'] == 'superadmin' || $_SESSION['type'] == 'superreporting') {
@@ -543,7 +556,7 @@ class Client extends DB{
           </div>
           <div class="form-group">
             <label for="birthdate">Birth Date</label><span class="required_field">*</span>
-            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="	" name="date_birth" placeholder="Enter Client Birth Date" required>
+            <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="date_birth" name="date_birth" placeholder="Enter Client Birth Date" required>
           	<!-- Code added by Eric -->
           	<div class="alert alert-warning birthdate-warning"><strong></strong></div> 
           	<!-- End added code here -->
@@ -602,20 +615,19 @@ class Client extends DB{
             <input type="checkbox" name="is_archived" id="is_archived" style="top: 2px;position: relative;">
             <label for="is_archived" style="font-weight:normal;">Check this if you want to archive this client record. </label>
           </div>
-          <div class="form-group " style="margin-top: -2px;">            
-            <input type="checkbox" name="" id="image_id" style="top: 2px;position: relative;">
-            <label for="image_id" style="font-weight:normal;">Check this to register finger print !</label>
-          </div>
+          <div class="form-group " >    
+		    <input class="btn btn-primary" style="text-align: center; font-size: 13px;" type="button" id="image_id" value="Check this to register finger print !" />
+	          </div>
 		  <div class="form-group">
 		    <input name="right_side_finger" type="text" id="right_side_finger" value="" readonly style = " display: none; border: 0px; font-size: 12px"/>
 		    <input name="center_finger" type="text" id="center_finger" value="" readonly style = " display: none; border: 0px; font-size: 12px"/>
 		    <input name="left_side_finger" type="text" id="left_side_finger" value="" readonly style = " display: none; border: 0px; font-size: 12px"/>
 		  </div>
           <div id="imgDiv" style="margin-top: 10px; float: right; padding: 2px; margin-right: 7px;">
-		  <input name="es" type="text" id="es" value="Register Your Finger Here >>" readonly style = "border: 0px; font-size: 12px"/>
+		  <input name="es" type="text" id="es" value="Scanner not ready! " readonly style = "border: 0px; font-size: 12px"/>
 			<span class = ""> 
 				<small style="margin-left: 7px; margin-top: 18px; text-align: center; position: absolute; font-size: 10px;">&nbsp;Right</small>
-				<img id = "image1" alt="" width="45px" height="45px" style = "border-radius: 5px;"/>
+				<img id = "image11" alt="" width="45px" height="45px" style = "border-radius: 5px;"/>
 			</span>
 			<span class = ""> 
 				<small style="margin-left: 5px; margin-top: 18px; text-align: center; position: absolute; font-size: 10px;">&nbsp;Center</small>
@@ -626,6 +638,7 @@ class Client extends DB{
 				<img id = "image3" alt="" width="45px" height="45px" style = "border-radius: 5px;"/>
 			</span>
 		  </div>
+		  
 		  <input id="btn_add_client" disabled style="margin-top: 20px;" type="submit" class="btn btn-success btn-default">
         </form>
 		<!-- </div>  --><!-- ===== id: modal-body ===== -->
@@ -641,10 +654,11 @@ class Client extends DB{
 		<script>
 		var hidden = true;
 		var finger_value = 1;
+		var checked = false;
 		$(document).ready(function(){
-		
 			// finger print input
 			$("#image_id").click(function(){
+				checked = true;
 				// test if the browser supports web sockets
 				if ("WebSocket" in window) {
 					console.log("ready");
@@ -679,10 +693,11 @@ class Client extends DB{
 							status.value = "Please Open Device";
 							break;
 						case 2:
-							status.value = "Place Finger";
+							status.value = "Place Right Thumb";
+							document.getElementById("image_id").disabled = true;
 							break;
 						case 3:
-							status.value = "Lift Finger";
+							status.value = "Lift Thumb";
 							break;
 						case 4:
 							//status.value = "";
@@ -731,7 +746,7 @@ class Client extends DB{
 								alert("Please try again !")
 							} else {
 								if(finger_value == 1){
-									var img = document.getElementById("image1");
+									var img = document.getElementById("image11");
 									img.src = "data:image/png;base64,"+obj.image;
 								}else if (finger_value == 2){
 									var img = document.getElementById("image2");
@@ -744,6 +759,7 @@ class Client extends DB{
 							break;
 						case 8:
 							status.value = "Time Out";
+							document.getElementById("image_id").disabled = false;
 							break;
 						case 9:
 
@@ -762,39 +778,16 @@ class Client extends DB{
 					};
 				};
 			});
-			function EnrollTemplate (){
+			function EnrollTemplate(){
 				try {
 					//ws.send("enrol");
 					var cmd = "{\"cmd\":\"enrol\",\"data1\":\"\",\"data2\":\"\"}";
 					ws.send(cmd);
 				} catch (err) {
 				}
-				document.getElementById("es").value = "Place Finger";
+				document.getElementById("es").value = "Place Right Thumb";
+				document.getElementById("image_id").disabled = true;
 			}
-
-			$("#GetTemplate").click(function(){
-				alert()
-				try {
-					//ws.send("capture");
-					var cmd = "{\"cmd\":\"capture\",\"data1\":\"\",\"data2\":\"\"}";
-					ws.send(cmd);
-					console.log(cmd)
-				} catch (err) {
-				}
-				document.getElementById("es").value = "Place Finger";
-			});
-			$("#btn_input_finger").click(function(){
-				$("#print_div").removeClass('hide');
-				$("#print_div").addClass('show');
-
-				var f1 = document.getElementById('right_side_finger').value;
-				var f2 = document.getElementById('center_finger').value;
-				var f3 = document.getElementById('left_side_finger').value;
-				//alert(f1 +" "+ f2 +" "+ f3 );
-				if ( !isEmpty(f1) && !isEmpty(f2) && !isEmpty(f3) ){
-					$('#btn_add_client').prop('disabled', false);
-				}
-			});
 			//Code added by Eric
 			var hold_dob = ""; //this will hold the previous birthdate value
 			$("#date_birth").click(function(){

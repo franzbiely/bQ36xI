@@ -112,9 +112,14 @@ class Client extends DB{
 		unset($_data['right_side_finger']);
 		unset($_data['center_finger']);
 		unset($_data['left_side_finger']);
+		unset($_data['imageDiv']);
 		unset($_data['image_id']);
+		unset($_data['image11']);
+		unset($_data['image2']);
+		unset($_data['image3']);
 		unset($_data['es']);
-
+		unset($_data['btn_add_client']);
+		//var_dump($_data);
 		if(isset($_data['is_archived'])){
 			$_data['is_archived']=($_data['is_archived']=="on") ? 1 : 0;	
 			$_data['date_archived']=date("m.d.y");
@@ -616,7 +621,7 @@ class Client extends DB{
             <label for="is_archived" style="font-weight:normal;">Check this if you want to archive this client record. </label>
           </div>
           <div class="form-group " >    
-		    <input class="btn btn-primary" style="text-align: center; font-size: 13px;" type="button" id="image_id" value="Check this to register finger print !" />
+		    <input class="btn btn-primary" style="text-align: center; font-size: 13px;" type="button" id="image_id" value="Click this to register finger print !" />
 	          </div>
 		  <div class="form-group">
 		    <input name="right_side_finger" type="text" id="right_side_finger" value="" readonly style = " display: none; border: 0px; font-size: 12px"/>
@@ -693,7 +698,13 @@ class Client extends DB{
 							status.value = "Please Open Device";
 							break;
 						case 2:
-							status.value = "Place Right Thumb";
+							if(finger_value == 1){
+								status.value = "Place Left Side Thumb";
+							}else if (finger_value == 2){
+								status.value = "Place Center Thumb";
+							}else if (finger_value == 3){
+								status.value = "Place Right Side Thumb";
+							}
 							document.getElementById("image_id").disabled = true;
 							break;
 						case 3:
@@ -785,7 +796,14 @@ class Client extends DB{
 					ws.send(cmd);
 				} catch (err) {
 				}
-				document.getElementById("es").value = "Place Right Thumb";
+				if(finger_value == 1){
+					document.getElementById("es").value = "Place Left Side Thumb";
+				}else if (finger_value == 2){
+					document.getElementById("es").value = "Place Center Thumb";
+				}else if (finger_value == 3){
+					document.getElementById("es").value = "Place Right Side Thumb";
+				}
+				//document.getElementById("es").value = "Place Right Thumb";
 				document.getElementById("image_id").disabled = true;
 			}
 			//Code added by Eric

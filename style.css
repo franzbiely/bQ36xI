@@ -29,6 +29,12 @@ body{
   width: 70%;
   border-radius: 20px;
 }
+.filled-in {
+  border: 2px solid green;
+}
+.filled-out {
+  border: 0px solid white;
+} 
 .searching-right input {
   margin-top: 30px;
   float: left;

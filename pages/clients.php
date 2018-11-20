@@ -15,7 +15,7 @@
               <?php if($_SESSION['type']!='superadmin') {
                  if (enablea_and_disable_ele($_SESSION['type'], "add", $_SESSION['client_section']) == false) { echo "hide"; }
                }else{  echo "hide"; }
-               ?>" 
+               ?>
               style="margin-left: 10px; float: right;"data-toggle="modal" href="#"
             ><i class ="glyphicon glyphicon-search"></i> Search By FingerPrint </a>
             <a id="addClient" type="button" class="btn btn-default

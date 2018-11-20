@@ -130,9 +130,10 @@ class Client extends DB{
 		
 		$check_record_nuber =  $this->select("record_number", array("record_number"=>$_data['record_number']),true, "tbl_client" );
 		
-		if ($check_record_nuber!=false){
-			echo "double-record";
-			exit();
+		if ($check_record_nuber!=false){ 
+		?>
+			<script> alert("Double record !");</script>
+		<?php
 		}
 		else{	
 			//Code added by Joe [to fix ajax error when adding a new client record "this error will show as undefined in the network tab by pressing F12 goto network tab then response" using ajax call]
@@ -163,9 +164,11 @@ class Client extends DB{
 			$dataFinger['client_id'] = $data;
 			$dataFinger['finger_data'] = $finger_3;
 			$data3 = $this->save($dataFinger, array(), "tbl_fingerprint", "lastInsertId");
-
+			if ($data == 0 ){
+				$data = true;
+			}
 			if($data==false){
-				echo "";
+				echo "error";
 			}else{
 				if($mother!=''){
 					if($_data['client_type']=='Child'){
@@ -179,10 +182,15 @@ class Client extends DB{
 										);
 						$data = $this->save($_mother_data);
 					}
+				} 
+				?>
+				<script> 
+					alert("Success !");
+					window.location.href = "?page=clients";
+				</script> 
+				<?php //echo "success";
 				}
-				echo "success";
-			}
-			exit();
+			//exit();
 		}		
 	}
 	function edit(){
@@ -732,14 +740,17 @@ class Client extends DB{
 									status.value = "Finger Print Save !";
 									if(finger_value == 1){
 										document.getElementById("right_side_finger").value = obj.data1;
+										document.getElementById("image11").setAttribute("style", "border-radius: 0px; border:2px solid green;");
 										finger_value = 2;
 										EnrollTemplate();
 									}else if (finger_value == 2){
 										document.getElementById("center_finger").value = obj.data1;
+										document.getElementById("image2").setAttribute("style", "border-radius: 0px; border:2px solid green;");
 										finger_value = 3;
 										EnrollTemplate();
 									}else if (finger_value == 3){
 										document.getElementById("left_side_finger").value = obj.data1;
+										document.getElementById("image3").setAttribute("style", "border-radius: 0px; border:2px solid green;");
 										finger_value = 0;
 										document.getElementById("btn_add_client").disabled = false;
 										document.getElementById("image_id").disabled = true;
@@ -759,12 +770,15 @@ class Client extends DB{
 								if(finger_value == 1){
 									var img = document.getElementById("image11");
 									img.src = "data:image/png;base64,"+obj.image;
+										
 								}else if (finger_value == 2){
 									var img = document.getElementById("image2");
 									img.src = "data:image/png;base64,"+obj.image;
+										
 								}else if (finger_value == 3){
 									var img = document.getElementById("image3");
 									img.src = "data:image/png;base64,"+obj.image;
+										
 								}
 							}
 							break;

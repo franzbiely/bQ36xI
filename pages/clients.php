@@ -166,19 +166,19 @@
 								status.value = "Get Template Fail";
 							}
 							break;
-						case 6:
-							if (obj.retmsg == 1) {
-								if (obj.data1 != "null") {
-									status.value = "Searching Client...!";
-										document.getElementById("finger_search").value = obj.data1;
-								} else {
-									status.value = "Please Click Again !";    
-								}
-							} else {
-								status.value = "Enrol Template Fail";
-								EnrollTemplate1();	
-							}
-							break;
+						// case 6:
+						// 	if (obj.retmsg == 1) {
+						// 		if (obj.data1 != "null") {
+						// 			status.value = "Searching Client...!";
+						// 				document.getElementById("finger_search").value = obj.data1;
+						// 		} else {
+						// 			status.value = "Please Click Again !";    
+						// 		}
+						// 	} else {
+						// 		status.value = "Enrol Template Fail";
+						// 		EnrollTemplate1();	
+						// 	}
+						// 	break;
 						case 7:
 							if (obj.image == "null") {
 								alert("Please try again !")
@@ -189,7 +189,11 @@
 							break;
 						case 8:
 							status.value = "Time Out";
-							EnrollTemplate1();
+              var img = document.getElementById("image1");
+              img.src = "";
+              setInterval(function (){
+                EnrollTemplate1();
+              },2000);
 							break;
 						case 9:
 							if(obj.retmsg >= 100){

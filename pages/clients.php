@@ -233,6 +233,7 @@
               var concat = "";
               var count = 0;
               client_id = value["client_id"];
+              console.log(value);
               for( x = 0; x < str.length; x++){
                 if(str.charAt(x) != " "){
                   concat += str.charAt(x);
@@ -267,9 +268,10 @@
                                   prevIndex = x;
                               }
                           }
-                          // alert(client_id);
-                          window.location.href = "?page=records&cid=" +client_id+ "&p=view";
+                          window.location.href = "?page=records&cid=" +content[results.indexOf(100)].client_id+ "&p=view";
                           console.log('Results', results, content[prevIndex]);
+                          console.log(results, content[results.indexOf(100)].client_id);
+                          // console.log('Results', client_id);
                           clearInterval(timer);
                           // GetTemplate();
                       }else{

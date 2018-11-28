@@ -119,6 +119,7 @@ class Client extends DB{
 		unset($_data['image3']);
 		unset($_data['es']);
 		unset($_data['btn_add_client']);
+		unset($_data['source']);
 		//var_dump($_data);
 		if(isset($_data['is_archived'])){
 			$_data['is_archived']=($_data['is_archived']=="on") ? 1 : 0;	
@@ -196,9 +197,47 @@ class Client extends DB{
 	function edit(){
 		$_data = $_POST;
 		$id = $_data['id'];
+		var_dump($_data);
+		if($_data['source'] == "record"){
+			$finger_1 =  $_data['u_right_side_finger'];
+		    $finger_2 =  $_data['u_center_finger'];
+		    $finger_3 =  $_data['u_left_side_finger'];
+		    unset($_data['u_right_side_finger']);
+		    unset($_data['u_center_finger']);
+		    unset($_data['u_left_side_finger']);
+		    unset($_data['u_imageDiv']);
+		    unset($_data['u_image_id']);
+		    unset($_data['u_image11']);
+		    unset($_data['u_image2']);
+		    unset($_data['u_image3']);
+		    unset($_data['u_es']);
+		    unset($_data['source']);
+		    unset($_data['save_info']);
+		}
+		if($_data['source'] == "modal"){
+			$finger_1 =  $_data['right_side_finger'];
+			$finger_2 =  $_data['center_finger'];
+			$finger_3 =  $_data['left_side_finger'];
+			unset($_data['class']);
+			unset($_data['func']);
+			unset($_data['right_side_finger']);
+			unset($_data['center_finger']);
+			unset($_data['left_side_finger']);
+			unset($_data['imageDiv']);
+			unset($_data['image_id']);
+			unset($_data['image11']);
+			unset($_data['image2']);
+			unset($_data['image3']);
+			unset($_data['es']);
+			unset($_data['source']);
+			unset($_data['btn_add_client']);
+		}
+	    
 		unset($_data['id']);
 		unset($_data['class']);
 		unset($_data['func']);
+
+		var_dump($_data);
 		if(isset($_data['is_archived'])){
 			$_data['is_archived']=($_data['is_archived']=="on") ? 1 : 0;	
 			$_data['date_archived']=date("m.d.y");
@@ -215,18 +254,29 @@ class Client extends DB{
 			$_data['review_date'] = $review_date->getTimestamp();
 		}*/
 		
-		$relation_to = $_data['relation_to'];
+		// $relation_to = $_data['relation_to'];
 
-		$query = "DELETE FROM tbl_relationship WHERE base_client = '$id'";
-		$stmt = $this->connect();
-		$data = $stmt->exec($query);
-		if($data==false){
-			echo ""; //"error on delete";
-		}
-		else
-			echo "";//"success on delete";
+		// $query = "DELETE FROM tbl_relationship WHERE base_client = '$id'";
+		// $stmt = $this->connect();
+		// $data = $stmt->exec($query);
+		// if($data==false){
+		// 	echo ""; //"error on delete";
+		// }
+		// else
+		// 	echo "";//"success on delete()te";
 
-		unset($_data['relation_to']);
+		//unset($_data['relation_to']);
+
+
+		$query = "SELECT * FROM tbl_fingerprint WHERE client_id = '$id'";
+		$stmt = $this->query($query,array());
+		$_all_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		var_dump($_all_data[0]['ID']);
+		var_dump($_all_data[1]['ID']);
+		var_dump($_all_data[2]['ID']);
+		$data1 = $this->update($finger_1, $_all_data[0]['ID'], $_all_data[0]['client_id'] );
+		$data2 = $this->update($finger_2, $_all_data[1]['ID'], $_all_data[1]['client_id'] );
+		$data3 = $this->update($finger_3, $_all_data[2]['ID'], $_all_data[2]['client_id'] );
 
 		$this->table = 'tbl_client';
 		$data = $this->save($_data,array("ID"=>$id));
@@ -235,7 +285,11 @@ class Client extends DB{
 			echo "error";
 		}
 		else{
-			echo "success";
+			if ($_all_data){
+				echo "success $_all_data";
+			}else {
+				echo "success";
+			}
 		}
 
 		if($_data['client_type']=='Child') {
@@ -630,13 +684,14 @@ class Client extends DB{
           </div>
           <div class="form-group " >    
 		    <input class="btn btn-primary" style="text-align: center; font-size: 13px;" type="button" id="image_id" value="Click this to register finger print !" />
-	          </div>
+	      </div>
 		  <div class="form-group">
 		    <input name="right_side_finger" type="text" id="right_side_finger" value="" readonly style = " display: none; border: 0px; font-size: 12px"/>
 		    <input name="center_finger" type="text" id="center_finger" value="" readonly style = " display: none; border: 0px; font-size: 12px"/>
 		    <input name="left_side_finger" type="text" id="left_side_finger" value="" readonly style = " display: none; border: 0px; font-size: 12px"/>
 		  </div>
           <div id="imgDiv" style="margin-top: 10px; float: right; padding: 2px; margin-right: 7px;">
+          <input name="source" type="text" id="source" value="modal" readonly style = "display: none;"/>
 		  <input name="es" type="text" id="es" value="Scanner not ready! " readonly style = "border: 0px; font-size: 12px"/>
 			<span class = ""> 
 				<small style="margin-left: 7px; margin-top: 18px; text-align: center; position: absolute; font-size: 10px;">&nbsp;Right</small>
@@ -671,6 +726,7 @@ class Client extends DB{
 		$(document).ready(function(){
 			// finger print input
 			$("#image_id").click(function(){
+				document.getElementById("source").value = "modal";
 				checked = true;
 				// test if the browser supports web sockets
 				if ("WebSocket" in window) {
@@ -721,19 +777,19 @@ class Client extends DB{
 						case 4:
 							//status.value = "";
 							break;
-						case 5:
-							if (obj.retmsg == 1) {
-								status.value = "Get Template";
-								if (obj.data2 != "null") {
-									attempt = obj.data2;
-									//MatchTemplate();
-								} else {
-									status.value = "Get Template Fail";
-								}
-							}else {
-								status.value = "Get Template Fail";
-							}
-							break;
+						// case 5:
+						// 	if (obj.retmsg == 1) {
+						// 		status.value = "Get Template";
+						// 		if (obj.data2 != "null") {
+						// 			attempt = obj.data2;
+						// 			//MatchTemplate();
+						// 		} else {
+						// 			status.value = "Get Template Fail";
+						// 		}
+						// 	}else {
+						// 		status.value = "Get Template Fail";
+						// 	}
+						// 	break;
 						case 6:
 							if (obj.retmsg == 1) {
 								if (obj.data1 != "null") {
@@ -751,9 +807,10 @@ class Client extends DB{
 									}else if (finger_value == 3){
 										document.getElementById("left_side_finger").value = obj.data1;
 										document.getElementById("image3").setAttribute("style", "border-radius: 0px; border:2px solid green;");
-										finger_value = 0;
+										finger_value = 1;
 										document.getElementById("btn_add_client").disabled = false;
 										document.getElementById("image_id").disabled = true;
+										console.log("Finger final value "+finger_value);
 									}
 								} else {
 									status.value = "Please Click Again !";    
@@ -770,15 +827,12 @@ class Client extends DB{
 								if(finger_value == 1){
 									var img = document.getElementById("image11");
 									img.src = "data:image/png;base64,"+obj.image;
-										
 								}else if (finger_value == 2){
 									var img = document.getElementById("image2");
 									img.src = "data:image/png;base64,"+obj.image;
-										
 								}else if (finger_value == 3){
 									var img = document.getElementById("image3");
 									img.src = "data:image/png;base64,"+obj.image;
-										
 								}
 							}
 							break;

@@ -132,7 +132,24 @@ class DB{
 		$array = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		return $array;
 	}
-    
+    public function update($data ="", $ID, $CLIENT_ID){
+		
+		
+		$con = $this->connect();
+		
+		$q = 'UPDATE tbl_fingerprint SET finger_data = "'.$data.'" 
+			  WHERE ID="'.$ID.'" AND client_id = "'.$CLIENT_ID.'"';
+
+		$stmt = $con->prepare($q);
+        $stmt->execute();
+
+        if($stmt->rowCount()>0){
+     		return true;
+        }
+        else{
+        	return false;
+        }
+	}
 	public function save($data = array(), $arr_where=array(), $table = "",$return="count"){
 
 		$this->set_default($table);

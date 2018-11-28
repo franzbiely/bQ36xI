@@ -54,6 +54,8 @@ class Records extends DB{
 	function edit(){
 		$_data = $_POST;
 		$id = $_data['id'];
+    
+
 		unset($_data['id']);
 		unset($_data['class']);
 		unset($_data['func']);
@@ -952,7 +954,7 @@ class Records extends DB{
       });
       $("#frm_client_personal_info_update").on('submit',function(e){
         e.preventDefault();
-        show_loader($);
+        //show_loader($);
         $('.required_field').hide();  
         _data = $(this).serialize();  
         _this = $(this);
@@ -968,7 +970,7 @@ class Records extends DB{
              show_alert_info("Record Modified Successfully!",$);
            window.location.href="?page=records&cid=<?php echo $_GET['cid'] ?>&p=view";           
          } 
-         close_loader($);                   
+         //close_loader($);                   
         })
         return false;
       })

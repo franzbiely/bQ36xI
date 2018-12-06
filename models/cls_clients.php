@@ -5,7 +5,6 @@ class Client extends DB{
 		$this->table = "tbl_client";
 		
 	}
-
 	function get_age($date_birth){
 		// GETTING THE AGE from birth date
         if($date_birth!=null || $date_birth!=""){
@@ -605,7 +604,7 @@ class Client extends DB{
 				?>
 		<!-- <div id="modal-body"> -->
 		<form role="form" action="" method="post">
-		
+			
           <input type="hidden" name="class" value="client" />
           <input type="hidden" name="func" value="add" />
           <span class="required_field">* <span class="required_label">required fields.</span></span>
@@ -678,10 +677,17 @@ class Client extends DB{
             <label for="current_address">Client Address (where client currently resides)</label>
             <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="current_address" placeholder="Enter Client current address" name="current_address">
           </div>
-		  <div class="form-group" style="border-top: 1px solid #eee;margin-top: 20px;">            
-            <input type="checkbox" name="is_archived" id="is_archived" style="top: 2px;position: relative;">
-            <label for="is_archived" style="font-weight:normal;">Check this if you want to archive this client record. </label>
-          </div>
+          <?php if (isset($_GET['modal']) && $_GET['modal']  === "add" ){ ?> 
+				  	<div class="form-group edit_only hide">  
+			            <input type="checkbox" name="is_archived" id="is_archived" style="top: 2px;position: relative;">
+			            <label for="is_archived" style="font-weight:normal;">Check this if you want to archive this client record. </label>
+		          	</div>
+      	  <?php } else {?>
+      	  		<div class="form-group edit_only">  
+			            <input type="checkbox" name="is_archived" id="is_archived" style="top: 2px;position: relative;">
+			            <label for="is_archived" style="font-weight:normal;">Check this if you want to archive this client record. </label>
+		          	</div>
+      	  <?php }?>
           <div class="form-group " >    
 		    <input class="btn btn-primary" style="text-align: center; font-size: 13px;" type="button" id="image_id" value="Click this to register finger print !" />
 	      </div>
@@ -724,18 +730,15 @@ class Client extends DB{
 		var finger_value = 1;
 		var checked = false;
 		$(document).ready(function(){
-			// finger print input
 			$("#image_id").click(function(){
 				document.getElementById("source").value = "modal";
 				checked = true;
-				// test if the browser supports web sockets
 				if ("WebSocket" in window) {
 					console.log("ready");
 					connect("ws://127.0.0.1:21187/fps");
 				} else {
 					$('#es').val('Browser does not support!');
 				};
-				// function to send data on the web socket
 				function ws_send(str) {
 					try {
 						ws.send(str);
@@ -774,22 +777,6 @@ class Client extends DB{
 						case 3:
 							status.value = "Lift Thumb";
 							break;
-						case 4:
-							//status.value = "";
-							break;
-						// case 5:
-						// 	if (obj.retmsg == 1) {
-						// 		status.value = "Get Template";
-						// 		if (obj.data2 != "null") {
-						// 			attempt = obj.data2;
-						// 			//MatchTemplate();
-						// 		} else {
-						// 			status.value = "Get Template Fail";
-						// 		}
-						// 	}else {
-						// 		status.value = "Get Template Fail";
-						// 	}
-						// 	break;
 						case 6:
 							if (obj.retmsg == 1) {
 								if (obj.data1 != "null") {
@@ -844,14 +831,12 @@ class Client extends DB{
 
 							if(obj.retmsg >= 100){
 								window.result = 1; 
-									
 							}
 								results.push(obj.retmsg); 
 								count_occur++;            
 							break;
 						}
 					};
-
 					ws.onclose = function () {
 						document.getElementById("es").value = "Closed!";
 					};
@@ -859,7 +844,6 @@ class Client extends DB{
 			});
 			function EnrollTemplate(){
 				try {
-					//ws.send("enrol");
 					var cmd = "{\"cmd\":\"enrol\",\"data1\":\"\",\"data2\":\"\"}";
 					ws.send(cmd);
 				} catch (err) {
@@ -871,7 +855,6 @@ class Client extends DB{
 				}else if (finger_value == 3){
 					document.getElementById("es").value = "Place Right Side Thumb";
 				}
-				//document.getElementById("es").value = "Place Right Thumb";
 				document.getElementById("image_id").disabled = true;
 			}
 			//Code added by Eric
@@ -882,7 +865,6 @@ class Client extends DB{
 				}
 			});
 			//End added code here
-
 			$("#date_birth").on( 'change', function(){
 				var dob = new Date($(this).val());
 
@@ -1031,10 +1013,10 @@ class Client extends DB{
 			$(".alert .btn-default, .alert .close").on('click',function(){
 				$(this).parent().fadeOut();
 			});
-			
 		}
 		function add_button($){
 			$("#addClient").on('click',function(){
+				var i = $('.edit_or_add').html();
 				$('.edit_or_add').html('Add New');
 				$("#newClientModal input[name='func']").val('add');
 				$("#newClientModal input[name='id']").remove();
@@ -1042,7 +1024,27 @@ class Client extends DB{
 				resetForm();
 			});
 		}
-
+		$("#addClient").on('click',function(){
+        	$(".edit_only").hide();
+        	<?php if (isset($_GET['modal'])){ ?>
+	        	$(".edit_only").removeClass('show');
+	        	$(".edit_only").addClass('hide');
+	        <?php } ?>
+        	console.log("addClient");
+	    })
+	    $(".addNewCli").on('click',function(){
+	        $(".edit_only").hide();
+        	console.log("addCli");
+	    })
+	    $(".edit").on('click',function(){
+	        <?php if (isset($_GET['modal'])){ ?>
+	        	$(".edit_only").removeClass('hide');
+	        	$(".edit_only").addClass('show');
+	        <?php } else { ?>
+	        	$(".edit_only").show();
+	        <?php }  ?>
+        	console.log("edit");
+	    })
 		function delete_button($,_this){
 			$(_this).on('click',"a.delete",function(){
 				$("#alert-sure-delete").fadeIn();

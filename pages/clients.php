@@ -100,7 +100,9 @@
       var results = [];
       var count_occur = -1;
       var client_id;
+
       $("#searchClientFingerPrint").click(function(){
+
         if(hidden == true){
           $("#image_div").fadeIn('slow');
           $("#image_div").removeClass('hide');
@@ -118,7 +120,6 @@
 				} else {
 					$('#ess').val('Browser does not support!');
 				};
-				// function to send data on the web socket
 				function ws_send(str) {
 					try {
 						ws.send(str);
@@ -127,105 +128,86 @@
 					}
 				}
         function connect(host) {
-				$('#ess').val("Connecting to " + host + " ...");
-				try {
-					ws = new WebSocket(host); // create the web socket
-				} catch (err) {
-					$('#ess').val('error');
-				}
-				ws.onopen = function () {
-					$('#ess').val('Connected OK!');
-					EnrollTemplate1();
-				};
-				ws.onmessage = function (evt) {
-					var obj = eval("("+evt.data+")");
-					var status = document.getElementById("ess");
-					switch (obj.workmsg) {
-						case 1:
-							status.value = "Please Open Device";
-							break;
-						case 2:
-							status.value = "Place Right Thumb";
-							break;
-						case 3:
-							status.value = "Lift Finger";
-							break;
-						case 4:
-							//status.value = "";
-							break;
-						case 5:
-							if (obj.retmsg == 1) {
-								status.value = "Searching Client...!";
-								if (obj.data2 != "null") {
-									attempt = obj.data2;
-									MatchTemplate();
-								} else {
-									status.value = "Get Template Fail";
-								}
-							}else {
-								status.value = "Get Template Fail";
-							}
-							break;
-						// case 6:
-						// 	if (obj.retmsg == 1) {
-						// 		if (obj.data1 != "null") {
-						// 			status.value = "Searching Client...!";
-						// 				document.getElementById("finger_search").value = obj.data1;
-						// 		} else {
-						// 			status.value = "Please Click Again !";    
-						// 		}
-						// 	} else {
-						// 		status.value = "Enrol Template Fail";
-						// 		EnrollTemplate1();	
-						// 	}
-						// 	break;
-						case 7:
-							if (obj.image == "null") {
-								alert("Please try again !")
-							} else {
-									var img = document.getElementById("image1");
-									img.src = "data:image/png;base64,"+obj.image;
-							}
-							break;
-						case 8:
-							status.value = "Time Out";
-              var img = document.getElementById("image1");
-              img.src = "";
-              setInterval(function (){
-                EnrollTemplate1();
-              },2000);
-							break;
-						case 9:
-							if(obj.retmsg >= 100){
-								window.result = 1; 
-							}
-								results.push(obj.retmsg); 
-								count_occur++;            
-							break;
-						}
-					};
-					ws.onclose = function () {
-						document.getElementById("ess").value = "Closed!";
-					};
-				};
-			});
+  				  $('#ess').val("Connecting to " + host + " ...");
+    				try {
+    					ws = new WebSocket(host); // create the web socket
+    				} catch (err) {
+    					$('#ess').val('error');
+    				}
+  				ws.onopen = function () {
+  					$('#ess').val('Connected OK!');
+  					EnrollTemplate1();
+  				};
+  				ws.onmessage = function (evt) {
+  					var obj = eval("("+evt.data+")");
+  					var status = document.getElementById("ess");
+  					switch (obj.workmsg) {
+  						case 1:
+  							status.value = "Please Open Device";
+  							break;
+  						case 2:
+  							status.value = "Place Right Thumb";
+  							break;
+  						case 3:
+  							status.value = "Lift Finger";
+  							break;
+  						case 5:
+  							if (obj.retmsg == 1) {
+  								status.value = "Searching Client...!";
+  								if (obj.data2 != "null") {
+  									attempt = obj.data2;
+  									MatchTemplate();
+  								} else {
+  									status.value = "Get Template Fail";
+  								}
+  							}else {
+  								status.value = "Get Template Fail";
+  							}
+  							break;
+  						case 7:
+  							if (obj.image == "null") {
+  								alert("Please try again !")
+  							} else {
+  									var img = document.getElementById("image1");
+  									img.src = "data:image/png;base64,"+obj.image;
+  							}
+  							break;
+  						case 8:
+  							status.value = "Time Out";
+                var img = document.getElementById("image1");
+                img.src = "";
+                setInterval(function (){
+                    EnrollTemplate1();
+                  },2000);
+  							break;
+  						case 9:
+  							if(obj.retmsg >= 100){
+  								window.result = 1; 
+  							}
+  								results.push(obj.retmsg); 
+  								count_occur++;            
+  							break;
+  						}
+  					};
+  					ws.onclose = function () {
+  						document.getElementById("ess").value = "Closed!";
+  					};
+  				};
+			  });
 			function EnrollTemplate1(){
 				try {
-					//ws.send("enrol");
           var cmd = "{\"cmd\":\"capture\",\"data1\":\"\",\"data2\":\"\"}";
 					ws.send(cmd);
-				} catch (err) {
-				}
-				document.getElementById("ess").value = "Place Right Thumb";
+				} catch (err) {}
+				  document.getElementById("ess").value = "Place Right Thumb";
 			}
-
       function MatchTemplate () {
         $.ajax({
           url: '/ajax.php?capture=capture_data',
           type: 'get',
           dataType: 'json',
           success:function(response){
-                  content = response;
+            content = response;
             $.each(response, function(key, value){
               //alert();
               console.log(value["finger_data"]);
@@ -247,44 +229,35 @@
                 var cmd = "{\"cmd\":\"setdata\",\"data1\":\"" + "\",\"data2\":\"" + concat + "\"}";
                 ws.send(cmd);
                 var cmd = "{\"cmd\":\"match\",\"data1\":\"\",\"data2\":\"\"}";
-                          ws.send(cmd);
-                          console.log(window.result);
+                  ws.send(cmd);
+                  console.log(window.result);
                 } catch (err) {}	
             });
-      
           }
         });
-      
-          timer = setInterval(function(){
-                      if(window.result == 1){
-                          window.result = 0;
-      
-                          let prevMatch = 0;
-                          let prevIndex = -1;
-                          
-                          for(x = 0; x < results.length; x++){
-                              if(prevMatch < results[x]){
-                                  prevMatch = results[x];
-                                  prevIndex = x;
-                              }
-                          }
-                          window.location.href = "?page=records&cid=" +content[results.indexOf(100)].client_id+ "&p=view";
-                          console.log('Results', results, content[prevIndex]);
-                          console.log(results, content[results.indexOf(100)].client_id);
-                          // console.log('Results', client_id);
-                          clearInterval(timer);
-                          // GetTemplate();
-                      }else{
-                          console.log("PLease try again!");
-                          alert("try again !");
-                          clearInterval(timer);
-                          EnrollTemplate1();
-                      }           
-                  }, 500);  
-      
-        
+        timer = setInterval(function(){
+          if(window.result == 1){
+            window.result = 0;
+            let prevMatch = 0;
+            let prevIndex = -1;
+            for(x = 0; x < results.length; x++){
+              if(prevMatch < results[x]){
+                prevMatch = results[x];
+                prevIndex = x;
+              }
+            }
+            window.location.href = "?page=records&cid=" +content[results.indexOf(100)].client_id+ "&p=view";
+            console.log('Results', results, content[prevIndex]);
+            console.log(results, content[results.indexOf(100)].client_id);
+            clearInterval(timer);
+          }else{
+            console.log("PLease try again!");
+            alert("try again !");
+            clearInterval(timer);
+            EnrollTemplate1();
+          }           
+        }, 500);  
       }
-		
     </script>
  <?php  
  if (isset($_GET['modal'])) {

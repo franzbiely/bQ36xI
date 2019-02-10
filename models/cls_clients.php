@@ -123,8 +123,8 @@ class Client extends DB{
 			if($_data['date_death']=='') {
 				unset($_data['date_death']);
 			}		
-
 			$data = $this->save($_data, array(), "tbl_client", "lastInsertId");
+			// print_r($data);
 			
 			if($data==false){
 				echo "error";
@@ -580,10 +580,18 @@ class Client extends DB{
             <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="current_address" placeholder="Enter Client current address" name="current_address">
           </div>
 
-          <div class="form-group" style="border-top: 1px solid #eee;margin-top: 20px;">            
-            <input type="checkbox" name="is_archived" id="is_archived" style="top: 2px;position: relative;">
-            <label for="is_archived" style="font-weight:normal;">Check this if you want to archive this client record. </label>
-          </div>
+					<?php if (isset($_GET['modal']) && $_GET['modal']  === "add" ){ ?> 
+                      <div class="form-group edit_only hide">  
+                        <input type="checkbox" name="is_archived" id="is_archived" style="top: 2px;position: relative;">
+                        <label for="is_archived" style="font-weight:normal;">Check this if you want to archive this client record. </label>
+                      </div>
+            <?php } else {?>
+                    <div class="form-group edit_only">  
+                        <input type="checkbox" name="is_archived" id="is_archived" style="top: 2px;position: relative;">
+                        <label for="is_archived" style="font-weight:normal;">Check this if you want to archive this client record. </label>
+                      </div>
+            <?php }?>
+					
           <input style="margin-top: 20px;" type="submit" class="btn btn-success btn-default">
         </form>
 		<!-- </div>  --><!-- ===== id: modal-body ===== -->
@@ -673,7 +681,8 @@ class Client extends DB{
 				}
 		    });
 
-			$(document).on('submit',".col-md-9 form",function(){
+			$(document).on('submit',".col-md-9 form",function(e){
+				e.preventDefault();
 				show_loader($);
 				$(this).find('.btn-success').prop('disabled', true);
 				$(this).find('.btn-success').html('Saving...');
@@ -698,7 +707,8 @@ class Client extends DB{
 							show_alert_info("Record Modified Successfully!",$);
 						}						
 					}
-					else { $("#newClientModal").modal('hide'); console.log(data); }	
+					else { //$("#newClientModal").modal('hide'); console.log(data); 
+					}	
 					$(".container table").load(window.location.href+" table",function(){
 						close_loader($);
 					});
@@ -767,7 +777,24 @@ class Client extends DB{
 				resetForm();
 			});
 		}
-
+		$("#addClient").on('click',function(){
+						$(".edit_only").hide();
+						<?php if (isset($_GET['modal'])){ ?>
+										$(".edit_only").removeClass('show');
+										$(".edit_only").addClass('hide');
+						<?php } ?>
+		})
+		$(".addNewCli").on('click',function(){
+						$(".edit_only").hide();
+		})
+		$(".edit").on('click',function(){
+						<?php if (isset($_GET['modal'])){ ?>
+										$(".edit_only").removeClass('hide');
+										$(".edit_only").addClass('show');
+						<?php } else { ?>
+										$(".edit_only").show();
+						<?php }  ?>
+		})
 		function delete_button($,_this){
 			$(_this).on('click',"a.delete",function(){
 				$("#alert-sure-delete").fadeIn();

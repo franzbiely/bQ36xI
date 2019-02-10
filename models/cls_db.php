@@ -35,10 +35,10 @@ class DB{
     }
     private function setValue(&$stmt, $data){
     	foreach($data as $key=>$val){ // BINDING WHERE VALUES
-			if(is_array($val))
-				$val = json_encode($val);
-			$stmt->bindValue(":$key", "$val");
-		}
+				if(is_array($val))
+					$val = json_encode($val);
+				$stmt->bindValue(":$key", "$val");
+			}
     }
     function connect(){
         extract($this->_config);
@@ -134,7 +134,7 @@ class DB{
 	}
     
 	public function save($data = array(), $arr_where=array(), $table = "",$return="count"){
-
+		// print_r($data);
 		$this->set_default($table);
 		$con = $this->connect();
 		
@@ -151,24 +151,28 @@ class DB{
 			$q.=$where;
 		}	
 		// =============================[ end ]=============
+		
 		$stmt = $con->prepare($q);
-        $this->setValue($stmt, $data);
+		// print_r($q);
+
+		$this->setValue($stmt, $data);
 
 		foreach($arr_where as $key=>$val){ // BINDING WHERE VALUES
 			$stmt->bindValue(":$key", "$val");
 		}
-		
-        $stmt->execute();
-
-        if($stmt->rowCount()>0){
-     		if($return=="count")
-     			return $stmt->rowCount();
-	     	elseif($return=="lastInsertId")
-        		return $con->lastInsertId('ID');
-        }
-        else{
-        	return false;
-        }
+		// print_r($stmt);
+		// echo "SUN";
+		$stmt->execute();
+		// echo "hello there";
+		if($stmt->rowCount()>0){
+			if($return=="count")
+				return $stmt->rowCount();
+			elseif($return=="lastInsertId")
+				return $con->lastInsertId('ID');
+		}
+		else{
+			return false;
+		}
         
 	}	// insert func()
 	

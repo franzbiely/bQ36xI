@@ -53,7 +53,7 @@
                 </div><!-- /.col-lg-6 -->
               </div>
             </div>
-            <a href="?page=clients&modal=add" class="btn btn-default addNewCli" style="width: 100%;" 
+            <a href="?page=clients&modal=add" class="btn btn-default" style="width: 100%;" 
                <?php if ($_SESSION['type'] != 'superadmin' && $_SESSION['type'] != 'superreporting' && $_SESSION['type'] != 'reporting'): ?>
                   <?php if (enablea_and_disable_ele($_SESSION['type'], "quick_search", $_SESSION['search_client'])) {
                   echo "enabled";
@@ -189,6 +189,5 @@
                 </div>
               </div>
             </div>
-            <?php $client->scripts(); ?>
           </div>              
         </div>

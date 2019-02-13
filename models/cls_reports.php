@@ -675,12 +675,12 @@ class Reports extends DB{
 
   }
   function get_client_record($sDate,$eDate,$client_type,$visit_type,$clinic, $province){
+    echo "test";
         $temp = array("start_date"=>$sDate,"end_date"=>$eDate, "client_type"=>$client_type,
                      "visit_type"=>$visit_type,"clinic"=>$clinic, "province"=>$province);
         $_data = array_filter($temp);
         $where = "";
         $bind_query = array();
-
         if(array_key_exists("client_type", $_data)){
           $where .= "b.client_type =  :client_type AND ";
           $bind_query['client_type']=$_data['client_type'];
@@ -750,6 +750,7 @@ class Reports extends DB{
                       ORDER BY a.client_id";
                       $bind_query['office_id'] = $_SESSION['office_id'];
           }
+          
         // $bind_array = array("start_date"=>$start_date, "end_date"=>$end_date);
         $stmt = $this->query($query,$bind_query);
         $array = $stmt->fetchAll(PDO::FETCH_ASSOC);

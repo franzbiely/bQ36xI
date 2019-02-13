@@ -1,6 +1,6 @@
 <?php
-error_reporting(0);
-# error_reporting(E_ALL ^ E_WARNING); 
+// error_reporting(0);
+ error_reporting(E_ALL ^ E_WARNING); 
 
 class User extends DB{
 	public $username;
@@ -26,7 +26,7 @@ class User extends DB{
 			$data2 = $this->select("*", array("user_id" =>$data['ID']),true, "tbl_permissions" );
 			if ($data2 != false) {
 				/* user already given permissions */
-				error_reporting(0);
+				// error_reporting(0);
 				session_start();
 				$_SESSION['id']=$data['ID'];
 				$_SESSION['username']=$data['username'];
@@ -56,7 +56,7 @@ class User extends DB{
 					}
 				}
 				if($_SESSION['type'] != 'superreporting') { 
-					error_reporting(0);
+					// error_reporting(0);
 					header( "Location:?page=reports");	
 				}elseif($_SESSION['type'] == 'dataentry' || $_SESSION['type'] == 'enquiry'){ 
 					header("Location:?page=clients");
@@ -88,7 +88,7 @@ class User extends DB{
 		return $user_type['type'];
 	}
 	function logout(){
-		error_reporting(0);
+		// error_reporting(0);
 		session_start();
 		session_destroy();
 		header("Location: ".SITE_URL."/?page=".FRONT_PAGE);

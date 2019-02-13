@@ -58,7 +58,6 @@ $main = new Client();
 $permission = new Permission();
 $relationship = new Relationship();
 $current_page = isset($_GET['page']) ? $_GET['page'] : FRONT_PAGE;
-
 include("functions.php");
 
 include("parts/header.php");

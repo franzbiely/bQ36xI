@@ -1,6 +1,5 @@
 <?php
 
-
 if(isset($_POST['func']) && isset($_POST['class'])){
     $class = new $_POST['class']();
     $func = $_POST['func'];

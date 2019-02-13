@@ -75,20 +75,21 @@ function export_client_records(){
 }
 function export_client(){
       require_once dirname(__FILE__) . '/models/Classes/PHPExcel.php';
+      
       global $reports;
       extract($_POST);
-
+    
       if($visit_type != ""){
-        $data = $reports->get_client_record($sDate,$eDate,$client_type,$visit_type,$clinic);
+        $data = $reports->get_client_record($sDate,$eDate,$client_type,$visit_type,$clinic, $province);
         $data2 = $reports->search_by_visit_reason($data, $visit_type);  
 
-        $client_details = $reports->get_client_record_details($sDate,$eDate,$client_type,$visit_type,$clinic);
+        $client_details = $reports->get_client_record_details($sDate,$eDate,$client_type,$visit_type);
         $client_details2 = $reports->search_visit_reason_details($client_details, $visit_type);  
       }else{
-         $data2 = $reports->get_client_record($sDate,$eDate,$client_type,$visit_type,$clinic);
-         $client_details2 = $reports->get_client_record_details($sDate,$eDate,$client_type,$visit_type,$clinic);
+         $data2 = $reports->get_client_record($sDate,$eDate,$client_type,$visit_type,$clinic, $province);
+         $client_details2 = $reports->get_client_record_details($sDate,$eDate,$client_type,$visit_type);
       }
-     
+      
       $visit_type_report = $reports->visit_type_reports_excel($data2);
 
       switch($_POST['client_type']) {

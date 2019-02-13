@@ -5,6 +5,10 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.26 | 13th of Feb 2019
+ - Reporting > Client Reports > Export Button Fix
+ - Fix Archive trigger to only show for edit
+
 v3.25 | 12th of Sept 2018
  - Superreporting > Consultation Reports > Filter by Province fix
 

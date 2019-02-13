@@ -580,10 +580,17 @@ class Client extends DB{
             <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="current_address" placeholder="Enter Client current address" name="current_address">
           </div>
 
-          <div class="form-group" style="border-top: 1px solid #eee;margin-top: 20px;">            
-            <input type="checkbox" name="is_archived" id="is_archived" style="top: 2px;position: relative;">
-            <label for="is_archived" style="font-weight:normal;">Check this if you want to archive this client record. </label>
-          </div>
+					<?php if (isset($_GET['modal']) && $_GET['modal']  === "add" ){ ?> 
+						<div class="form-group edit_only hide">  
+							<input type="checkbox" name="is_archived" id="is_archived" style="top: 2px;position: relative;">
+							<label for="is_archived" style="font-weight:normal;">Check this if you want to archive this client record. </label>
+						</div>
+					<?php } else {?>
+						<div class="form-group edit_only">  
+							<input type="checkbox" name="is_archived" id="is_archived" style="top: 2px;position: relative;">
+							<label for="is_archived" style="font-weight:normal;">Check this if you want to archive this client record. </label>
+						</div>
+					<?php }?>
           <input style="margin-top: 20px;" type="submit" class="btn btn-success btn-default">
         </form>
 		<!-- </div>  --><!-- ===== id: modal-body ===== -->

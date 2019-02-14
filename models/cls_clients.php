@@ -68,7 +68,7 @@ class Client extends DB{
 			$end = ITEM_DISPLAY_COUNT;
 				
 			$query = "SELECT c.* FROM tbl_client c WHERE c.office_id = :office_id AND 
-								c.client_type='Child' OR c.date_birth ='0000-00-00' ORDER BY c.ID DESC
+								c.client_type='Child' OR c.date_birth ='0000-00-00' OR c.date_birth ='0000-00-00' ORDER BY c.ID DESC
 				LIMIT $start, $end;";	
 				$bind_array= array("office_id"=>$_SESSION['office_id']);
 				$stmt = $this->query($query,$bind_array);

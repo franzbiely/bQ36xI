@@ -60,6 +60,31 @@ class Client extends DB{
 		else return $data;
 		
 	}
+	function get_all_unknown($paged=1){
+		$start = ($paged==1) ? 0 : $paged*ITEM_DISPLAY_COUNT;
+		if ($_SESSION['type'] == 'superadmin' || $_SESSION['type'] == 'superreporting') {
+			$data = $this->select("*"); 
+		}else{
+			$end = ITEM_DISPLAY_COUNT;
+				
+			$query = "SELECT c.* FROM tbl_client c WHERE c.office_id = :office_id AND 
+								c.client_type='Child' OR c.date_birth ='0000-00-00' ORDER BY c.ID DESC
+				LIMIT $start, $end;";	
+				$bind_array= array("office_id"=>$_SESSION['office_id']);
+				$stmt = $this->query($query,$bind_array);
+				$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+			/*$d1 = $this->select("*",array("office_id"=>$_SESSION['office_id']), 
+					false,"",false,"ID","DESC",$start,ITEM_DISPLAY_COUNT);
+
+			$d2 = $this->select("*",array("district"=>$_SESSION['district_id']), 
+					false,"",false,"ID","DESC",$start,ITEM_DISPLAY_COUNT);
+			$data = array_merge($d1, $d2);*/
+		}
+		if($data==false) return array();
+		else return $data;
+		
+	}
 	function get_mother(){
 		$start = ($paged==1) ? 0 : $paged*ITEM_DISPLAY_COUNT;
 		if ($_SESSION['type'] == 'superadmin' || $_SESSION['type'] == 'superreporting') {
@@ -148,6 +173,7 @@ class Client extends DB{
 		}		
 	}
 	function edit(){
+		ob_start();
 		$_data = $_POST;
 		$id = $_data['id'];
 		unset($_data['id']);
@@ -168,28 +194,29 @@ class Client extends DB{
 			$review_date=new DateTime($d[0] . ' ' . $d[1]);
 			$_data['review_date'] = $review_date->getTimestamp();
 		}*/
-		
+		if ($_data['relation_to'] !== "undefined"){
 		$relation_to = $_data['relation_to'];
-
+		}
 		$query = "DELETE FROM tbl_relationship WHERE base_client = '$id'";
 		$stmt = $this->connect();
 		$data = $stmt->exec($query);
-		if($data==false){
-			echo ""; //"error on delete";
-		}
-		else
-			echo "";//"success on delete";
-
+		// if($data==false){
+		// 	echo ""; //"error on delete";
+		// }
+		// else
+		// 	echo "";//"success on delete";
+		if ($_data['relation_to'] !== "undefined"){
 		unset($_data['relation_to']);
-
+		}		
 		$this->table = 'tbl_client';
 		$data = $this->save($_data,array("ID"=>$id));
 
 		if($data==false){
-			echo "error";
+			//echo "error";
 		}
 		else{
-			echo "success";
+			//echo "success in updating client record";
+			echo'<script type="text/javascript">alert();</script>';
 		}
 
 		if($_data['client_type']=='Child') {
@@ -605,7 +632,6 @@ class Client extends DB{
 		?>
 		<script>
 		$(document).ready(function(){
-
 			//Code added by Eric
 			var hold_dob = ""; //this will hold the previous birthdate value
 			$("#date_birth").click(function(){

@@ -54,6 +54,10 @@ if($_GET['p'] != "update") {
               <?php if($showDeprecatedMessage) : ?>
                 <p class="yellowme"><strong>Notice : </strong><br />Visit Reasons for Consultations prior to the <strong>1st of April, 2018</strong> have been deprecated and cannot be displayed. <br />Please refer to Client paper Record.</p>
               <?php endif; ?>
+              <div id = "warning-p" class = "form-group hide">
+                <i id="close-p" style = "font-size: 15px; top: 11px; right: 10px; cursor: pointer" class= "glyphicon glyphicon-remove-circle pull-right" ></i>
+                <p  class="redme "><strong>Warning : </strong>Please update your <strong>personal profile first! </strong></p>
+              </div>
               <form id="frm_client_personal_info_update" role="form" action="" method="post">
                 <input type="hidden" name="class" value="client" />
                 <input type="hidden" name="func" value="edit" />
@@ -126,6 +130,7 @@ if($_GET['p'] != "update") {
                 <?php 
                 $addClass=""; 
                 $note = "";
+                $gender_check = "";
                 // if($date_birth!="0000-00-00" && $date_birth!=null) {
                 //   if($record->get_age($date_birth) >= 15 && $client_info['client_type']=="Child"){
                 //     $addClass=" redme";
@@ -135,6 +140,7 @@ if($_GET['p'] != "update") {
                 if($client_info['client_type'] != 'Male' && $client_info['client_type'] != 'Female' ) {
                   $addClass = " redme";
                   $note = "Please adjust the client gender.";
+                  $gender_check = "true";
                 }
                              
                 ?>
@@ -253,9 +259,12 @@ if($_GET['p'] != "update") {
                 </div> -->
               <?php //endif ?>
             <?php if($_GET['p']!="delete") : ?>
+            <input type="text" style = "display: none" id="gender-check" name="gender-check" class="form-control" value="<?php echo $gender_check ?>">         
+
              <a type="button" class="btn btn-default <?php if (enablea_and_disable_ele($_SESSION['type'], "add_con_records", $_SESSION['records']) == false) { echo "hide"; }?>" 
               style="float: right; " id="add-consultation-btn" href="#">Add Consultation Schedule</a> 
             <?php endif; ?>
+
             <!-- Modal -->
             <?php $record->consultation_modal($client_info) ?> 
           </h1> 
@@ -353,18 +362,31 @@ if($_GET['p'] != "update") {
         }
       }
     })
-
+   
     $('#add-consultation-btn').on('click', function() {
-	  
-      console.log($('#client_type').val());
-      if($('#client_type').val() == "Female") {
-        $('#newClientModal').find('input[value="ANC 1stvisit"], input[value="ANC 4th visit"], input[value="ANC Other visit"]').parent().show()
-      } else {
-        $('#newClientModal').find('input[value="ANC 1stvisit"], input[value="ANC 4th visit"], input[value="ANC Other visit"]').parent().hide()
+      
+      if ($('#gender-check').val() !== "true") {
+        $('#warning-p').removeClass("show");
+        $('#warning-p').addClass("hide");
+        console.log($('#client_type').val());
+        if($('#client_type').val() == "Female") {
+          $('#newClientModal').find('input[value="ANC 1stvisit"], input[value="ANC 4th visit"], input[value="ANC Other visit"]').parent().show()
+        } else {
+          $('#newClientModal').find('input[value="ANC 1stvisit"], input[value="ANC 4th visit"], input[value="ANC Other visit"]').parent().hide()
+        }
+        $('#newClientModal').modal('show');
+        $('#hb-warning').hide();
+      }else {
+        $('#warning-p').removeClass("hide");
+        $('#warning-p').addClass("show");
+        $('#warning-p').fadeIn("slow");
       }
-      $('#newClientModal').modal('show');
-	  $('#hb-warning').hide();
     })
+    $('#close-p').on('click', function() {
+      $('#warning-p').removeClass("show");
+      $('#warning-p').addClass("hide");
+      $('#warning-p').fadeOut("slow");
+    });
 
     $('#hb_level').on('change', function() {
       if($(this).val() == '8-') {

@@ -98,9 +98,12 @@ if($_GET['p'] != "update") {
                 <?php 
                 $addClass=""; 
                 $note = "";
+                $status_check = '';
+                
                 if($client_info['date_birth']=="0000-00-00" || $client_info['date_birth']==null) {
                   $addClass=" redme";
                   $note = "Please adjust the birth date.";
+                  $status_check = 'true';
                 }         
                 ?>
                 <div class="form-group<?php echo $addClass ?>">
@@ -130,7 +133,6 @@ if($_GET['p'] != "update") {
                 <?php 
                 $addClass=""; 
                 $note = "";
-                $gender_check = "";
                 // if($date_birth!="0000-00-00" && $date_birth!=null) {
                 //   if($record->get_age($date_birth) >= 15 && $client_info['client_type']=="Child"){
                 //     $addClass=" redme";
@@ -140,7 +142,8 @@ if($_GET['p'] != "update") {
                 if($client_info['client_type'] != 'Male' && $client_info['client_type'] != 'Female' ) {
                   $addClass = " redme";
                   $note = "Please adjust the client gender.";
-                  $gender_check = "true";
+                  $status_check = "true";
+
                 }
                              
                 ?>
@@ -259,7 +262,7 @@ if($_GET['p'] != "update") {
                 </div> -->
               <?php //endif ?>
             <?php if($_GET['p']!="delete") : ?>
-            <input type="text" style = "display: none" id="gender-check" name="gender-check" class="form-control" value="<?php echo $gender_check ?>">         
+            <input type="text" style = "display: none" id="status-check" name="gender-check" class="form-control" value="<?php echo $status_check ?>">         
 
              <a type="button" class="btn btn-default <?php if (enablea_and_disable_ele($_SESSION['type'], "add_con_records", $_SESSION['records']) == false) { echo "hide"; }?>" 
               style="float: right; " id="add-consultation-btn" href="#">Add Consultation Schedule</a> 
@@ -365,7 +368,7 @@ if($_GET['p'] != "update") {
    
     $('#add-consultation-btn').on('click', function() {
       
-      if ($('#gender-check').val() !== "true") {
+      if ($('#status-check').val() !== "true") {
         $('#warning-p').removeClass("show");
         $('#warning-p').addClass("hide");
         console.log($('#client_type').val());

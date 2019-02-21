@@ -259,7 +259,7 @@ if($_GET['p'] != "update") {
                 </div> -->
               <?php //endif ?>
             <?php if($_GET['p']!="delete") : ?>
-            <input type="text" style = "display: none" id="gender-check" name="gender-check" class="form-control" value="<?php echo $status_check ?>">         
+            <input type="text" style = "display: none" id="gender-check" name="gender-check" class="form-control" value="<?php echo $gender_check ?>">         
 
              <a type="button" class="btn btn-default <?php if (enablea_and_disable_ele($_SESSION['type'], "add_con_records", $_SESSION['records']) == false) { echo "hide"; }?>" 
               style="float: right; " id="add-consultation-btn" href="#">Add Consultation Schedule</a> 

@@ -23,16 +23,17 @@ class Client extends DB{
 
 	function pagination(){
 		$paged = (isset($_GET['paged'])) ? $_GET['paged'] : 1;
+		$r = (isset($_GET['r'])) ? '&r='.$_GET['r'] : '';
 		$query = "SELECT COUNT(*) as count FROM tbl_client";
 		$stmt = $this->query($query,array());
 		$count = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		$count = $count[0]['count'];
 		$pages_count = ceil($count/ITEM_DISPLAY_COUNT);
 		if($paged>1){
-			echo '<a href="?page=clients&paged='.($paged-1).'" class="prev btn btn-default">Previous</a>';
+			echo '<a href="?page=clients&paged='.($paged-1).$r.'" class="prev btn btn-default">Previous</a>';
 		}
 		if($paged<($pages_count-1)){
-			echo '<a href="?page=clients&paged='.($paged+1).'" class="next btn btn-default">Next</a>';
+			echo '<a href="?page=clients&paged='.($paged+1).$r.'" class="next btn btn-default">Next</a>';
 		}
 	}
 	function get_all($paged=1){
@@ -73,13 +74,6 @@ class Client extends DB{
 				$bind_array= array("office_id"=>$_SESSION['office_id']);
 				$stmt = $this->query($query,$bind_array);
 				$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-			/*$d1 = $this->select("*",array("office_id"=>$_SESSION['office_id']), 
-					false,"",false,"ID","DESC",$start,ITEM_DISPLAY_COUNT);
-
-			$d2 = $this->select("*",array("district"=>$_SESSION['district_id']), 
-					false,"",false,"ID","DESC",$start,ITEM_DISPLAY_COUNT);
-			$data = array_merge($d1, $d2);*/
 		}
 		if($data==false) return array();
 		else return $data;
@@ -194,9 +188,12 @@ class Client extends DB{
 			$review_date=new DateTime($d[0] . ' ' . $d[1]);
 			$_data['review_date'] = $review_date->getTimestamp();
 		}*/
-		if ($_data['relation_to'] !== "undefined"){
-		$relation_to = $_data['relation_to'];
+		if(isset($_data['relation_to'])) {
+			if ($_data['relation_to'] !== "undefined"){
+				$relation_to = $_data['relation_to'];
+			}
 		}
+		
 		$query = "DELETE FROM tbl_relationship WHERE base_client = '$id'";
 		$stmt = $this->connect();
 		$data = $stmt->exec($query);
@@ -205,18 +202,20 @@ class Client extends DB{
 		// }
 		// else
 		// 	echo "";//"success on delete";
-		if ($_data['relation_to'] !== "undefined"){
-		unset($_data['relation_to']);
-		}		
+		if(isset($_data['relation_to'])) {
+			if ($_data['relation_to'] !== "undefined"){
+				unset($_data['relation_to']);
+			}		
+		}
 		$this->table = 'tbl_client';
 		$data = $this->save($_data,array("ID"=>$id));
 
 		if($data==false){
-			//echo "error";
+			echo "error";
 		}
 		else{
-			//echo "success in updating client record";
-			echo'<script type="text/javascript">alert();</script>';
+			echo "success";
+			// echo'<script type="text/javascript">alert();</script>';
 		}
 
 		if($_data['client_type']=='Child') {

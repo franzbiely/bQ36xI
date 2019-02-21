@@ -98,16 +98,14 @@ if($_GET['p'] != "update") {
                 <?php 
                 $addClass=""; 
                 $note = "";
-                $status_check="";
                 if($client_info['date_birth']=="0000-00-00" || $client_info['date_birth']==null) {
                   $addClass=" redme";
                   $note = "Please adjust the birth date.";
-                  $status_check = 'true';
                 }         
                 ?>
                 <div class="form-group<?php echo $addClass ?>">
-                           
                   <label for="birthdate">Birth Date</label><span class="required_field <?php if($_GET['p']!="update") echo "hide"; ?> " >*</span>
+
                   <?php
                   $date_birth = $client_info['date_birth'];
                   if($date_birth=="0000-00-00" || $date_birth==null){          
@@ -132,6 +130,7 @@ if($_GET['p'] != "update") {
                 <?php 
                 $addClass=""; 
                 $note = "";
+                $gender_check = "";
                 // if($date_birth!="0000-00-00" && $date_birth!=null) {
                 //   if($record->get_age($date_birth) >= 15 && $client_info['client_type']=="Child"){
                 //     $addClass=" redme";
@@ -141,15 +140,12 @@ if($_GET['p'] != "update") {
                 if($client_info['client_type'] != 'Male' && $client_info['client_type'] != 'Female' ) {
                   $addClass = " redme";
                   $note = "Please adjust the client gender.";
-                  $status_check = "true";
-                }else if($client_info['client_type'] === 'Child') {
-                  $status_check = "true";
+                  $gender_check = "true";
                 }
                              
                 ?>
 
                <div class="form-group<?php echo $addClass ?>" style="position: relative;">
-               <input type="text" style = "display: none" id="check_status_failed" name="check_status_failed" class="form-control" value="<?php echo $status_check ?>">
                <label for="clinictype">Client Gender</label><span class="required_field <?php if($_GET['p']!="update") echo "hide"; ?>">*</span>
                 <select class="form-control" name="client_type" id="client_type" required>
                   <option value="">Select Client Gender</option>
@@ -366,8 +362,10 @@ if($_GET['p'] != "update") {
         }
       }
     })
+   
     $('#add-consultation-btn').on('click', function() {
-      if ($('#check_status_failed').val() !== "true") {
+      
+      if ($('#gender-check').val() !== "true") {
         $('#warning-p').removeClass("show");
         $('#warning-p').addClass("hide");
         console.log($('#client_type').val());

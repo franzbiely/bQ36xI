@@ -46,7 +46,7 @@
           <tbody>            
               <?php 
               $paged = (isset($_GET['paged'])) ? $_GET['paged'] : 1;
-              if(!isset($_GET['r']) && $_GET['r'] !== "unknown_clients"){
+              if(!isset($_GET['r']) || $_GET['r'] !== "unknown_clients"){
                 $datas = $client->get_all($paged);
               }else {
                 $datas = $client->get_all_unknown($paged);
@@ -115,7 +115,7 @@
               <?php endif; ?>                                         
           </tbody>
         </table>  
-        <?php $client->pagination() ?>      
+        <?php $client->pagination(); ?>      
       </div><!--/span-->        
     </div>
   </div>

@@ -8,7 +8,8 @@
         <?php are_you_sure_delete(); ?>
         <div class="alert alert-info"><strong></strong></div>
         <div class="page-header">
-          <h1 id="overview" style="width: 100%; padding-top: 10px; margin-top: 20px;">Clients Records
+          <h1 id="overview" style="width: 100%; padding-top: 10px; margin-top: 20px;">
+            <?php if(isset($_GET['r']) && $_GET['r'] === "unknown_clients"){echo "Unknown Client Records";} else { echo "Clients Records"; } ?>
             <?php $client->pagination() ?>   
             <a id="addClient" type="button" class="btn btn-default
               <?php if($_SESSION['type']!='superadmin') {

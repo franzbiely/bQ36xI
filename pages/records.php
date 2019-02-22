@@ -32,11 +32,13 @@ if($_GET['p'] != "update") {
       </div>
       <div class="col-md-9" role="main" style="margin-bottom:30px;">
         <div class="row">
-          <?php  success_message($_GET['page'], $_GET['p']); ?>
-           
+          <?php  success_message($_GET['page'], $_GET['p']);
+          $status_check = '';
+          if(($client_info['client_type'] != 'Male' && $client_info['client_type'] != 'Female' ) || $client_info['date_birth']=="0000-00-00" || $client_info['date_birth']==null) { $status_check='true';}
+          ?>
           <div class="page-header" style="margin-top: 45px;margin-bottom: 50px;">
           <h1 id="overview" style="width: 100%; padding-top: 10px;">Personal Info<?php if($client_info['is_archived']=="1") echo " <span>- (Archived - <span style='font-size: 18px;'>".$client_info['date_archived']."</span>)</span>"; ?></h1> 
-          <?php if(isset($_GET['list']) && $_GET['list'] == '1'){ ?><a id="overview" href="?page=clients&r=unknown_clients" style="width: 100%; margin: 5px;"><b>See all Unknown client lists</b></a><br /><?php } ?>
+          <?php if($status_check === 'true'){ ?><a id="overview" href="?page=clients&r=unknown_clients" style="width: 100%; margin: 5px;"><b>See all Unknown client lists</b></a><br /><?php } ?>
               <?php if($_GET['p']=="delete") : ?>
                   <div class="delete-options-entry" style="margin: 0 125px 45px 0;">
                     <form id="frm_client_personal_info_update" role="form" action="" method="post">
@@ -98,8 +100,6 @@ if($_GET['p'] != "update") {
                 <?php 
                 $addClass=""; 
                 $note = "";
-                $status_check = '';
-                
                 if($client_info['date_birth']=="0000-00-00" || $client_info['date_birth']==null) {
                   $addClass=" redme";
                   $note = "Please adjust the birth date.";
@@ -143,7 +143,6 @@ if($_GET['p'] != "update") {
                   $addClass = " redme";
                   $note = "Please adjust the client gender.";
                   $status_check = "true";
-
                 }
                              
                 ?>

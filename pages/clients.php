@@ -102,7 +102,7 @@
                   <td class="relationship hide"><?php echo $data['relation_to']; ?></td>
                   <td class="current_address hide"><?php echo $data['current_address']; ?></td>
                   <td  <?php if (enablea_and_disable_ele($_SESSION['type'], "view_con_records", $_SESSION['records']) == false) { echo 'class="hide"'; }?>>
-                     <a class="check_records" href="<?php echo SITE_URL ?>/?page=records&cid=<?php echo $data['ID'] ?>&p=view&list=<?php echo (($data['client_type'] == 'Child') || ($data['date_birth'] == '0000-00-00')) ? '1' : '0';?>">Check Records</a></td>
+                     <a class="check_records" href="<?php echo SITE_URL ?>/?page=records&cid=<?php echo $data['ID'] ?>&p=view">Check Records</a></td>
                   <td>
                     <div class="btn-group">
                         <a type="button" title="Edit" class="btn btn-default edit

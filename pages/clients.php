@@ -51,6 +51,10 @@
                 $datas = $client->get_all($paged);
               }else {
                 $datas = $client->get_all_unknown($paged);
+                $record_count = $client->get_record_count($paged);
+                $to = (count($datas) < ITEM_DISPLAY_COUNT) ? (ITEM_DISPLAY_COUNT*($paged-1))+count($datas) :  ITEM_DISPLAY_COUNT*$paged;
+                $from = $paged == 1 ? 1 : (ITEM_DISPLAY_COUNT*($paged-1))+1;
+                echo 'Record '.$from.' to '.$to.' of ('.$record_count.')';
               }
               if($datas!=false): foreach($datas as $data ): 
                 if(isset($_GET['r']) && $_GET['r'] !== "unknown_clients"){

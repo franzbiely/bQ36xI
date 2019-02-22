@@ -29,6 +29,7 @@ class Client extends DB{
 		$count = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		$count = $count[0]['count'];
 		$pages_count = ceil($count/ITEM_DISPLAY_COUNT);
+		$pages_count = (isset($_GET['r'])) ? ceil($this->get_record_count()/ITEM_DISPLAY_COUNT)+1 : $pages_count;
 		if($paged>1){
 			echo '<a href="?page=clients&paged='.($paged-1).$r.'" class="prev btn btn-default">Previous</a>';
 		}
@@ -37,7 +38,7 @@ class Client extends DB{
 		}
 	}
 	function get_all($paged=1){
-		$start = ($paged==1) ? 0 : $paged*ITEM_DISPLAY_COUNT;
+		$start =  ($paged > 1) ? ($paged-1)*ITEM_DISPLAY_COUNT : 0;
 		if ($_SESSION['type'] == 'superadmin' || $_SESSION['type'] == 'superreporting') {
 			$data = $this->select("*"); 
 		}else{
@@ -62,7 +63,7 @@ class Client extends DB{
 		
 	}
 	function get_all_unknown($paged=1){
-		$start = ($paged==1) ? 0 : $paged*ITEM_DISPLAY_COUNT;
+		$start =  ($paged > 1) ? ($paged-1)*ITEM_DISPLAY_COUNT : 0;
 		if ($_SESSION['type'] == 'superadmin' || $_SESSION['type'] == 'superreporting') {
 			$data = $this->select("*"); 
 		}else{
@@ -77,7 +78,15 @@ class Client extends DB{
 		}
 		if($data==false) return array();
 		else return $data;
-		
+	}
+	// get the count of all unknown clients
+	function get_record_count($paged=1){
+			$query = "SELECT COUNT(*) as count FROM tbl_client c WHERE c.office_id = :office_id AND 
+							c.client_type='Child' OR c.date_birth ='0000-00-00'";	
+			$bind_array= array("office_id"=>$_SESSION['office_id']);
+			$stmt = $this->query($query,$bind_array);
+			$count = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			return $count[0]['count'];
 	}
 	function get_mother(){
 		$start = ($paged==1) ? 0 : $paged*ITEM_DISPLAY_COUNT;

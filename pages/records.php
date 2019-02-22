@@ -37,8 +37,11 @@ if($_GET['p'] != "update") {
           if(($client_info['client_type'] != 'Male' && $client_info['client_type'] != 'Female' ) || $client_info['date_birth']=="0000-00-00" || $client_info['date_birth']==null) { $status_check='true';}
           ?>
           <div class="page-header" style="margin-top: 45px;margin-bottom: 50px;">
-          <h1 id="overview" style="width: 100%; padding-top: 10px;">Personal Info<?php if($client_info['is_archived']=="1") echo " <span>- (Archived - <span style='font-size: 18px;'>".$client_info['date_archived']."</span>)</span>"; ?></h1> 
-          <?php if($status_check === 'true'){ ?><a id="overview" href="?page=clients&r=unknown_clients" style="width: 100%; margin: 5px;"><b>&laquo See all Unknown client lists</b></a><br /><?php } ?>
+          <h1 id="overview" style="width: 100%; padding-top: 10px;">Personal Info<?php if($client_info['is_archived']=="1") echo " <span>- (Archived - <span style='font-size: 18px;'>".$client_info['date_archived']."</span>)</span>"; ?>
+            <?php if($status_check === 'true'){ ?>
+              <a type="button" class="btn btn-default" id="overview" href="?page=clients&r=unknown_clients"> See all Unknown client lists</a>
+            <?php } ?>
+          </h1> 
               <?php if($_GET['p']=="delete") : ?>
                   <div class="delete-options-entry" style="margin: 0 125px 45px 0;">
                     <form id="frm_client_personal_info_update" role="form" action="" method="post">

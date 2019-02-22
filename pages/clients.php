@@ -39,7 +39,7 @@
               <th>Record Number</th>
               <th>Full Name</th>
               <th>Birth Date</th>
-              <th>Client Type</th>
+              <th>Gender</th>
               <th>Action</th>
               <?php if(!isset($_GET['r'])){ ?><th>Action</th>
               <?php } } ?>

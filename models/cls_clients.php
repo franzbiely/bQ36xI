@@ -279,7 +279,6 @@ class Client extends DB{
 		$stmt = $this->query($query,$bind_array);
 		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
 		$data2 = $this->quick_search2($_data,$key);
 		
 		// combine $data and $data2;
@@ -299,9 +298,7 @@ class Client extends DB{
 		}
 	}
 	function search(){
-
 		$temp = $_POST;
-
 		if (isset($temp['quick_search'])) { 
 			$_SESSION['quick'] = "yes";
 			unset($_SESSION['advanced']);

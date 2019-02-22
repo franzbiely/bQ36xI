@@ -881,7 +881,7 @@ class Client extends DB{
 	
 					if(age >= 2){
 						//$("#client_type option[value='Child']").remove();
-						$(this).find("#client_type").next().html("<span class='required_field'>*</span> Please update the gender. Type no longer appropriate for age.");
+						$(this).find("#client_type").next().html("<span class='required_field'>*</span> Please update the client type. Type no longer appropriate for age.");
 					}else{
 						$(this).find("#client_type").next().html("");
 						//if( $("#client_type option[value='Child']").length <= 0 ){
@@ -895,7 +895,7 @@ class Client extends DB{
 							$(this).prop('selected', true);
 							
 							if(age >= 2 && $(_this).find('.type').html()=='Child'){								
-								$("#client_type").next().html("<span class='required_field'>*</span> Please update the gender. Type no longer appropriate for age.");
+								$("#client_type").next().html("<span class='required_field'>*</span> Please update the client type. Type no longer appropriate for age.");
 							}else{
 								$("#client_type").next().html("");
 							}

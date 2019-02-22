@@ -46,7 +46,7 @@
                 <h4>Filter by:</h4>
                 <div class="form-group ">
                   <!-- <select class="form-control" name="client_type">
-                    <option value="">[Gender]</option>
+                    <option value="">[Client Type]</option>
                         <?php //$_data = $type->get_all('client');
                         //if($_data!=false): foreach($_data['value'] as $data ): ?>
                           <option value="<?php //echo $data ?>" 

@@ -1,5 +1,5 @@
 <?php if ($_SESSION['type'] == 'superadmin'): ?>
-  <?php header_nav_bar("random", "Gender","settings") ?>
+  <?php header_nav_bar("random", "Client Types","settings") ?>
   <div class="container">    
     <div class="row">
       <div class="col-md-3">

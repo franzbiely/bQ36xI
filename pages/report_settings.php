@@ -1,4 +1,4 @@
-<?php header_nav_bar("user", "Gender", "settings") ?>
+<?php header_nav_bar("user", "Client Types", "settings") ?>
 
 <?php
 

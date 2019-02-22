@@ -235,7 +235,7 @@ $arr = 	array(
 			"office_id"=>OFFICE_ID
 		);
 #migrate("client", "tbl_client", $arr,0,20000);
-// UPDATE Gender from id to value
+// UPDATE CLIENT TYPE from id to value
  #convert_id_to_value("client_type", "1", "Male", "tbl_client");
  #convert_id_to_value("client_type", "2", "Female", "tbl_client");
  #convert_id_to_value("client_type", "3", "Infant", "tbl_client");

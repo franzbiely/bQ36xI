@@ -10,15 +10,16 @@
         <div class="page-header">
           <h1 id="overview" style="width: 100%; padding-top: 10px; margin-top: 20px;">
             <?php if(isset($_GET['r']) && $_GET['r'] === "unknown_clients"){echo "Unknown Client Records";} else { echo "Clients Records"; } ?>
-            <?php $client->pagination() ?>   
+            <?php $client->pagination();   
+              if(!isset($_GET['r'])){ ?>   
             <a id="addClient" type="button" class="btn btn-default
               <?php if($_SESSION['type']!='superadmin') {
-                 if (enablea_and_disable_ele($_SESSION['type'], "add", $_SESSION['client_section']) == false) { echo "hide"; }
+                  if (enablea_and_disable_ele($_SESSION['type'], "add", $_SESSION['client_section']) == false) { echo "hide"; }
                }else{  echo "hide"; }
                ?>" 
               style="float: right;"data-toggle="modal" href="#newClientModal"
             >Add New Client </a> 
-            <?php $client->modal(); ?>             
+              <?php } $client->modal(); ?>             
           </h1> 
         </div>
        
@@ -54,7 +55,7 @@
                 $record_count = $client->get_record_count($paged);
                 $to = (count($datas) < ITEM_DISPLAY_COUNT) ? (ITEM_DISPLAY_COUNT*($paged-1))+count($datas) :  ITEM_DISPLAY_COUNT*$paged;
                 $from = $paged == 1 ? 1 : (ITEM_DISPLAY_COUNT*($paged-1))+1;
-                echo 'Record '.$from.' to '.$to.' of ('.$record_count.')';
+                echo 'Record '.number_format($from).' to '.number_format($to).' of ('.number_format($record_count).')';
               }
               if($datas!=false): foreach($datas as $data ): 
                 if(isset($_GET['r']) && $_GET['r'] === "unknown_clients"){
@@ -101,7 +102,7 @@
                   <td class="relationship hide"><?php echo $data['relation_to']; ?></td>
                   <td class="current_address hide"><?php echo $data['current_address']; ?></td>
                   <td  <?php if (enablea_and_disable_ele($_SESSION['type'], "view_con_records", $_SESSION['records']) == false) { echo 'class="hide"'; }?>>
-                     <a class="check_records" href="<?php echo SITE_URL ?>/?page=records&cid=<?php echo $data['ID'] ?>&p=view">Check Records</a></td>
+                     <a class="check_records" href="<?php echo SITE_URL ?>/?page=records&cid=<?php echo $data['ID'] ?>&p=view&list=<?php echo (($data['client_type'] == 'Child') || ($data['date_birth'] == '0000-00-00')) ? '1' : '0';?>">Check Records</a></td>
                   <td>
                     <div class="btn-group">
                         <a type="button" title="Edit" class="btn btn-default edit

@@ -40,8 +40,8 @@
               <th>Birth Date</th>
               <th>Gender</th>
               <th>Action</th>
-              <th>Action</th>
-               <?php }  ?>
+              <?php if(!isset($_GET['r'])){ ?><th>Action</th>
+              <?php } } ?>
             </tr>
           </thead>
           <tbody>            
@@ -57,12 +57,12 @@
                 echo 'Record '.$from.' to '.$to.' of ('.$record_count.')';
               }
               if($datas!=false): foreach($datas as $data ): 
-                if(isset($_GET['r']) && $_GET['r'] !== "unknown_clients"){
+                if(isset($_GET['r']) && $_GET['r'] === "unknown_clients"){
                 ?>
-                <tr <?php if($data['is_archived']==1) echo 'class="is_archived" data-archived-date="'.$data['date_archived'].'"'; ?>>
-                  <td class="id record" data-id="<?php echo $data['ID']; ?>"><?php echo $data['record_number']; ?></td>
-                  <td class="fname"><?php echo $data['fname']; ?></td>
-                  <td class="lname"><?php echo $data['lname']; ?></td>
+                  <tr <?php if($data['is_archived']==1) echo 'class="is_archived" data-archived-date="'.$data['date_archived'].'"'; ?>>
+                  <td class="id record" data-id="<?php echo $data['ID']; ?>"><?php echo $data['ID']; ?></td>
+                  <td class="fname"><?php echo $data['record_number']; ?></td>
+                  <td class="lname"><?php echo $data['fname']." ".$data['lname']; ?></td>
                   <td class="date_birth" data-date-death="<?php echo $data['date_death']; ?>"><?php echo $data['date_birth']; ?></td>   
                   <td class="type"><?php echo ($data['client_type'] != 'Child') ? $data['client_type'] : "Unknown"; ?></td>
                   <td class="phone hide"><?php echo $data['phone']; ?></td>
@@ -71,15 +71,15 @@
                   <td class="district hide"><?php echo $data['district']; ?></td>
                   <td class="relationship hide"><?php echo $data['relation_to']; ?></td>
                   <td class="current_address hide"><?php echo $data['current_address']; ?></td>
-                  <td  <?php if (enablea_and_disable_ele($_SESSION['type'], "view_con_records", $_SESSION['records']) == false) { echo 'class="hide"'; }?>>
-                     <a class="check_records" href="<?php echo SITE_URL ?>/?page=records&cid=<?php echo $data['ID'] ?>&p=view">Check Records</a></td>
+                  <!--td  <?php // if (enablea_and_disable_ele($_SESSION['type'], "view_con_records", $_SESSION['records']) == false) { echo 'class="hide"'; }?>>
+                     <a class="check_records" href="<?php echo SITE_URL ?>/?page=records&cid=<?php echo $data['ID'] ?>&p=view">Check Records</a></td-->
                   <td>
                     <div class="btn-group">
                         <a type="button" title="Edit" class="btn btn-default edit
                          <?php if (enablea_and_disable_ele($_SESSION['type'], "edit", $_SESSION['client_section']) == false || $_SESSION['type'] == 'superadmin') { echo "hide"; }?>"
                          style="padding: 0 5px;" data-original-title="Edit Records" data-toggle="modal" href="#newClientModal"><span class="glyphicon glyphicon-edit"></span></a>
-                        <a type="button" title="Delete" class="btn btn-default delete  <?php if (enablea_and_disable_ele($_SESSION['type'], "add", $_SESSION['client_section']) == false || $_SESSION['type'] == 'superadmin') { echo "hide"; }?>" 
-                        style="padding: 0 5px;" data-original-title="Delete Records"><span class="glyphicon glyphicon-remove-circle"></span></a>  
+                        <!--a type="button" title="Delete" class="btn btn-default delete  <?php //if (enablea_and_disable_ele($_SESSION['type'], "add", $_SESSION['client_section']) == false || $_SESSION['type'] == 'superadmin') { echo "hide"; }?>" 
+                        style="padding: 0 5px;" data-original-title="Delete Records"><span class="glyphicon glyphicon-remove-circle"></span></a-->  
 
                       
                     </div> 
@@ -89,9 +89,9 @@
                    // if ($data['client_type'] == 'Child' ){
                   ?>
                   <tr <?php if($data['is_archived']==1) echo 'class="is_archived" data-archived-date="'.$data['date_archived'].'"'; ?>>
-                  <td class="id record" data-id="<?php echo $data['ID']; ?>"><?php echo $data['ID']; ?></td>
-                  <td class="fname"><?php echo $data['record_number']; ?></td>
-                  <td class="lname"><?php echo $data['fname']." ".$data['lname']; ?></td>
+                  <td class="id record" data-id="<?php echo $data['ID']; ?>"><?php echo $data['record_number']; ?></td>
+                  <td class="fname"><?php echo $data['fname']; ?></td>
+                  <td class="lname"><?php echo $data['lname']; ?></td>
                   <td class="date_birth" data-date-death="<?php echo $data['date_death']; ?>"><?php echo $data['date_birth']; ?></td>   
                   <td class="type"><?php echo ($data['client_type'] != 'Child') ? $data['client_type'] : "Unknown"; ?></td>
                   <td class="phone hide"><?php echo $data['phone']; ?></td>

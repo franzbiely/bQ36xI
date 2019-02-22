@@ -69,13 +69,13 @@ v3.12 | 22nd of Sept 2017
 v3.11 | 21st of Sept 2017
  - Updated client reports for changes in v3.10
  - Updated Export functionality for changes in v3.10
- - Updated Client management Page from Child to Unknown and Client Type to Gender
- - Updated Client Report Page for Client type to Gender
- - Updated Settings Label  from Client Type to Gender
+ - Updated Client management Page from Child to Unknown and Gender to Gender
+ - Updated Client Report Page for Gender to Gender
+ - Updated Settings Label  from Gender to Gender
  - Changed idle auto logout time from 5 mins to 10 minutes
- - Changed the condition in records page to detect Child type based on Birthdate/Age and not on the set Client type data.
+ - Changed the condition in records page to detect Child type based on Birthdate/Age and not on the set Gender data.
  - In Add New Client, replaced condition to show Mother Client ID option based on age of client and not on type.
- - Renamed Client Type to Gender across the entire site
+ - Renamed Gender to Gender across the entire site
  - Hiding the Unknown option in Modal > Gender
  - Updated changelog.txt and footer version
  - Unset client option in client report advance search
@@ -83,11 +83,11 @@ v3.11 | 21st of Sept 2017
 v3.10 | 2nd of Sept 2017
  - When Male record is generated, will check the current age of the Male person, and only show Male that has greater or equal 15 years old, same goes with Female.
  - added age column in client reports table
- - added client type column in client reports table
+ - added Gender column in client reports table
  - Updated Export functionality for the changes.
 
 v3.9 | 1st of Sept 2017
- - Hides other client type when a specified type is generated in the client reports
+ - Hides other Gender when a specified type is generated in the client reports
  - Updates the changes to the Export functionalities as well
 
 v3.8 | 25th of Aug 2017
@@ -101,10 +101,10 @@ v3.7 | 25th of Aug 2017
 v3.6 | 7th of June 2017
  - Show db info in live and testsite footer
  - Updated testsite DB to latest records
- - Removed bug client type in testsite and livesite
+ - Removed bug Gender in testsite and livesite
 
 v3.5 | 5th of June 2017
- - Removed delete function for client type
+ - Removed delete function for Gender
  - Fixed homebutton link for all user types
  - Added new age group for client reporting
  - Auto logout when idle
@@ -301,9 +301,9 @@ v2.2.3 | 8th of April 2015
 
 
 v2.2.2 | 25th of February 2015
-- age count is now based on the time of visit (Client Type Totals - Client Reports)
+- age count is now based on the time of visit (Gender Totals - Client Reports)
 - fixed the age count of child type
-- added total Child count in Client Type Totals
+- added total Child count in Gender Totals
 	- public/pages/client_reports.php
 	- public/models/cls_reports.php
 - added a validation in the add client section to stop future death dates being added
@@ -362,7 +362,7 @@ v2.0.2 | 20th of June 2014
 - detects age of clients
 - notifies admin for clients that doesn't have birthdates
 - mandatory birthday rule
-- have added client type detection and notifies admin if Child client must be changed based on the age.
+- have added Gender detection and notifies admin if Child client must be changed based on the age.
 
 v2.0.1 | 12th of May 2014
 - Fixed bugs from superadmin panel.

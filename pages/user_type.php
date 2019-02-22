@@ -39,7 +39,7 @@
 					  </td>  
 				  </tr>
 				  <?php endforeach; else: ?>
-          <tr><td colspan="7">No Client Type record found.</td></tr>
+          <tr><td colspan="7">No Gender record found.</td></tr>
           <?php endif; ?>                                         
 			  </tbody>
 			</table>

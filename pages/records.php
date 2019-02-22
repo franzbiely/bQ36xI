@@ -38,7 +38,7 @@ if($_GET['p'] != "update") {
           ?>
           <div class="page-header" style="margin-top: 45px;margin-bottom: 50px;">
           <h1 id="overview" style="width: 100%; padding-top: 10px;">Personal Info<?php if($client_info['is_archived']=="1") echo " <span>- (Archived - <span style='font-size: 18px;'>".$client_info['date_archived']."</span>)</span>"; ?></h1> 
-          <?php if($status_check === 'true'){ ?><a id="overview" href="?page=clients&r=unknown_clients" style="width: 100%; margin: 5px;"><b>See all Unknown client lists</b></a><br /><?php } ?>
+          <?php if($status_check === 'true'){ ?><a id="overview" href="?page=clients&r=unknown_clients" style="width: 100%; margin: 5px;"><b>&laquo See all Unknown client lists</b></a><br /><?php } ?>
               <?php if($_GET['p']=="delete") : ?>
                   <div class="delete-options-entry" style="margin: 0 125px 45px 0;">
                     <form id="frm_client_personal_info_update" role="form" action="" method="post">

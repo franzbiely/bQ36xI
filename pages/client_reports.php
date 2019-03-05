@@ -129,13 +129,14 @@
         if(!isset($_POST['start_date'])) :
           echo "<p>Please set start and end date.</p>";
         else:  
+          $province = (isset($_POST['province'])) ? $_POST['province'] : null;
           if($_POST['visit_type'] != ""){
 
-              $data = $reports->get_client_record($_POST['start_date'], $_POST['end_date'], $_POST['client_type'], $_POST['visit_type'], $_POST['clinic'], $_POST['province']);
+              $data = $reports->get_client_record($_POST['start_date'], $_POST['end_date'], $_POST['client_type'], $_POST['visit_type'], $_POST['clinic'], $province);
               $data2 = $reports->search_by_visit_reason($data, $_POST['visit_type']);
           }else{
 
-              $data2 = $reports->get_client_record($_POST['start_date'], $_POST['end_date'], $_POST['client_type'], $_POST['visit_type'], $_POST['clinic'], $_POST['province']);
+              $data2 = $reports->get_client_record($_POST['start_date'], $_POST['end_date'], $_POST['client_type'], $_POST['visit_type'], $_POST['clinic'], $province);
           }
           if($data2==false):
             echo "<p>No Record Found in the specified date or filter.</p>";

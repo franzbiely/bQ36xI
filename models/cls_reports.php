@@ -675,7 +675,6 @@ class Reports extends DB{
 
   }
   function get_client_record($sDate,$eDate,$client_type,$visit_type,$clinic, $province){
-    echo "test";
         $temp = array("start_date"=>$sDate,"end_date"=>$eDate, "client_type"=>$client_type,
                      "visit_type"=>$visit_type,"clinic"=>$clinic, "province"=>$province);
         $_data = array_filter($temp);
@@ -710,7 +709,7 @@ class Reports extends DB{
               a.visit_reasons,      
               a.date,        
               COUNT(*) AS ctr_consultation,
-              floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) as current_age    
+              IF(b.date_birth='0000-00-00', 'Unknown age', floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 )) as current_age
               FROM tbl_records AS a
               JOIN tbl_client AS b ON a.client_id = b.ID
               JOIN tbl_clinic AS c ON a.clinic_id = c.ID
@@ -735,7 +734,7 @@ class Reports extends DB{
                       a.visit_reasons, 
                       a.date,               
                       COUNT(*) AS ctr_consultation,
-                      floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) as current_age
+                      IF(b.date_birth='0000-00-00', 'Unknown age', floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 )) as current_age
                       FROM tbl_records AS a
                       JOIN tbl_client AS b ON a.client_id = b.ID
                       JOIN tbl_clinic AS c ON a.clinic_id = c.ID
@@ -866,7 +865,7 @@ class Reports extends DB{
                   a.visit_reasons,  
                   COUNT(*) AS ctr_consultation,
                   a.review_date,
-                  floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) as current_age
+                  IF(b.date_birth='0000-00-00', 'Unknown age', floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 )) as current_age
                   FROM tbl_records AS a
                   JOIN tbl_client AS b ON a.client_id = b.ID
                   JOIN tbl_clinic AS c ON a.clinic_id = c.ID
@@ -888,7 +887,7 @@ class Reports extends DB{
                       a.visit_reasons,  
                       COUNT(*) AS ctr_consultation,
                       a.review_date,
-                      floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) as current_age
+                      IF(b.date_birth='0000-00-00', 'Unknown age', floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 )) as current_age
                       FROM tbl_records AS a
                       JOIN tbl_client AS b ON a.client_id = b.ID
                       JOIN tbl_clinic AS c ON a.clinic_id = c.ID

@@ -20,7 +20,6 @@ class Client extends DB{
 		$data = $this->select("*",array("id"=>$id),true);
 		return $data;
 	}
-
 	function pagination(){
 		$paged = (isset($_GET['paged'])) ? $_GET['paged'] : 1;
 		$r = (isset($_GET['r'])) ? '&r='.$_GET['r'] : '';
@@ -68,22 +67,40 @@ class Client extends DB{
 			$data = $this->select("*"); 
 		}else{
 			$end = ITEM_DISPLAY_COUNT;
-				
-			$query = "SELECT c.* FROM tbl_client c WHERE c.office_id = :office_id AND 
-								c.client_type='Child' OR c.date_birth ='0000-00-00' OR c.date_birth ='0000-00-00' ORDER BY c.ID DESC
-				LIMIT $start, $end;";	
-				$bind_array= array("office_id"=>$_SESSION['office_id']);
-				$stmt = $this->query($query,$bind_array);
-				$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			
+			$query = "SELECT DISTINCT a.*, b.*  
+								FROM tbl_records as a
+								INNER JOIN tbl_client as b ON b.ID = a.client_id
+								INNER JOIN tbl_area AS office ON office.ID = a.office_id
+								
+								WHERE a.date >= :start_date AND a.date <= CURDATE()
+								AND a.office_id = :office_id
+								AND (b.client_type='Child' 
+								OR b.date_birth ='0000-00-00')
+								
+								GROUP BY a.ID
+								ORDER BY a.date DESC
+								LIMIT $start, $end;";      
+			// Only get records starting for 2019 consultations.
+			$bind_array = array("start_date"=>'2019-01-01', "office_id"=>$_SESSION['office_id']);
+			$stmt = $this->query($query,$bind_array);
+			$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		}
 		if($data==false) return array();
 		else return $data;
 	}
 	// get the count of all unknown clients
 	function get_record_count($paged=1){
-			$query = "SELECT COUNT(*) as count FROM tbl_client c WHERE c.office_id = :office_id AND 
-							c.client_type='Child' OR c.date_birth ='0000-00-00'";	
-			$bind_array= array("office_id"=>$_SESSION['office_id']);
+		$query = "SELECT COUNT(*) as count  
+								FROM tbl_records as a
+								INNER JOIN tbl_client as b ON b.ID = a.client_id
+								INNER JOIN tbl_area AS office ON office.ID = a.office_id
+								WHERE a.date >= :start_date AND a.date <= CURDATE()
+								AND a.office_id = :office_id
+								AND (b.client_type='Child' 
+								OR b.date_birth ='0000-00-00')
+								GROUP BY a.ID";   
+			$bind_array = array("start_date"=>'2019-01-01', "office_id"=>$_SESSION['office_id']);
 			$stmt = $this->query($query,$bind_array);
 			$count = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			return $count[0]['count'];

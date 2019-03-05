@@ -83,11 +83,11 @@ function export_client(){
         $data = $reports->get_client_record($sDate,$eDate,$client_type,$visit_type,$clinic, $province);
         $data2 = $reports->search_by_visit_reason($data, $visit_type);  
 
-        $client_details = $reports->get_client_record_details($sDate,$eDate,$client_type,$visit_type);
-        $client_details2 = $reports->search_visit_reason_details($client_details, $visit_type);  
+        // $client_details = $reports->get_client_record_details($sDate,$eDate,$client_type,$visit_type);
+        // $client_details2 = $reports->search_visit_reason_details($client_details, $visit_type);  
       }else{
          $data2 = $reports->get_client_record($sDate,$eDate,$client_type,$visit_type,$clinic, $province);
-         $client_details2 = $reports->get_client_record_details($sDate,$eDate,$client_type,$visit_type);
+        //  $client_details2 = $reports->get_client_record_details($sDate,$eDate,$client_type,$visit_type);
       }
       
       $visit_type_report = $reports->visit_type_reports_excel($data2);
@@ -104,15 +104,15 @@ function export_client(){
         }
       }
       
-      $client_record_header = array("Record Number", "Gender", "Full Name", "Province", "District", "Health Facility", "Clinic", "Date","Visit Reasons", "Consultation", "Review Date", "Current Age");
+      $client_record_header = array("Record Number", "Birthdate", "Gender", "Full Name", "Province", "District", "Health Facility", "Clinic", "Date","Visit Reasons", "Consultation", "Review Date", "Current Age");
       
 
       if ($param1 == "excel") {
            $reports->generate_report_client($sDate, $eDate,  $data2, $visit_type_report, $visit_type_reports_header, 
-                                        $client_record_header,  $client_details2, 'Excel2007','Client Report.xlsx');
+                                        $client_record_header,  $data2, 'Excel2007','Client Report.xlsx');
       }else{
            $reports->generate_report_client($sDate, $eDate,  $data2, $visit_type_report, $visit_type_reports_header, 
-                                        $client_record_header,  $client_details2, 'CSV', 'Client Report.csv');
+                                        $client_record_header,  $data2, 'CSV', 'Client Report.csv');
       }
   }
 function export_consultation(){

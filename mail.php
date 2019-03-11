@@ -54,12 +54,12 @@ function send_mail($from, $to, $replyTo, $subject, $htmlBody, $plainBody) {
    $mail = new PHPMailer;
 
    $mail->isSMTP();
-   $mail->Host = 'smtp.mailgun.org';
+   $mail->Host = 'mail.smtp2go.com';
    $mail->SMTPAuth = true; 
-   $mail->Username = 'postmaster@sandboxe8b212114bb642a98b1fd4bca453aaf5.mailgun.org';         
-   $mail->Password = 'f31fcf6bff82cb10feac44ed37bd7cc9';
+   $mail->Username = 'admin@susumamas.org.pg';         
+   $mail->Password = 'pF2$OsVQozz4';
    $mail->SMTPSecure = 'tls'; 
-   $mail->Port = 587;
+   $mail->Port = 2525;
 
    $mail->setFrom($from['email'], $from['name']);
    $mail->addAddress($to['email'], $to['name']); 

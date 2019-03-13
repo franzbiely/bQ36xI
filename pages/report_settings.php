@@ -111,7 +111,7 @@ $json = json_decode(file_get_contents('anc.json'), true);
 							<p style="padding-bottom: 0px; margin-bottom: 4px; font-size: 90%;">*Email addresses should be separated by a comma</p>							
 						</div>
 					</div>
-					<p class="yellowme" style="float:right; width: 300px;"><strong>Notice : </strong><br>This notifications are triggered when a client in the db is in it's 10th birthday.</p>
+					<p class="yellowme" style="float:right; width: 300px;"><strong>Notice : </strong><br>Notifications are triggered when a client's Hb level is < 8mg.</p>
 					<div style="clear:both"></div>
 					
 				</p>

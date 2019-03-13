@@ -30,11 +30,11 @@
           <thead>
             <tr>
               <th>&nbsp;</th>
-              <th>Client ID</th>
               <th>Record Number</th>
-              <th>Full Name</th>
-              <th>Birth Date</th>
+              <th>First Name</th>
+              <th>Last Name</th>
               <th>Gender</th>
+              <th>Date of Birth</th>
               <th>Consultation Date</th>
               <th>Action</th>
             </tr>
@@ -46,12 +46,17 @@
                     foreach($datas as $data ): $index++; ?>
                     <tr <?php if($data['is_archived']==1) echo 'class="is_archived" data-archived-date="'.$data['date_archived'].'"'; ?>>
                     <td><?php echo $index ?></td>
-                    <td class="id record" data-id="<?php echo $data['ID']; ?>"><?php echo $data['ID']; ?></td>
-                    <td class="fname"><?php echo $data['record_number']; ?></td>
-                    <td class="lname"><?php echo $data['fname']." ".$data['lname']; ?></td>
-                    <td class="date_birth" data-date-death="<?php echo $data['date_death']; ?>"><?php echo $data['date_birth']; ?></td>   
+                    <td class="id record" data-id="<?php echo $data['ID']; ?>"><?php echo $data['record_number']; ?></td>
+                    <td class="fname"><?php echo $data['fname']; ?></td>
+                    <td class="lname"><?php echo $data['lname']; ?></td>
                     <td class="type"><?php echo ($data['client_type'] != 'Child') ? $data['client_type'] : "Unknown"; ?></td>
+                    <td class="date_birth" data-date-death="<?php echo $data['date_death']; ?>"><?php echo $data['date_birth']; ?></td>   
                     <td class="consultation_date"><?php echo $data['date']; ?></td>
+                    <td class="phone hide"><?php echo $data['phone']; ?></td>
+                    <td class="place_of_birth hide"><?php echo $data['place_of_birth']; ?></td>
+                    <td class="province hide"><?php echo $data['province']; ?></td>
+                    <td class="district hide"><?php echo $data['district']; ?></td>
+                    <td class="current_address hide"><?php echo $data['current_address']; ?></td>
                     <td>
                     <div class="btn-group">
                         <a type="button" title="Edit" class="btn btn-default edit
@@ -86,6 +91,9 @@
     
   });
 </script>
+<style>
+/* body.unknown_clients  */
+</style>
 <?php
 }
 

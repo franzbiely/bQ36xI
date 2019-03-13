@@ -870,7 +870,11 @@ class Client extends DB{
 					$(this).find("#record_number").val( $(_this).find('.record').html() );
 					$(this).find("#fname").val( $(_this).find('.fname').html() );
 					$(this).find("#lname").val( $(_this).find('.lname').html() );
-					$(this).find("#date_birth").val( $(_this).find('.date_birth').html() );
+					
+					//Replace datefield to null if has value 0000-00-00 for validation
+					if($(_this).find('.date_birth').html() !== '0000-00-00') {
+						$(this).find("#date_birth").val( $(_this).find('.date_birth').html() );
+					}
 					$(this).find("#date_death").val( $(_this).find('.date_birth').data("date-death") );
 
 					//Code added by Joe [to set the datetimelocal format value when "dataEntry user" clicks the edit button for client records]

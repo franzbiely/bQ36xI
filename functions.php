@@ -77,12 +77,11 @@ function export_client(){
       require_once dirname(__FILE__) . '/models/Classes/PHPExcel.php';
       
       global $reports;
+      $province = (isset($_POST['province'])) ? $_POST['province'] : null;   
       extract($_POST);
-    
       if($visit_type != ""){
         $data = $reports->get_client_record($sDate,$eDate,$client_type,$visit_type,$clinic, $province);
         $data2 = $reports->search_by_visit_reason($data, $visit_type);  
-
         // $client_details = $reports->get_client_record_details($sDate,$eDate,$client_type,$visit_type);
         // $client_details2 = $reports->search_visit_reason_details($client_details, $visit_type);  
       }else{
@@ -139,7 +138,7 @@ function export_consultation(){
 	                  $client_record_header , $client_details, 'Excel2007','Consultation Report.xlsx');
 	  }else{
 	      $reports->generate_report_consultation($sDate, $eDate,   $overview_row, 
-	                  $client_record_header , $client_details, 'CSV', 'Client Report.csv');
+	                  $client_record_header , $client_details, 'CSV', 'Consultation Report.csv');
 	}
      
 }

@@ -874,10 +874,7 @@ class Records extends DB{
               show_alert_info("New Record Successfully Added!",$);
             else
               show_alert_info("Record Modified Successfully!",$);
-            //$("table").load(window.location.href+" table");
             $(".container table").load(window.location.href+" table");
-            
-            
           }
           location.reload();
           close_loader($);                    
@@ -964,11 +961,14 @@ class Records extends DB{
          else{
            if($(_this).find("input[name='func']").val()=="add")
              show_alert_info("New Record Successfully Added!",$);
-           else
-             show_alert_info("Record Modified Successfully!",$);
-           window.location.href="?page=records&cid=<?php echo $_GET['cid'] ?>&p=view";           
+           else {
+            show_alert_info("Record Modified Successfully!",$);
+            setTimeout(function() {
+              close_loader($);
+              window.location.href="?page=records&cid=<?php echo $_GET['cid'] ?>&p=view";
+            },3500);
+           }           
          } 
-         close_loader($);                   
         })
         return false;
       })
@@ -977,10 +977,13 @@ class Records extends DB{
      
     });  
     function show_alert_info(string, $){
-      $(".alert-info").fadeIn().find('strong').html(string);
+      $(".alert-info").fadeIn();
       setTimeout(function(){
-        $(".alert-info").fadeOut();
-      },3500);
+        $(".alert-info").html('<strong>'+string+'</strong>');
+        setTimeout(function(){
+          $(".alert-info").fadeOut();
+        }, 1000);
+      },2000);
     } 
 
     function modal_close($){

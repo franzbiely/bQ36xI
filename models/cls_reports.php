@@ -675,7 +675,6 @@ class Reports extends DB{
 
   }
   function get_client_record($sDate,$eDate,$client_type,$visit_type,$clinic, $province){
-    echo "test";
         $temp = array("start_date"=>$sDate,"end_date"=>$eDate, "client_type"=>$client_type,
                      "visit_type"=>$visit_type,"clinic"=>$clinic, "province"=>$province);
         $_data = array_filter($temp);
@@ -710,7 +709,7 @@ class Reports extends DB{
               a.visit_reasons,      
               a.date,        
               COUNT(*) AS ctr_consultation,
-              floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) as current_age    
+              IF(b.date_birth='0000-00-00', 'Unknown age', floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 )) as current_age
               FROM tbl_records AS a
               JOIN tbl_client AS b ON a.client_id = b.ID
               JOIN tbl_clinic AS c ON a.clinic_id = c.ID
@@ -735,7 +734,7 @@ class Reports extends DB{
                       a.visit_reasons, 
                       a.date,               
                       COUNT(*) AS ctr_consultation,
-                      floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) as current_age
+                      IF(b.date_birth='0000-00-00', 'Unknown age', floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 )) as current_age
                       FROM tbl_records AS a
                       JOIN tbl_client AS b ON a.client_id = b.ID
                       JOIN tbl_clinic AS c ON a.clinic_id = c.ID
@@ -866,7 +865,7 @@ class Reports extends DB{
                   a.visit_reasons,  
                   COUNT(*) AS ctr_consultation,
                   a.review_date,
-                  floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) as current_age
+                  IF(b.date_birth='0000-00-00', 'Unknown age', floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 )) as current_age
                   FROM tbl_records AS a
                   JOIN tbl_client AS b ON a.client_id = b.ID
                   JOIN tbl_clinic AS c ON a.clinic_id = c.ID
@@ -888,7 +887,7 @@ class Reports extends DB{
                       a.visit_reasons,  
                       COUNT(*) AS ctr_consultation,
                       a.review_date,
-                      floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) as current_age
+                      IF(b.date_birth='0000-00-00', 'Unknown age', floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 )) as current_age
                       FROM tbl_records AS a
                       JOIN tbl_client AS b ON a.client_id = b.ID
                       JOIN tbl_clinic AS c ON a.clinic_id = c.ID
@@ -1122,45 +1121,75 @@ class Reports extends DB{
     }
     return $array;
   }
-
   function get_hb_level_all() {
-    
-    $query = "SELECT DISTINCT client_id FROM tbl_records 
-          WHERE hb_level != '' and hb_level != '10+' 
-          
-          ORDER BY hb_level DESC
-    ";
-
-    // GROUP BY hb_level        
+    $query = "SELECT a.*, b.ID as tbl_records_ID, b.*, c.*, d.*
+              FROM tbl_client as a 
+              INNER JOIN tbl_records as b ON b.client_id = a.ID 
+              INNER JOIN tbl_clinic as c ON b.clinic_id = c.ID
+              LEFT JOIN tbl_area as d ON b.office_id = d.ID
+              WHERE b.hb_level != '' and b.hb_level != '10+'
+              ORDER BY b.hb_level DESC";
     $arr = array();
     $qobj = $this->query($query, $arr);
     $array = $qobj->fetchAll(PDO::FETCH_ASSOC);
+    $new_array = array();
+    foreach($array as $i => $a) {
+      $arr_records = array(
+        'ID' => $a['tbl_records_ID'],
+        'client_id' => $a['client_id'],
+        'clinic_id' => $a['clinic_id'],
+        'date' => $a['date'],
+        'feeding_type' => $a['feeding_type'],
+        'visit_reasons' => $a['visit_reasons'],
+        'consultation_time' => $a['consultation_time'],
+        'review_date' => $a['review_date'],
+        'referral_time' => $a['referral_time'],
+        'referral_id' => $a['referral_id'],
+        'followup_type' => $a['followup_type'],
+        'record_type' => $a['record_type'],
+        'office_id' => $a['office_id'],
+        'hb_level' => $a['hb_level'],
+        'catchment' => $a['catchment'],
+        'clinic_name' => $a['clinic_name'],
+        'clinic_type' => $a['clinic_type'],
+        'province' => $a['province'],
+        'location' => $a['location'],
+        'llg_id' => $a['llg_id'],
+        'officer_in_charge' => $a['officer_in_charge'],
+        'contact' => $a['contact'],
+        'area_name' => $a['area_name']
+      );
 
-   // print_r($array);
-
-    //exit;
-
-    foreach($array as $idx => $a) {
-      //get the client info
-      $query = "SELECT * from tbl_client where ID = :client_id";
-      $arr = array('client_id' => $a['client_id']);
-      $qobj = $this->query($query, $arr);
-      $client = $qobj->fetchAll(PDO::FETCH_ASSOC);
-      $array[$idx]['client']  = $client[0];
-
-      //get the hb_levels;
-      $query = "SELECT tbl_records.*, tbl_clinic.*, tbl_area.area_name FROM tbl_records  INNER JOIN tbl_clinic on tbl_records.clinic_id = tbl_clinic.ID left join tbl_area on tbl_area.ID = tbl_records.office_id WHERE client_id = :client_id AND hb_level != ''  
-            ORDER BY date DESC  limit 1
-      ";
-
-      //AND hb_level != '10+'
-      $arr = array('client_id' => $a['client_id']);
-      $qobj = $this->query($query, $arr);
-      $records = $qobj->fetchAll(PDO::FETCH_ASSOC);
-      $array[$idx]['records'] = $records;
-      
+      $searched_key = array_search($a['client_id'], array_column($new_array, 'client_id'));
+      if(!$searched_key) {      
+        array_push($new_array, array(
+          client_id => $a['client_id'],
+          client => array(
+            'ID' => $a['client_id'],
+            'record_number' => $a['record_number'],
+            'fname' => $a['fname'],
+            'lname' => $a['lname'],
+            'date_birth' => $a['date_birth'],
+            'date_death' => $a['date_death'],
+            'client_type' => $a['client_type'],
+            'feeding_type' => $a['feeding_type'],
+            'phone' => $a['phone'],
+            'place_of_birth' => $a['place_of_birth'],
+            'district' => $a['district'],
+            'province' => $a['province'],
+            'office_id' => $a['office_id'],
+            'current_address' => $a['current_address'],
+            'is_archived' => $a['is_archived'],
+            'date_archived' => $a['date_archived']
+          ),
+          records =>  array($arr_records)
+        ));
+      }
+      else {
+        array_push($new_array[$searched_key]['records'], $arr_records);
+      }
     }
-    return $array;
+    return $new_array;
   }
 
   function get_hb_level_record_exact($start_date,$end_date,$by, $id) {

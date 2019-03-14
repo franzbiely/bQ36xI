@@ -27,7 +27,9 @@ class User extends DB{
 			if ($data2 != false) {
 				/* user already given permissions */
 				// error_reporting(0);
-				session_start();
+				if(!isset($_SESSION)) {
+					session_start();
+				}
 				$_SESSION['id']=$data['ID'];
 				$_SESSION['username']=$data['username'];
 				$_SESSION['office_id']=$data['office_id'];

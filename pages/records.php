@@ -32,11 +32,16 @@ if($_GET['p'] != "update") {
       </div>
       <div class="col-md-9" role="main" style="margin-bottom:30px;">
         <div class="row">
-          <?php  success_message($_GET['page'], $_GET['p']); ?>
-           
+          <?php  success_message($_GET['page'], $_GET['p']);
+          $status_check = '';
+          if(($client_info['client_type'] != 'Male' && $client_info['client_type'] != 'Female' ) || $client_info['date_birth']=="0000-00-00" || $client_info['date_birth']==null) { $status_check='true';}
+          ?>
           <div class="page-header" style="margin-top: 45px;margin-bottom: 50px;">
-            <h1 id="overview" style="width: 100%; padding-top: 10px;">Personal Info<?php if($client_info['is_archived']=="1") echo " <span>- (Archived - <span style='font-size: 18px;'>".$client_info['date_archived']."</span>)</span>"; ?></h1> 
-
+          <h1 id="overview" style="width: 100%; padding-top: 10px;">Personal Info<?php if($client_info['is_archived']=="1") echo " <span>- (Archived - <span style='font-size: 18px;'>".$client_info['date_archived']."</span>)</span>"; ?>
+            <?php if($status_check === 'true'){ ?>
+              <a type="button" class="btn btn-default" id="overview" href="?page=clients&r=unknown_clients"> See all Unknown client lists</a>
+            <?php } ?>
+          </h1> 
               <?php if($_GET['p']=="delete") : ?>
                   <div class="delete-options-entry" style="margin: 0 125px 45px 0;">
                     <form id="frm_client_personal_info_update" role="form" action="" method="post">
@@ -54,6 +59,10 @@ if($_GET['p'] != "update") {
               <?php if($showDeprecatedMessage) : ?>
                 <p class="yellowme"><strong>Notice : </strong><br />Visit Reasons for Consultations prior to the <strong>1st of April, 2018</strong> have been deprecated and cannot be displayed. <br />Please refer to Client paper Record.</p>
               <?php endif; ?>
+              <div id = "warning-p" class = "form-group hide">
+                <i id="close-p" style = "font-size: 15px; top: 11px; right: 10px; cursor: pointer" class= "glyphicon glyphicon-remove-circle pull-right" ></i>
+                <p  class="redme "><strong>Warning : </strong>Please update your <strong>personal profile first! </strong></p>
+              </div>
               <form id="frm_client_personal_info_update" role="form" action="" method="post">
                 <input type="hidden" name="class" value="client" />
                 <input type="hidden" name="func" value="edit" />
@@ -97,6 +106,7 @@ if($_GET['p'] != "update") {
                 if($client_info['date_birth']=="0000-00-00" || $client_info['date_birth']==null) {
                   $addClass=" redme";
                   $note = "Please adjust the birth date.";
+                  $status_check = 'true';
                 }         
                 ?>
                 <div class="form-group<?php echo $addClass ?>">
@@ -135,6 +145,7 @@ if($_GET['p'] != "update") {
                 if($client_info['client_type'] != 'Male' && $client_info['client_type'] != 'Female' ) {
                   $addClass = " redme";
                   $note = "Please adjust the client gender.";
+                  $status_check = "true";
                 }
                              
                 ?>
@@ -253,9 +264,12 @@ if($_GET['p'] != "update") {
                 </div> -->
               <?php //endif ?>
             <?php if($_GET['p']!="delete") : ?>
+            <input type="text" style = "display: none" id="status-check" name="gender-check" class="form-control" value="<?php echo $status_check ?>">         
+
              <a type="button" class="btn btn-default <?php if (enablea_and_disable_ele($_SESSION['type'], "add_con_records", $_SESSION['records']) == false) { echo "hide"; }?>" 
               style="float: right; " id="add-consultation-btn" href="#">Add Consultation Schedule</a> 
             <?php endif; ?>
+
             <!-- Modal -->
             <?php $record->consultation_modal($client_info) ?> 
           </h1> 
@@ -353,18 +367,31 @@ if($_GET['p'] != "update") {
         }
       }
     })
-
+   
     $('#add-consultation-btn').on('click', function() {
-	  
-      console.log($('#client_type').val());
-      if($('#client_type').val() == "Female") {
-        $('#newClientModal').find('input[value="ANC 1stvisit"], input[value="ANC 4th visit"], input[value="ANC Other visit"]').parent().show()
-      } else {
-        $('#newClientModal').find('input[value="ANC 1stvisit"], input[value="ANC 4th visit"], input[value="ANC Other visit"]').parent().hide()
+      
+      if ($('#status-check').val() !== "true") {
+        $('#warning-p').removeClass("show");
+        $('#warning-p').addClass("hide");
+        console.log($('#client_type').val());
+        if($('#client_type').val() == "Female") {
+          $('#newClientModal').find('input[value="ANC 1stvisit"], input[value="ANC 4th visit"], input[value="ANC Other visit"]').parent().show()
+        } else {
+          $('#newClientModal').find('input[value="ANC 1stvisit"], input[value="ANC 4th visit"], input[value="ANC Other visit"]').parent().hide()
+        }
+        $('#newClientModal').modal('show');
+        $('#hb-warning').hide();
+      }else {
+        $('#warning-p').removeClass("hide");
+        $('#warning-p').addClass("show");
+        $('#warning-p').fadeIn("slow");
       }
-      $('#newClientModal').modal('show');
-	  $('#hb-warning').hide();
     })
+    $('#close-p').on('click', function() {
+      $('#warning-p').removeClass("show");
+      $('#warning-p').addClass("hide");
+      $('#warning-p').fadeOut("slow");
+    });
 
     $('#hb_level').on('change', function() {
       if($(this).val() == '8-') {

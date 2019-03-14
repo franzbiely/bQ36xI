@@ -5,6 +5,17 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.27 | 14th of March 2019
+	- New reporting for Unknown Client Type
+	- Added validation on gender and birthdate every adding new consultation
+	- Refactor and fixed old php code
+	- Fix Exporting to Excel file bug
+	- Set new STMP (mailer) settings
+	- Fix mail.php (initial fix)
+  Tickets resolved : 
+  	- https://kuakawa.atlassian.net/browse/CSR-255 	(Client DB Issues)
+  	- https://kuakawa.atlassian.net/browse/CSR-273  (Exporting unknown clients with missing DOB)
+
 v3.26 | 13th of Feb 2019
  - Reporting > Client Reports > Export Button Fix
  - Fix Archive trigger to only show for edit

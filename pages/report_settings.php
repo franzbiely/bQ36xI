@@ -82,8 +82,9 @@ $json = json_decode(file_get_contents('anc.json'), true);
 							</select>
 						</div>
 						<div>
-							<p style="padding-bottom: 0px; margin-bottom: 4px; font-size: 90%;">*Daily and weekly notification are sent at 3am</p>
-							<p style="font-size: 90%;">**Monthly notifications are sent on the 1st at 3am</p>
+							<p style="padding-bottom: 0px; margin-bottom: 4px; font-size: 90%;">**Daily notifications are sent at 12am.</p>
+							<p style="padding-bottom: 0px; margin-bottom: 4px; font-size: 90%;">**Weekly notifications are sent every selected day of the week at 12am.</p>
+							<p style="font-size: 90%;">**Monthly notifications are sent on the 1st at 12am.</p>
 						</div>
 					</div>
 					<div style="width:200px;float:left;margin:10px;display:none" id="weekly-select-div">

@@ -72,11 +72,11 @@ function send_mail($from, $to, $replyTo, $subject, $htmlBody, $plainBody) {
    $mail->AltBody = $plainBody;
 
    if(!$mail->send()) {
-      return false;
-       //echo 'Mailer Error: ' . $mail->ErrorInfo;
+      // return false;
+      //  echo 'Mailer Error: ' . $mail->ErrorInfo;
    } else {
-      return true;
-      //echo 'Message has been sent';
+      // return true;
+      // echo 'Message has been sent';
    }
 }
 
@@ -105,9 +105,9 @@ function disp_record($arr, $filter) {
                               }
                               //$tmp .= date('jS M Y', strtotime($c_record['date'])) . ' : HB ' . $c_record['hb_level'];
                               if($c_record['hb_level'] == '10-' || $c_record['hb_level'] == '9-'){
-                                 $tmp .= date('jS M Y', strtotime($c_record['date'])) ." : Hb8-10g%";
+                                 $tmp .= date('jS M Y', strtotime($c_record['review_date'])) ." : Hb8-10g%";
                               }else if($c_record['hb_level'] == '8-'){
-                                 $tmp .= date('jS M Y', strtotime($c_record['date'])) ." : Hb<8g%";
+                                 $tmp .= date('jS M Y', strtotime($c_record['review_date'])) ." : Hb<8g%";
                               }
 
                               $tmp .= ' ' .$c_record['clinic_name'];
@@ -215,7 +215,7 @@ $reports = new Reports();
 
 if($json['schedule'] == 'daily') {
    $date = date('Y-m-d', strtotime('-1 days'));
-   $data = $reports->get_hb_level_all();
+   $data = $reports->get_hb_level_today();
    $body = body($data);
 } else if ($json['schedule'] == 'weekly') {
    if(strtolower(date('l', strtotime('now'))) != $json['every']) {
@@ -223,8 +223,8 @@ if($json['schedule'] == 'daily') {
    }
    $start_date = date('Y-m-d', strtotime('-7 days'));
    $end_date = date('Y-m-d', strtotime('-1 days'));
-   $data = $reports->get_hb_level_all();
-   $body = body($body);
+   $data = $reports->get_hb_level_this_week();
+   $body = body($data);
 } else if($json['schedule'] == 'monthly') {
    if(date('d', strtotime('now')) != "01") {
       exit;
@@ -234,11 +234,11 @@ if($json['schedule'] == 'daily') {
    $this_month = date('m', strtotime('-1 months'));
    $last_date = cal_days_in_month(CAL_GREGORIAN,$this_month,$this_year);
    $end_date = $this_year . '-' . $this_month . '-' . $last_date;
-   $data = $reports->get_hb_level_all();
-   $body = body($body);
+   $data = $reports->get_hb_level_this_month();
+   $body = body($data);
 }
 
-echo $body;
+// echo $body;
 
 foreach($emails as $email) {
    $mail = send_mail(
@@ -246,7 +246,7 @@ foreach($emails as $email) {
       array('email' => $email, 'name' => ''), 
       array('email' => 'admin@susumamas.org.pg', 'name' => ''), 
       'Susumamas | ANC Report', 
-      $body, 
+      $body,
       htmlentities($body)
    );
 }

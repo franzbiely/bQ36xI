@@ -1121,14 +1121,7 @@ class Reports extends DB{
     }
     return $array;
   }
-  function get_hb_level_all() {
-    $query = "SELECT a.*, b.ID as tbl_records_ID, b.*, c.*, d.*
-              FROM tbl_client as a 
-              INNER JOIN tbl_records as b ON b.client_id = a.ID 
-              INNER JOIN tbl_clinic as c ON b.clinic_id = c.ID
-              LEFT JOIN tbl_area as d ON b.office_id = d.ID
-              WHERE b.hb_level != '' and b.hb_level != '10+'
-              ORDER BY b.hb_level DESC";
+  function get_hb_level($query) {
     $arr = array();
     $qobj = $this->query($query, $arr);
     $array = $qobj->fetchAll(PDO::FETCH_ASSOC);
@@ -1191,7 +1184,52 @@ class Reports extends DB{
     }
     return $new_array;
   }
-
+  // Not yet used 
+  function get_hb_level_all() {
+    $query = "SELECT a.*, b.ID as tbl_records_ID, b.*, c.*, d.*
+              FROM tbl_client as a 
+              INNER JOIN tbl_records as b ON b.client_id = a.ID 
+              INNER JOIN tbl_clinic as c ON b.clinic_id = c.ID
+              LEFT JOIN tbl_area as d ON b.office_id = d.ID
+              WHERE b.hb_level != '' and b.hb_level != '10+'
+              ORDER BY b.hb_level DESC";
+    return $this->get_hb_level($query);
+  }
+  function get_hb_level_today() {
+    $query = "SELECT a.*, b.ID as tbl_records_ID, b.*, c.*, d.*
+              FROM tbl_client as a 
+              INNER JOIN tbl_records as b ON b.client_id = a.ID 
+              INNER JOIN tbl_clinic as c ON b.clinic_id = c.ID
+              LEFT JOIN tbl_area as d ON b.office_id = d.ID
+              WHERE b.hb_level != '' and b.hb_level != '10+'
+              AND b.review_date = CURDATE()
+              ORDER BY b.hb_level DESC";
+              echo $query;
+    return $this->get_hb_level($query);
+  }
+  function get_hb_level_this_week() {
+    $query = "SELECT a.*, b.ID as tbl_records_ID, b.*, c.*, d.*
+              FROM tbl_client as a 
+              INNER JOIN tbl_records as b ON b.client_id = a.ID 
+              INNER JOIN tbl_clinic as c ON b.clinic_id = c.ID
+              LEFT JOIN tbl_area as d ON b.office_id = d.ID
+              WHERE b.hb_level != '' and b.hb_level != '10+'
+              AND b.review_date BETWEEN CURDATE() AND  DATE_ADD(CURDATE(), INTERVAL 6 DAY) 
+              ORDER BY b.hb_level DESC";
+    return $this->get_hb_level($query);
+  }
+  function get_hb_level_this_month() {
+    $query = "SELECT a.*, b.ID as tbl_records_ID, b.*, c.*, d.*
+              FROM tbl_client as a 
+              INNER JOIN tbl_records as b ON b.client_id = a.ID 
+              INNER JOIN tbl_clinic as c ON b.clinic_id = c.ID
+              LEFT JOIN tbl_area as d ON b.office_id = d.ID
+              WHERE b.hb_level != '' and b.hb_level != '10+'
+              AND MONTH(b.review_date) = MONTH(CURRENT_DATE())
+              AND YEAR(b.review_date) = YEAR(CURRENT_DATE())
+              ORDER BY b.hb_level DESC";
+    return $this->get_hb_level($query);
+  }
   function get_hb_level_record_exact($start_date,$end_date,$by, $id) {
     $query = "SELECT DISTINCT client_id FROM tbl_records 
           WHERE date >= :start_date AND date <= :end_date AND hb_level != ''

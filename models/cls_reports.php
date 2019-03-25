@@ -1184,7 +1184,7 @@ class Reports extends DB{
     }
     return $new_array;
   }
-  // Not yet used 
+  //==================== Not yet used 
   function get_hb_level_all() {
     $query = "SELECT a.*, b.ID as tbl_records_ID, b.*, c.*, d.*
               FROM tbl_client as a 
@@ -1204,7 +1204,6 @@ class Reports extends DB{
               WHERE b.hb_level != '' and b.hb_level != '10+'
               AND b.review_date = CURDATE()
               ORDER BY b.hb_level DESC";
-              echo $query;
     return $this->get_hb_level($query);
   }
   function get_hb_level_this_week() {
@@ -1227,6 +1226,18 @@ class Reports extends DB{
               WHERE b.hb_level != '' and b.hb_level != '10+'
               AND MONTH(b.review_date) = MONTH(CURRENT_DATE())
               AND YEAR(b.review_date) = YEAR(CURRENT_DATE())
+              ORDER BY b.hb_level DESC";
+    return $this->get_hb_level($query);
+  }
+  // =========================
+  function get_hb_level_from_today() {
+    $query = "SELECT a.*, b.ID as tbl_records_ID, b.*, c.*, d.*
+              FROM tbl_client as a 
+              INNER JOIN tbl_records as b ON b.client_id = a.ID 
+              INNER JOIN tbl_clinic as c ON b.clinic_id = c.ID
+              LEFT JOIN tbl_area as d ON b.office_id = d.ID
+              WHERE b.hb_level != '' and b.hb_level != '10+'
+              AND b.review_date >= CURDATE()
               ORDER BY b.hb_level DESC";
     return $this->get_hb_level($query);
   }

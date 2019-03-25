@@ -212,10 +212,9 @@ $emails = str_replace(' ', '', $emails);
 
 $reports = new Reports();
 
-
 if($json['schedule'] == 'daily') {
    $date = date('Y-m-d', strtotime('-1 days'));
-   $data = $reports->get_hb_level_today();
+   $data = $reports->get_hb_level_from_today();
    $body = body($data);
 } else if ($json['schedule'] == 'weekly') {
    if(strtolower(date('l', strtotime('now'))) != $json['every']) {
@@ -223,7 +222,7 @@ if($json['schedule'] == 'daily') {
    }
    $start_date = date('Y-m-d', strtotime('-7 days'));
    $end_date = date('Y-m-d', strtotime('-1 days'));
-   $data = $reports->get_hb_level_this_week();
+   $data = $reports->get_hb_level_from_today();
    $body = body($data);
 } else if($json['schedule'] == 'monthly') {
    if(date('d', strtotime('now')) != "01") {
@@ -234,7 +233,7 @@ if($json['schedule'] == 'daily') {
    $this_month = date('m', strtotime('-1 months'));
    $last_date = cal_days_in_month(CAL_GREGORIAN,$this_month,$this_year);
    $end_date = $this_year . '-' . $this_month . '-' . $last_date;
-   $data = $reports->get_hb_level_this_month();
+   $data = $reports->get_hb_level_from_today();
    $body = body($data);
 }
 

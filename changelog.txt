@@ -5,6 +5,9 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.28 | 25th of March 2019
+	- Change logic of ANC Report (before it fetch all the data, now it just fetch datas for upcoming review dates starting from the current day)
+
 v3.27 | 14th of March 2019
 	- New reporting for Unknown Client Type
 	- Added validation on gender and birthdate every adding new consultation

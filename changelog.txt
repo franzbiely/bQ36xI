@@ -5,6 +5,9 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.29 | 4th of April 2019
+  - fixed session bug on logout
+
 v3.28 | 25th of March 2019
 	- Change logic of ANC Report (before it fetch all the data, now it just fetch datas for upcoming review dates starting from the current day)
 

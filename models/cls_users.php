@@ -91,7 +91,9 @@ class User extends DB{
 	}
 	function logout(){
 		// error_reporting(0);
-		session_start();
+		if(!isset($_SESSION)) {
+			session_start();
+		}
 		session_destroy();
 		header("Location: ".SITE_URL."/?page=".FRONT_PAGE);
 		

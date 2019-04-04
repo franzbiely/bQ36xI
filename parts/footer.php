@@ -2,7 +2,7 @@
 		<div class="row">	
 			<footer>
 				<ul>
-					<li><a href="#" style="pointer-events: none;">Susu Mamas &copy 2019</a> <span id="system_version">v3.28</span></li>			
+					<li><a href="#" style="pointer-events: none;">Susu Mamas &copy 2019</a> <span id="system_version">v3.29</span></li>			
 					<li><a href="#">Documentation</a></li>
 					<li><a href="/changelog.txt">Changelog</a></li>
 					<li><a href="#">Official Website</a></li>

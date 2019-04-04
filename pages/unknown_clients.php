@@ -19,11 +19,13 @@
             $record_count = $client->get_record_count($paged);
             $to = (count($datas) < ITEM_DISPLAY_COUNT) ? (ITEM_DISPLAY_COUNT*($paged-1))+count($datas) :  ITEM_DISPLAY_COUNT*$paged;
             $from = $paged == 1 ? 1 : (ITEM_DISPLAY_COUNT*($paged-1))+1;
+            if($record_count > 0) :
             ?>
             <p>Record <?php echo number_format($from) ?> 
                 to <?php echo number_format($to) ?> 
                 of page (<?php echo number_format($record_count) ?>)
             </p>
+            <?php endif; ?>
         </div>
        
         <table class="table  table-striped table-hover table-condensed">

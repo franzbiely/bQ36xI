@@ -7,6 +7,8 @@
 ******************************************************************************************
 v3.29 | 4th of April 2019
   - fixed session bug on logout
+	- bug on no report on unknown client report
+	- fix bug on Show Advance Filter dropdown on Reports > Clients after first submition.
 
 v3.28 | 25th of March 2019
 	- Change logic of ANC Report (before it fetch all the data, now it just fetch datas for upcoming review dates starting from the current day)

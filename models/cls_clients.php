@@ -103,7 +103,7 @@ class Client extends DB{
 			$bind_array = array("start_date"=>'2019-01-01', "office_id"=>$_SESSION['office_id']);
 			$stmt = $this->query($query,$bind_array);
 			$count = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			return $count[0]['count'];
+			return (count($count) > 0) ? $count[0]['count'] : 0;
 	}
 	function get_mother(){
 		$start = ($paged==1) ? 0 : $paged*ITEM_DISPLAY_COUNT;

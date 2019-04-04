@@ -1599,7 +1599,7 @@ class Reports extends DB{
           close_loader($);
         });
       });
-      $("#advance_filter_toggle").on('click',function(){
+      $(document).on('click', '#advance_filter_toggle',function(){
         if($(this).html()=="Show Advance Filter"){
           $(".advance_filter").addClass('active');
           $(this).html("Hide Advance Filter");
@@ -1649,6 +1649,7 @@ class Reports extends DB{
                         
                       <?php endforeach; endif; ?>
               break;
+            <?php if(isset($province)) : ?>
             case "llg":
               element += "<option value=''>--[Choose "+choice.toLowerCase()+"]--</option>";
               <?php $data = $llg->get_all();
@@ -1670,9 +1671,9 @@ class Reports extends DB{
                         element += "<option value='<?php echo $data['ID']; ?>'><?php echo $data['area_name']; ?></option>";
                       <?php endforeach; endif; ?>
                       break;
+            <?php endif; ?>
           } 
           element += "</select></div>";
-          //close_loader($,"#newClientModal");
           $(this).parent().after(element);
         }
       })

@@ -1,11 +1,11 @@
 <?php
 /* show all errors */
-error_reporting(E_ALL);
-ini_set('display_errors', TRUE);
-ini_set('display_startup_errors', TRUE);
+//error_reporting(E_ALL);
+//ini_set('display_errors', TRUE);
+//ini_set('display_startup_errors', TRUE);
 //Note:  Do not include the opening and closing PHP tags when you copy this code
-// error_reporting(0);
-// error_reporting(E_ALL ^ E_WARNING); 
+error_reporting(0);
+error_reporting(E_ALL ^ E_WARNING); 
 
 session_start();
 
@@ -58,6 +58,7 @@ $main = new Client();
 $permission = new Permission();
 $relationship = new Relationship();
 $current_page = isset($_GET['page']) ? $_GET['page'] : FRONT_PAGE;
+
 include("functions.php");
 
 include("parts/header.php");

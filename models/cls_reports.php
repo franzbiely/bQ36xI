@@ -22,11 +22,7 @@ class Reports extends DB{
   }
 
   function generate_report_search($client_record_header , $client_details, $file_type, $file_name){
-
-     error_reporting(E_ALL);
-            ini_set('display_errors', TRUE);
-            ini_set('display_startup_errors', TRUE);
-            date_default_timezone_set('Asia/Manila');
+  date_default_timezone_set('Asia/Manila');
 
           if (PHP_SAPI == 'cli')
            die('This example should only be run from a Web Browser');
@@ -54,9 +50,6 @@ class Reports extends DB{
           exit;
   }
   function generate_report_catchment($sDate, $eDate, $overview_row, $client_record_header , $client_details, $file_type, $file_name){
-     error_reporting(E_ALL);
-            ini_set('display_errors', TRUE);
-            ini_set('display_startup_errors', TRUE);
             date_default_timezone_set('Asia/Manila');
 
           if (PHP_SAPI == 'cli')
@@ -101,9 +94,6 @@ class Reports extends DB{
           exit;
   }
   function generate_report_consultation($sDate, $eDate, $overview_row, $client_record_header , $client_details, $file_type, $file_name){
-     error_reporting(E_ALL);
-            ini_set('display_errors', TRUE);
-            ini_set('display_startup_errors', TRUE);
             date_default_timezone_set('Asia/Manila');
 
           if (PHP_SAPI == 'cli')
@@ -156,9 +146,6 @@ class Reports extends DB{
   }
 
   function generate_report_fedding($sDate, $eDate,  $data_overview, $client_record_header , $client_details, $file_type, $file_name){
-     error_reporting(E_ALL);
-            ini_set('display_errors', TRUE);
-            ini_set('display_startup_errors', TRUE);
             date_default_timezone_set('Asia/Manila');
 
           if (PHP_SAPI == 'cli')
@@ -300,9 +287,6 @@ class Reports extends DB{
         return $rows;
   }  
   function generate_client_records($name, $b_date, $d_date, $type, $phone,  $client_record_header, $data, $file_type, $file_name){
-     error_reporting(E_ALL);
-          ini_set('display_errors', TRUE);
-          ini_set('display_startup_errors', TRUE);
           date_default_timezone_set('Asia/Manila');
 
           if (PHP_SAPI == 'cli')
@@ -343,9 +327,6 @@ class Reports extends DB{
           exit;
   }
   function generate_report_client($sDate, $eDate,  $data, $visit_type_report, $visit_type_reports_header, $client_record_header, $client_row, $file_type, $file_name){
-          error_reporting(E_ALL);
-          ini_set('display_errors', TRUE);
-          ini_set('display_startup_errors', TRUE);
           date_default_timezone_set('Asia/Manila');
 
           if (PHP_SAPI == 'cli')
@@ -1649,7 +1630,7 @@ class Reports extends DB{
                         
                       <?php endforeach; endif; ?>
               break;
-            <?php if(isset($province)) : ?>
+            <?php if(isset($province) && is_object($province)) :  ?>
             case "llg":
               element += "<option value=''>--[Choose "+choice.toLowerCase()+"]--</option>";
               <?php $data = $llg->get_all();

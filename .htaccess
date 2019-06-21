@@ -1,0 +1,47 @@
+# Only allow specific access
+Order allow,deny
+
+#*************************************************
+# Allow following Sucuri IP addresses only
+#
+Allow from 96.126.106.125
+Allow from 50.116.41.217
+Allow from 173.255.233.124
+Allow from 50.116.36.93
+Allow from 50.116.3.171
+Allow from 198.58.96.212
+Allow from 50.116.63.221
+Allow from 192.99.33.22
+Allow from 198.58.111.80
+#*************************************************
+
+#*************************************************
+# Allow following SSM IP addresses only
+#
+Allow from 66.
+Allow from 103.
+Allow from 180.
+Allow from 203.
+#*************************************************
+
+#*************************************************
+# Allow following Kuakawa IP addresses only
+#
+# Philippines
+Allow from 130.105.24.
+Allow from 49.151.188.
+#mobile
+Allow from 110.54.180.
+#Tigatto
+Allow from 49.151.241.
+#
+# Robert
+Allow from 31.24.225.254
+#*************************************************
+
+#*************************************************
+# Allow running of CRON job as suggested by ServerPilot
+#
+Allow from 13.251.54.50
+#
+#*************************************************

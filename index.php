@@ -1,11 +1,11 @@
 <?php
 /* show all errors */
-//error_reporting(E_ALL);
-//ini_set('display_errors', TRUE);
-//ini_set('display_startup_errors', TRUE);
+error_reporting(E_ALL);
+ini_set('display_errors', TRUE);
+ini_set('display_startup_errors', TRUE);
 //Note:  Do not include the opening and closing PHP tags when you copy this code
-error_reporting(0);
-error_reporting(E_ALL ^ E_WARNING); 
+// error_reporting(0);
+// error_reporting(E_ALL ^ E_WARNING); 
 
 session_start();
 
@@ -39,9 +39,11 @@ include("models/cls_records.php");
 include("models/cls_permission_shema.php");
 include("models/cls_relationship.php");
 include("models/cls_catchment.php");
+include('./popups/malnutrition.blade.php');
+include('./component/Malnutrition.php');
 
 // DECLARING THE OBJECTS
-global $users,$catchment, $office, $client, $clinic, $province, $district, $llg, $type, $record, $reports, $main, $permission, $relationship;
+global $users,$catchment, $office, $client, $clinic, $province, $district, $llg, $type, $record, $reports, $main, $permission, $relationship, $Malnutrition_Blade_Popup;
 
 $user = new User(); 
 $office = new Office();
@@ -57,8 +59,11 @@ $reports = new Reports();
 $main = new Client();
 $permission = new Permission();
 $relationship = new Relationship();
-$current_page = isset($_GET['page']) ? $_GET['page'] : FRONT_PAGE;
+$Malnutrition_Blade_Popup = new Malnutrition_Blade_Popup();
 
+$Malnutrition = new Malnutrition();
+
+$current_page = isset($_GET['page']) ? $_GET['page'] : FRONT_PAGE;
 include("functions.php");
 
 include("parts/header.php");

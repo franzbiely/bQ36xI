@@ -685,3 +685,16 @@ a.list-group-item{
 
 .noneditable .foreditable,
 .editable .fornoneditable{display: none;}
+
+
+.outcome_review_readonly,
+.review_date_future_readonly {display:none;}
+
+.typeoffeedingblock {
+  background: #c2f4ff;
+}
+.field-description {
+      font-size: 12px;
+    font-style: italic;
+    padding: 5px;
+}

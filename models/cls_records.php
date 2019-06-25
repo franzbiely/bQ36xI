@@ -437,7 +437,8 @@ class Records extends DB{
               </span>
             </div>
 
-            <div class="row">
+
+            <div class="row typeoffeedingblock">
               
               <?php if($client->get_age($client_info['date_birth']) <= 14) : ?>
                 <?php if($client_info['date_birth']=="0000-00-00" ||
@@ -453,6 +454,7 @@ class Records extends DB{
                         <option value="<?php echo $data ?>"><?php echo $data ?></option>
                       <?php endforeach; endif; ?>
                       </select>
+                      <p class="field-description">This section is only relevant for infants <6 months of age.</p>
                     </div>
                   </div>
                   <div class="col-xs-12 col-sm-6">
@@ -505,6 +507,8 @@ class Records extends DB{
                 </div>            
               <?php endif; ?>
             </div>
+
+
             <?php $Malnutrition_Blade_Popup->render() ?>
             <div class="row">
               <div class="col-md-4">

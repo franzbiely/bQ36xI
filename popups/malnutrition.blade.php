@@ -73,7 +73,7 @@ class Malnutrition_Blade_Popup extends DB{
                 <div class="col-xs-12 col-sm-12">
                     <h3>Malnutrition (MAM/SAM)</h3>
                     <div class="malnutinitinfo noneditable"> 
-                        <h5 class="fornoneditable">Enrollment #<span id="series_no"><?php echo $this->series ?></span> - Visit #<span id="visit_no"><?php echo $this->visit_no ?></span></h5>
+                        <h5 class="fornoneditable">Enrollment #<span id="series_no"><?php echo $this->series ?></span></h5>
                     </div>
                 </div>
             </div>
@@ -82,13 +82,13 @@ class Malnutrition_Blade_Popup extends DB{
                     <div class="col-xs-12 col-sm-6">
                         <div class="form-group">
                             <label>HIV Status</label><span class="required_field">*</span>
-                            <input class="form-control fornoneditable" type="text" placeholder="<?php echo $this->data['hiv_status'] ?>" readonly/>
+                            <input id="hiv_status" class="form-control" readonly/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-6">
                         <div class="form-group">
                             <label>TB Diagnosed</label><span class="required_field">*</span>
-                            <input class="form-control fornoneditable" type="text" placeholder="<?php echo $this->data['tb_diagnosed'] ?>" readonly/>
+                            <input id="tb_diagnosed" class="form-control" readonly/>
                         </div>
                     </div>
                 </div>
@@ -96,13 +96,13 @@ class Malnutrition_Blade_Popup extends DB{
                     <div class="col-xs-12 col-sm-6">
                         <div class="form-group">
                             <label>MUAC < 11.5cm </label><span class="required_field">*</span>
-                            <input class="form-control fornoneditable" type="text" placeholder="<?php echo $this->data['muac'] ?>" readonly/>
+                            <input id="muac" class="form-control" readonly/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-6">
                         <div class="form-group">
                             <label>Oedema</label><span class="required_field">*</span>
-                            <input class="form-control fornoneditable" type="text" placeholder="<?php echo $this->data['oedema'] ?>" readonly/>
+                            <input id="oedema" class="form-control fornoneditable" type="text" placeholder="<?php echo $this->data['oedema'] ?>" readonly/>
                         </div>
                     </div>
                 </div>
@@ -110,7 +110,7 @@ class Malnutrition_Blade_Popup extends DB{
                     <div class="col-xs-12 col-sm-6">
                         <div class="form-group">
                             <label>WFH = or < -3 SD</label><span class="required_field">*</span>
-                            <input class="form-control fornoneditable" type="text" placeholder="<?php echo $this->data['wfh'] ?>" readonly/>
+                            <input id="wfh" class="form-control" readonly/>
                         </div>
                     </div>
                 </div>
@@ -120,33 +120,26 @@ class Malnutrition_Blade_Popup extends DB{
                 <div class="col-xs-12 col-sm-6">
                     <div class="form-group">
                     <label>No. of RUTF given </label><span class="required_field">*</span>
-                    <input id="rutf" name="rutf" type="number" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" value="-">
+                    <input id="rutf" class="form-control" readonly>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-6">
                     <div class="form-group">
                         <label>Referral to Hospital </label><span class="required_field">*</span>
+                        <input id="ref_hospital" class="form-control" readonly>
                     </div>
                 </div>
             </div>
             <hr />
             <div class="row">
                 <div class="col-xs-12 col-sm-6">
-                    <div class="form-group">
-                    <label>Review Date (in future)</label><span class="required_field">*</span>
-                    <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="datepicker-malnu-review_date" name="review_date_future" placeholder="Enter Review Date" >
+                    <div class="form-group review_date_future_readonly">
+                        <label>Review Date (in future)</label><span class="required_field">*</span>
+                        <input type="text" id="review_date_future" class="form-control" readonly>
                     </div>
-                </div>
-                <div class="col-xs-12 col-sm-6">
-                    <div class="form-group">
-                    <label>Outcome of Consultation</label><span class="required_field">*</span>
-                    <select class="form-control" id="outcome_review" name="outcome_review">
-                        <option value="">Select Outcome of Consultation</option>
-                        <option value="Discharged">Discharged</option>
-                        <option value="Death">Death</option>
-                        <option value="Defaulter">Defaulter</option>
-                        <option value="Non Respondent">Non Respondent</option>
-                    </select>
+                    <div class="form-group outcome_review_readonly">
+                        <label>Outcome of Consultation</label><span class="required_field">*</span>
+                        <input type="text" id="outcome_review" class="form-control" value="n/a" readonly>
                     </div>
                 </div>
             </div>
@@ -160,7 +153,7 @@ class Malnutrition_Blade_Popup extends DB{
             <input type="hidden" id="client_malnutrition_id" name="client_malnutrition_id" value="<?php echo $this->data['id'] ?>" />
         <?php endif; ?>
         <input type="hidden" name="series" value="<?php echo $this->series ?>" />
-        <div id="malnutgroup" class="consultation-sub-block" style="display:none">
+        <div id="malnutgroup" class="consultation-sub-block row" style="display:none">
             <div class="row">
                 <div class="col-xs-12 col-sm-12">
                     <?php if(!$this->isNew) : ?>
@@ -262,7 +255,7 @@ class Malnutrition_Blade_Popup extends DB{
             <div class="row">
                 <div class="col-xs-12 col-sm-12">
                     <label class="checkbox-inline">
-                        <input type="checkbox" name="is_final_consultation" id="is_final_consultation" value="Yes" />  Is this the final consultation
+                        <input type="checkbox" name="is_final_consultation" id="is_final_consultation" value="Yes" />  Tick this if final consultation.
                     </label>
                 </div>
             </div>

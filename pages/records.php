@@ -493,24 +493,34 @@ if($_GET['p'] != "update") {
     $(document).on('click',"a.view",function(){
       // get consultation data with malnutrition and
       $.get('/?c=records&f=get_consultation_malnutrition_records&rid='+ $(this).closest('tr').find('td.record').data('id'), function(_data) {
-        console.log(_data);
         if(_data==='error') {
           alert('Something went wrong.');
           return false;
         }
         const data = JSON.parse(_data);
-        $('#viewMalnutritionDetails').modal('show');  
-        console.log(data.rutf);
-        $(document).find('#rutf').removeAttr('value').attr('placeholder',data.rutf);
-        $('#review_date_future').attr('placeholder',data.review_date_future);
-        $('#ref_hospital').attr('placeholder',data.ref_hospital);
-        $('#outcome_review').attr('placeholder',data.outcome_review);
-        $('#series').attr('placeholder',data.series);
-        $('#tb_diagnosed').attr('placeholder',data.tb_diagnosed);
-        $('#hiv_status').attr('placeholder',data.hiv_status);
-        $('#muac').attr('placeholder',data.muac);
-        $('#oedema').attr('placeholder',data.oedema);
-        $('#wfh').attr('placeholder',data.wfh);
+        console.log(data);
+        $('#viewMalnutritionDetails').modal('show');
+        $(document).find('#viewMalnutritionDetails #rutf').attr('value',data.rutf);
+        $(document).find('#viewMalnutritionDetails #ref_hospital').attr('value',data.ref_hospital);
+
+        $(document).find('.review_date_future_readonly').removeAttr('style');
+        $(document).find('#viewMalnutritionDetails #outcome_review').parent().removeAttr('style');
+
+        if(data.outcome_review.trim()!==''){
+          $(document).find('#viewMalnutritionDetails #outcome_review').attr('value',data.outcome_review).parent().show();  
+        }
+        if(data.review_date_future.trim()!=="0000-00-00"){
+          $(document).find('#viewMalnutritionDetails #review_date_future').attr('value',data.review_date_future).parent().show();
+        }
+
+
+
+        $(document).find('#viewMalnutritionDetails #series').attr('value',data.series);
+        $(document).find('#viewMalnutritionDetails #tb_diagnosed').attr('value',data.tb_diagnosed);
+        $(document).find('#viewMalnutritionDetails #hiv_status').attr('value',data.hiv_status);
+        $(document).find('#viewMalnutritionDetails #muac').attr('value',data.muac);
+        $(document).find('#viewMalnutritionDetails #oedema').attr('value',data.oedema);
+        $(document).find('#viewMalnutritionDetails #wfh').attr('value',data.wfh);
 
       })
       

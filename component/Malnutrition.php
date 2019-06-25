@@ -110,7 +110,7 @@ class Malnutrition extends DB{
 	}
 	private function fetchReportData() {
 		$stmt = $this->query("
-			SELECT a.record_number, CONCAT(a.lname, ', ', a.fname) as fullname,
+			SELECT a.record_number, CONCAT(a.lname, ', ', a.fname) as fullname, FLOOR(DATEDIFF(NOW(), a.date_birth)/365.25 * 12) as age_months, FLOOR(DATEDIFF(NOW(), a.date_birth)/365.25) as age_year,
 				   b.date, b.rutf, b.review_date_future, b.ref_hospital, b.outcome_review,
 				   c.series, c.tb_diagnosed, c.hiv_status, c.muac, c.oedema, c.wfh,
 				   d.area_name as province
@@ -183,6 +183,8 @@ class Malnutrition extends DB{
 				        			<td style="<?php echo $td_style ?>">
 				        				<strong><?php echo $_data['fullname'] ?></strong><br />
 				        				<em>(<?php echo $_data['record_number'] ?>)</em><br />
+				        				<strong>Age</strong> : <?php echo $_data['age_year'] . ' year(s) ' . $_data['age_months'] . ' month(s)'; ?><br />
+				        				<hr />
 				        				<strong>TB Diagnosed</strong> : <?php echo $_data['tb_diagnosed']; ?><br />
 				        				<strong>HIV Status</strong> : <?php echo $_data['hiv_status']; ?><br />
 				        				<strong>Muac</strong> : <?php echo $_data['muac']; ?><br />

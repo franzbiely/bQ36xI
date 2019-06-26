@@ -272,11 +272,12 @@ if($_GET['p'] != "update") {
 
             <!-- Modal -->
             <?php $record->consultation_modal($client_info) ?> 
+            <?php $record->malnutrition_view_modal($client_info) ?> 
           </h1> 
         </div>
 
         <div class="tblcontainer" data-type="client">
-        <table class="table  table-striped table-hover table-condensed">
+        <table class="table table-striped table-hover table-condensed">
           <thead>
             <tr>
               <th>Consultation Date</th>
@@ -295,7 +296,7 @@ if($_GET['p'] != "update") {
           </thead>
           <tbody>
               <?php 
-              if($datas!=false): foreach($datas as $data ):  ?>
+              if($datas!=false): foreach($datas as $data ): ?>
                <tr>
                 <td class="id record hide" data-id="<?php echo $data['ID']; ?>"><?php echo $data['ID'] ?></td>
                 <td><?php echo $data['date'] ?></td>
@@ -323,15 +324,20 @@ if($_GET['p'] != "update") {
                     echo '<td>&nbsp;</td>';
                   }
                 } ?>
-                 <?php if ($_GET['p'] != 'delete'): ?>
-                    <td>
-                      <div class="btn-group">
+                <?php if ($_GET['p'] != 'delete'): ?>
+                  <td>
+                    <div class="btn-group">                
+                      <?php if($record->has_MALNUTRITION_visits($data)) : ?>
+                        <a type="button" title="View" class="btn btn-default view" 
+                            style="padding: 0 5px;" data-original-title="View Records"><span class="glyphicon glyphicon-search"></span></a>  
+                      <?php else : ?>
                         <a type="button" title="Delete" class="btn btn-default delete <?php if (enablea_and_disable_ele($_SESSION['type'], "delete_con_records", $_SESSION['records']) == false) { echo "hide"; }?>" 
-                          style="padding: 0 5px;" data-original-title="Delete Records"><span class="glyphicon glyphicon-remove-circle"></span></a>  
-                      </div> 
-                    </td>
-                 <?php endif ?>
-              </tr>
+                            style="padding: 0 5px;" data-original-title="Delete Records"><span class="glyphicon glyphicon-remove-circle"></span></a>  
+                      <?php endif; ?>
+                    </div> 
+                  </td>
+                <?php endif ?>
+                </tr>
               <?php endforeach; else: ?>
                 <tr><td colspan="4">No consultation record found.</td></tr>
               <?php endif; ?>           
@@ -369,7 +375,6 @@ if($_GET['p'] != "update") {
     })
    
     $('#add-consultation-btn').on('click', function() {
-      
       if ($('#status-check').val() !== "true") {
         $('#warning-p').removeClass("show");
         $('#warning-p').addClass("hide");
@@ -484,6 +489,43 @@ if($_GET['p'] != "update") {
       if($('#hb_level').val() == '10-') {
         $('#datepicker-review_date').val(moment($('#datepicker3').val(), 'YYYY-MM-DD').add(2, 'months').format('YYYY-MM-DD'));
       }
+    });
+    $(document).on('click',"a.view",function(){
+      // get consultation data with malnutrition and
+      $.get('/?c=records&f=get_consultation_malnutrition_records&rid='+ $(this).closest('tr').find('td.record').data('id'), function(_data) {
+        if(_data==='error') {
+          alert('Something went wrong.');
+          return false;
+        }
+        const data = JSON.parse(_data);
+        console.log(data);
+        $('#viewMalnutritionDetails').modal('show');
+        $(document).find('#viewMalnutritionDetails #rutf').attr('value',data.rutf);
+        $(document).find('#viewMalnutritionDetails #ref_hospital').attr('value',data.ref_hospital);
+
+        $(document).find('.review_date_future_readonly').removeAttr('style');
+        $(document).find('#viewMalnutritionDetails #outcome_review').parent().removeAttr('style');
+
+        if(data.outcome_review.trim()!==''){
+          $(document).find('#viewMalnutritionDetails #outcome_review').attr('value',data.outcome_review).parent().show();  
+        }
+        if(data.review_date_future.trim()!=="0000-00-00"){
+          $(document).find('#viewMalnutritionDetails #review_date_future').attr('value',data.review_date_future).parent().show();
+        }
+
+
+
+        $(document).find('#viewMalnutritionDetails #series').attr('value',data.series);
+        $(document).find('#viewMalnutritionDetails #tb_diagnosed').attr('value',data.tb_diagnosed);
+        $(document).find('#viewMalnutritionDetails #hiv_status').attr('value',data.hiv_status);
+        $(document).find('#viewMalnutritionDetails #muac').attr('value',data.muac);
+        $(document).find('#viewMalnutritionDetails #oedema').attr('value',data.oedema);
+        $(document).find('#viewMalnutritionDetails #wfh').attr('value',data.wfh);
+
+      })
+      
+
+      return false;
     });
    })
 </script>

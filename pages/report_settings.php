@@ -47,7 +47,6 @@ function modal_report_setting() {
 <?php 
 
 $json = json_decode(file_get_contents('anc.json'), true);
-
 ?>
 
 <div class="container">    
@@ -116,6 +115,47 @@ $json = json_decode(file_get_contents('anc.json'), true);
 					<div style="clear:both"></div>
 					
 				</p>
+				<hr />
+				<h3>Malnutrition Reporting</h3>
+				<p>
+					<p class="yellowme"><strong>Notice : </strong><br>Malnutrition reports are sent every 1st day of the month at 12am.</p>
+					
+					<?php
+					$province = array(
+						array('area_name'=>'Central'),
+						array('area_name'=>'Eastern Highlands'),
+						array('area_name'=>'Hela'),
+						array('area_name'=>'Jiwaka'),
+						array('area_name'=>'Morobe'),
+						array('area_name'=>'NCD'),
+						array('area_name'=>'Western Highlands'),
+					);
+					foreach($province as $key=>$val) {
+						?>
+						<div style="width:250px;float:left;margin:10px">
+							<div class="form-group">
+								<label><?php echo $val['area_name'] ?></label>
+								<textarea class="form-control" id="email-inp-malnu"><?php //data fetched from db ?></textarea>
+							</div>
+							<div>
+								<p style="padding-bottom: 0px; margin-bottom: 4px; font-size: 90%;">*Email addresses should be separated by a comma</p>							
+							</div>
+						</div>
+						<?php
+					} 
+					?>
+					<div style="width:250px;float:left;margin:10px">
+						<div class="form-group">
+							<label>All Provinces</label>
+						 	<textarea class="form-control" id="email-inp-malnu"><?= $json['email']; ?></textarea>
+						</div>
+						<div>
+							<p style="padding-bottom: 0px; margin-bottom: 4px; font-size: 90%;">*Email addresses should be separated by a comma</p>							
+						</div>
+					</div>
+					<div style="clear:both"></div>
+				</p>
+				<hr />
 				<p>
 					<button class="btn btn-primary" id="save-settings">Save</button>
 				</p>
@@ -141,6 +181,9 @@ $json = json_decode(file_get_contents('anc.json'), true);
 			var emails = $('#email-inp').val();
 			var emails_list = emails.replace(/\n|\r/g, "");
 			var arr = {schedule: $('#schedule-select').val(), every: $('#weekly-select').val(), email: emails_list};
+			var malnuarr = {
+				
+			}
 			$.ajax({
 				url: '/json.php',
 				type: 'post',
@@ -148,7 +191,14 @@ $json = json_decode(file_get_contents('anc.json'), true);
 				success: function() {
 					$('#settings-saved').show();
 				}
-
+			})
+			$.ajax({
+				url: '/json.php',
+				type: 'post',
+				data: {file: 'malnu.json', func: 'write', data: arr},
+				success: function() {
+					$('#settings-saved').show();
+				}
 			})
 		});
 	});

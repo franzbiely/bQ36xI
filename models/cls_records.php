@@ -31,25 +31,56 @@ class Records extends DB{
     }
     return $has_ANC;
   }
+  function has_MALNUTRITION_visits($datas) {
+    $has_MALNUTRITION = false;
+    $datas = json_decode( $datas['visit_reasons'], true );
+    if(in_array('Malnutrition (MAM/SAM)',$datas)) {
+      $has_MALNUTRITION = true;
+    }
+
+    return $has_MALNUTRITION;
+  }
 	function add(){
+    global $Malnutrition_Blade_Popup;
+
 		$_data = $_POST;
-	    unset($_data['class']);
-	    unset($_data['func']);
-	    $arr2 = array("client_id"=>$_GET['cid'],"record_type"=>$_data['type'], "office_id"=>$_SESSION['office_id']);   
-	    $_data = array_merge($_data, $arr2);
-	    if($_data['type']=="consultation"){
-	      $_data['visit_reasons']=json_encode($_data['visit_reasons'],JSON_FORCE_OBJECT);  
-	    }		
-	    unset($_data['type']);
-		
-	    $data = $this->save($_data);
-	    
+    unset($_data['class']);
+    unset($_data['func']);
+    $arr2 = array("client_id"=>$_GET['cid'],"record_type"=>$_data['type'], "office_id"=>$_SESSION['office_id']);   
+    $_data = array_merge($_data, $arr2);
+    
+    if($_data['type']=="consultation"){
+      $_data['visit_reasons']=json_encode($_data['visit_reasons'],JSON_FORCE_OBJECT);  
+
+      // if malnutrition, then store malnut data to tbl_client_malnutrition
+      if(isset($_data['hiv_status'])) {
+
+        if(!isset($_data['client_malnutrition_id'])) {
+          $_data['client_malnutrition_id'] = $Malnutrition_Blade_Popup->filter_and_save($_data);  
+        }
+        if(isset($_data['is_final_consultation'])) {
+          $Malnutrition_Blade_Popup->markAsPrevious($_data['client_malnutrition_id']);
+        }
+
+        unset($_data['hiv_status']);
+        unset($_data['tb_diagnosed']);
+        unset($_data['muac']);
+        unset($_data['uac']);
+        unset($_data['oedema']);
+        unset($_data['wfh']);
+        unset($_data['series']);
+        unset($_data['is_final_consultation']);
+      }
+    }		
+    unset($_data['type']);
+    $data = $this->save($_data);
 	    
 		if($data==false){ 
-	      return "error"; //exit();
+	      echo "error"; //exit();
 	    }else{
-	       return "success"; //exit();
+	       echo "success"; //exit();
 	    }
+      exit();
 	}
 	function edit(){
 		$_data = $_POST;
@@ -72,7 +103,12 @@ class Records extends DB{
 		exit();
 	}
 	function remove(){
+    global $Malnutrition_Blade_Popup;
 		$_data = $_POST;
+    $client_malnutrition_id = $this->check_to_remove_malnut_record($_data['id']);
+    if($client_malnutrition_id) {
+      $Malnutrition_Blade_Popup->remove($client_malnutrition_id);
+    }
 		$data = $this->delete($_data['id']);
 		if($data==false){
 			echo "error";
@@ -91,6 +127,19 @@ class Records extends DB{
       return false;
     }
   }
+  function check_to_remove_malnut_record($id){
+    /* this check if client_malnutrition (from table) is still in used OR ready to be deleted. */
+    $query = "SELECT a.* FROM tbl_records a, tbl_records b WHERE a.`client_malnutrition_id`= b.`client_malnutrition_id` AND b.`ID` = :record_id";
+    $bind_array = array("record_id"=>$id);
+
+    $stmt = $this->query($query,$bind_array);
+    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if (count($data)<=1) {
+      return $data[0]['client_malnutrition_id'];
+    }else{
+      return false;
+    }
+  }
   function remove_consultation_records(){
     $_data = $_POST;
     $data = $this->delete($_data['id'], "ID", "tbl_client");
@@ -104,6 +153,23 @@ class Records extends DB{
       echo "error";
       exit();
     }
+  }
+  function get_consultation_malnutrition_records() {
+    $query = "SELECT b.date, b.rutf, b.review_date_future, b.ref_hospital, b.outcome_review,
+                     c.series, c.tb_diagnosed, c.hiv_status, c.muac, c.oedema, c.wfh
+              FROM tbl_records b,
+                   tbl_client_malnutrition c
+              WHERE b.client_malnutrition_id=c.id 
+              AND b.id=:record_id 
+              ORDER BY b.date ASC";
+    $bind_array['record_id'] = $_GET['rid'];
+    $stmt = $this->query($query,$bind_array);
+    $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if(count($array)>0)
+      echo json_encode($array[0]);
+    else 
+      echo "error";
+    exit();
   }
 	function get_consultation_records(){
     $query = "SELECT a.ID, a.hb_level, a.feeding_type, a.date, b.clinic_name, a.visit_reasons 
@@ -229,7 +295,7 @@ class Records extends DB{
   } 
 
 	function consultation_modal($client_info){
-		global $type, $clinic, $client, $catchment;
+		global $type, $clinic, $client, $catchment, $Malnutrition_Blade_Popup;
 		ob_start();
 		?>
 
@@ -315,7 +381,7 @@ class Records extends DB{
             <div class="col-xs-12 col-sm-6">
               <div class="form-group">
                 <label for="review_date">Review Date</label>
-                <input  type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="datepicker-review_date" name="review_date" placeholder="Enter Review Date" >
+                <input  type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="datepicker-review_date" name="review_date" placeholder="Enter Review Date">
               </div>  
             </div>
             <div class="col-xs-12 col-sm-6">
@@ -355,14 +421,14 @@ class Records extends DB{
            </div>
 
 
-          <div class="form-group visitreasonsdiv">
+            <div class="form-group visitreasonsdiv">
               <label for="visittype">Visit Reason(s)</label><span class="required_field">*</span>
               <br>
               <?php  
               $_data = $type->get_all('visit');
               if($_data!=false): foreach($_data['value'] as $data ):?>
                 <label class="checkbox-inline">
-                    <input type="checkbox" name="visit_reasons[]"id="visit_id" value="<?php echo $data; ?>" multiple>  <?php echo $data ?>
+                    <input type="checkbox" name="visit_reasons[]"id="<?php echo toSlug($data) ?>" value="<?php echo $data; ?>" multiple>  <?php echo $data ?>
                 </label>
               <?php endforeach; endif;
               ?>
@@ -371,48 +437,26 @@ class Records extends DB{
               </span>
             </div>
 
-            <div class="row">
+
+            <div class="row typeoffeedingblock">
               
-                <?php if($client->get_age($client_info['date_birth']) <= 14) : ?>
-                  <?php if($client_info['date_birth']=="0000-00-00" ||
-                           $client->get_age($client_info['date_birth']) <= 2) : ?>
-                    <div class="col-xs-12 col-sm-6">
-                      <div class="form-group">
-                        <label for="typefeeding">Type of Feeding</label><span class="required_field">*</span>
-                        <select class="form-control" name="feeding_type" id="feeding_id" required>
-                          <option value="">Select Feeding Type</option>
-                          <?php
-                          $_data = $type->get_all('feeding');
-                          if($_data!=false): foreach($_data['value'] as $data ): ?>
-                          <option value="<?php echo $data ?>"><?php echo $data ?></option>
-                        <?php endforeach; endif; ?>
-                        </select>
-                      </div>
+              <?php if($client->get_age($client_info['date_birth']) <= 14) : ?>
+                <?php if($client_info['date_birth']=="0000-00-00" ||
+                          $client->get_age($client_info['date_birth']) <= 2) : ?>
+                  <div class="col-xs-12 col-sm-6">
+                    <div class="form-group">
+                      <label for="typefeeding">Type of Feeding</label><span class="required_field">*</span>
+                      <select class="form-control" name="feeding_type" id="feeding_id" required>
+                        <option value="">Select Feeding Type</option>
+                        <?php
+                        $_data = $type->get_all('feeding');
+                        if($_data!=false): foreach($_data['value'] as $data ): ?>
+                        <option value="<?php echo $data ?>"><?php echo $data ?></option>
+                      <?php endforeach; endif; ?>
+                      </select>
+                      <p class="field-description">This section is only relevant for infants <6 months of age.</p>
                     </div>
-                    <div class="col-xs-12 col-sm-6">
-                      <div id="hb-form" style="display:none">
-                        <div class="form-group">
-                          <label>HB Levels</label><span class="required_field">*</span>
-                          <select class="form-control" id="hb_level" name="hb_level">
-                            <option value="">
-                              Select HB Level
-                            </option>
-                            <option value="10+">
-                              10 above
-                            </option>
-                            <option value="10-">
-                              8-10
-                            </option>
-                            <option value="8-">
-                              8 below
-                            </option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                  <?php endif; ?>
-                  <?php else: ?>
-                  <input type="hidden" name="feeding_type" value="N/A" />
+                  </div>
                   <div class="col-xs-12 col-sm-6">
                     <div id="hb-form" style="display:none">
                       <div class="form-group">
@@ -434,13 +478,38 @@ class Records extends DB{
                       </div>
                     </div>
                   </div>
-                  <div class="col-xs-12 col-sm-6">
+                <?php endif; ?>
+                <?php else: ?>
+                <input type="hidden" name="feeding_type" value="N/A" />
+                <div class="col-xs-12 col-sm-6">
+                  <div id="hb-form" style="display:none">
+                    <div class="form-group">
+                      <label>HB Levels</label><span class="required_field">*</span>
+                      <select class="form-control" id="hb_level" name="hb_level">
+                        <option value="">
+                          Select HB Level
+                        </option>
+                        <option value="10+">
+                          10 above
+                        </option>
+                        <option value="10-">
+                          8-10
+                        </option>
+                        <option value="8-">
+                          8 below
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-6">
 
-                  </div>            
-                <?php endif; ?>  
-              
-              
+                </div>            
+              <?php endif; ?>
             </div>
+
+
+            <?php $Malnutrition_Blade_Popup->render() ?>
             <div class="row">
               <div class="col-md-4">
                 <input style="margin-top: 20px;" type="submit" class="btn btn-success btn-default" >
@@ -457,6 +526,14 @@ class Records extends DB{
 	    ob_end_clean();
 	    modal_container("Consultation",$output);
 	}
+  function malnutrition_view_modal() {
+    global $Malnutrition_Blade_Popup;
+    ob_start();
+    $Malnutrition_Blade_Popup->render_readonly();
+    $output = ob_get_contents();
+    ob_end_clean();
+    modal_container("Malnutrition", $output, 'viewMalnutritionDetails');
+  }
 	function followup_modal($modal_id){
 		global $type, $clinic;
 		ob_start();
@@ -694,20 +771,24 @@ class Records extends DB{
       $('#clinic_id').on('change',function(){
 	      var get_id = $(this).val();
 		  
-		  $('.clinic_c').css('display','none');
-		  $("#catchment").val('');
-		  if( $('.clinic_c_'+get_id).length )         // use this if you are using class to check
-		  {
-			$('#catchment_box').show();
-            $('.clinic_c_'+get_id).css('display','block');			
-            $('#catchment').attr('required', true);
-		  }     
-	      else{
-	      	$('#catchment').attr('required', false);
-		    $('#catchment_box').hide();
-	      }
+        $('.clinic_c').css('display','none');
+        $("#catchment").val('');
+        if( $('.clinic_c_'+get_id).length )         // use this if you are using class to check
+        {
+        $('#catchment_box').show();
+              $('.clinic_c_'+get_id).css('display','block');			
+              $('#catchment').attr('required', true);
+        }     
+        else{
+          $('#catchment').attr('required', false);
+          $('#catchment_box').hide();
+        }
 	      
       });
+
+      $(document).on('change', '#malnutrition-mam-sam', function() {
+          $('#malnutgroup').toggle(this.checked)
+      })
       
       
 
@@ -861,7 +942,8 @@ class Records extends DB{
         _data = $(this).serialize();
         _this = $(this);
         $.post(window.location.href,_data, function(data){
-          $("#newClientModal").modal('hide');
+
+          // $("#newClientModal").modal('hide');
           if($.trim(data)!="success"){
             console.log(data);
           }
@@ -973,8 +1055,7 @@ class Records extends DB{
         return false;
       })
       modal_close($);
-      delete_button($,this);  
-     
+      delete_button($,this);
     });  
     function show_alert_info(string, $){
       $(".alert-info").fadeIn();
@@ -989,6 +1070,7 @@ class Records extends DB{
     function modal_close($){
       $("#newClientModal, #alert-sure-delete").find(".close, .btn-default").on('click',function(){
         $("table tr").removeClass('focus');
+
       });
       $(".alert .btn-default, .alert .close").on('click',function(){
         $(this).parent().fadeOut();
@@ -1014,10 +1096,12 @@ class Records extends DB{
           } 
           $("#alert-sure-delete").fadeOut();   
           close_loader($);  
+          location.reload();
         });
         return false;
       });
-    } 
+    }
+
     </script>
     <?php
 	}

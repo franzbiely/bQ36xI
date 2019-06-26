@@ -69,96 +69,98 @@ $json = json_decode(file_get_contents('anc.json'), true);
 				</h1> 
 			</div>
 			<div>
-				<h3>ANC - HB Level</h3>
-				<p>
-					<div style="width:200px;float:left;margin:10px;" id="schedule-select-div">
-						<div class="form-group">
-							<label>Schedule</label>
-							<select class="form-control" id="schedule-select">
-								<option value="daily" <?= ($json['schedule'] == 'daily')?'selected':''; ?>>Daily</option>
-								<option value="weekly" <?= ($json['schedule'] == 'weekly')?'selected':''; ?>>Weekly</option>
-								<option value="monthly" <?= ($json['schedule'] == 'monthly')?'selected':''; ?>>Monthly</option>
-							</select>
-						</div>
-						<div>
-							<p style="padding-bottom: 0px; margin-bottom: 4px; font-size: 90%;">**Daily notifications are sent at 12am.</p>
-							<p style="padding-bottom: 0px; margin-bottom: 4px; font-size: 90%;">**Weekly notifications are sent every selected day of the week at 12am.</p>
-							<p style="font-size: 90%;">**Monthly notifications are sent on the 1st at 12am.</p>
-						</div>
-					</div>
-					<div style="width:200px;float:left;margin:10px;display:none" id="weekly-select-div">
-						<div class="form-group">
-							<label>Every</label>
-							<select class="form-control" id="weekly-select">
-								<option value="sunday" <?= ($json['every'] == 'sunday')?'selected':''; ?>>Sunday</option>
-								<option value="monday" <?= ($json['every'] == 'monday')?'selected':''; ?>>Monday</option>
-								<option value="tuesday" <?= ($json['every'] == 'tuesday')?'selected':''; ?>>Tuesday</option>
-								<option value="wednesday" <?= ($json['every'] == 'wednesday')?'selected':''; ?>>Wednesday</option>
-								<option value="thursday" <?= ($json['every'] == 'thursday')?'selected':''; ?>>Thursday</option>
-								<option value="friday" <?= ($json['every'] == 'friday')?'selected':''; ?>>Friday</option>
-								<option value="saturday" <?= ($json['every'] == 'saturday')?'selected':''; ?>>Saturday</option>
-							</select>
-						</div>
-						
-						
-					</div>
-					<div style="width:300px;float:left;margin:10px">
-						<div class="form-group">
-							<label>Emails</label>
-						 	<textarea class="form-control" id="email-inp"><?= $json['email']; ?></textarea>
-						</div>
-						<div>
-							<p style="padding-bottom: 0px; margin-bottom: 4px; font-size: 90%;">*Email addresses should be separated by a comma</p>							
-						</div>
-					</div>
-					<p class="yellowme" style="float:right; width: 300px;"><strong>Notice : </strong><br>Notifications are triggered when a client's Hb level is < 8mg.</p>
-					<div style="clear:both"></div>
-					
-				</p>
-				<hr />
-				<h3>Malnutrition Reporting</h3>
-				<p>
-					<p class="yellowme"><strong>Notice : </strong><br>Malnutrition reports are sent every 1st day of the month at 12am.</p>
-					
-					<?php
-					$province = array(
-						array('area_name'=>'Central'),
-						array('area_name'=>'Eastern Highlands'),
-						array('area_name'=>'Hela'),
-						array('area_name'=>'Jiwaka'),
-						array('area_name'=>'Morobe'),
-						array('area_name'=>'NCD'),
-						array('area_name'=>'Western Highlands'),
-					);
-					foreach($province as $key=>$val) {
-						?>
-						<div style="width:250px;float:left;margin:10px">
+				<form role="form" action="" method="post">
+					<h3>ANC - HB Level</h3>
+					<p>
+						<div style="width:200px;float:left;margin:10px;" id="schedule-select-div">
 							<div class="form-group">
-								<label><?php echo $val['area_name'] ?></label>
-								<textarea class="form-control" id="email-inp-malnu"><?php //data fetched from db ?></textarea>
+								<label>Schedule</label>
+								<select class="form-control" id="schedule-select">
+									<option value="daily" <?= ($json['schedule'] == 'daily')?'selected':''; ?>>Daily</option>
+									<option value="weekly" <?= ($json['schedule'] == 'weekly')?'selected':''; ?>>Weekly</option>
+									<option value="monthly" <?= ($json['schedule'] == 'monthly')?'selected':''; ?>>Monthly</option>
+								</select>
+							</div>
+							<div>
+								<p style="padding-bottom: 0px; margin-bottom: 4px; font-size: 90%;">**Daily notifications are sent at 12am.</p>
+								<p style="padding-bottom: 0px; margin-bottom: 4px; font-size: 90%;">**Weekly notifications are sent every selected day of the week at 12am.</p>
+								<p style="font-size: 90%;">**Monthly notifications are sent on the 1st at 12am.</p>
+							</div>
+						</div>
+						<div style="width:200px;float:left;margin:10px;display:none" id="weekly-select-div">
+							<div class="form-group">
+								<label>Every</label>
+								<select class="form-control" id="weekly-select">
+									<option value="sunday" <?= ($json['every'] == 'sunday')?'selected':''; ?>>Sunday</option>
+									<option value="monday" <?= ($json['every'] == 'monday')?'selected':''; ?>>Monday</option>
+									<option value="tuesday" <?= ($json['every'] == 'tuesday')?'selected':''; ?>>Tuesday</option>
+									<option value="wednesday" <?= ($json['every'] == 'wednesday')?'selected':''; ?>>Wednesday</option>
+									<option value="thursday" <?= ($json['every'] == 'thursday')?'selected':''; ?>>Thursday</option>
+									<option value="friday" <?= ($json['every'] == 'friday')?'selected':''; ?>>Friday</option>
+									<option value="saturday" <?= ($json['every'] == 'saturday')?'selected':''; ?>>Saturday</option>
+								</select>
+							</div>
+							
+							
+						</div>
+						<div style="width:300px;float:left;margin:10px">
+							<div class="form-group">
+								<label>Emails</label>
+							 	<textarea class="form-control" id="email-inp"><?= $json['email']; ?></textarea>
 							</div>
 							<div>
 								<p style="padding-bottom: 0px; margin-bottom: 4px; font-size: 90%;">*Email addresses should be separated by a comma</p>							
 							</div>
 						</div>
+						<p class="yellowme" style="float:right; width: 300px;"><strong>Notice : </strong><br>Notifications are triggered when a client's Hb level is < 8mg.</p>
+						<div style="clear:both"></div>
+						
+					</p>
+					<hr />
+				
+					<h3>Malnutrition Reporting</h3>
+					<input type="hidden" name="class" value="Malnutrition" />
+					<input type="hidden" name="func" value="storeNotificationSettingsForMalnutrition" />
+					<p>
+						<p class="yellowme"><strong>Notice : </strong><br>Malnutrition reports are sent every 1st day of the month at 12am.</p>
+						
 						<?php
-					} 
-					?>
-					<div style="width:250px;float:left;margin:10px">
-						<div class="form-group">
-							<label>All Provinces</label>
-						 	<textarea class="form-control" id="email-inp-malnu"><?= $json['email']; ?></textarea>
-						</div>
-						<div>
-							<p style="padding-bottom: 0px; margin-bottom: 4px; font-size: 90%;">*Email addresses should be separated by a comma</p>							
-						</div>
-					</div>
-					<div style="clear:both"></div>
-				</p>
-				<hr />
-				<p>
-					<button class="btn btn-primary" id="save-settings">Save</button>
-				</p>
+
+						$malnutrition_data = $Malnutrition->fetchNotificationSettingsForMalnutrition();
+						$province = array(
+							array('label'=>'Central', 'value'=>''),
+							array('label'=>'Eastern Highlands', 'value'=>''),
+							array('label'=>'Hela', 'value'=>''),
+							array('label'=>'Jiwaka', 'value'=>''),
+							array('label'=>'Morobe', 'value'=>''),
+							array('label'=>'NCD', 'value'=>''),
+							array('label'=>'Western Highlands', 'value'=>''),
+							array('label'=>'All Provinces', 'value'=>''),
+						);
+						if($malnutrition_data) {
+							$province = $malnutrition_data;
+						}
+						foreach($province as $key=>$val) {
+							?>
+							<div style="width:250px;float:left;margin:10px">
+								<div class="form-group">
+									<label><?php echo $val['label'] ?></label>
+									<textarea name="<?php echo $val['label'] ?>" class="form-control"><?php echo $val['value'] ?></textarea>
+								</div>
+								<div>
+									<p style="padding-bottom: 0px; margin-bottom: 4px; font-size: 90%;">*Email addresses should be separated by a comma</p>							
+								</div>
+							</div>
+							<?php
+						} 
+						?>
+						<div style="clear:both"></div>
+					</p>
+					<hr />
+					<p>
+						<button class="btn btn-primary" id="save-settings">Save</button>
+					</p>
+				</form>
 			</div>
 			
 		</div><!--/span-->        
@@ -181,25 +183,30 @@ $json = json_decode(file_get_contents('anc.json'), true);
 			var emails = $('#email-inp').val();
 			var emails_list = emails.replace(/\n|\r/g, "");
 			var arr = {schedule: $('#schedule-select').val(), every: $('#weekly-select').val(), email: emails_list};
-			var malnuarr = {
-				
-			}
 			$.ajax({
 				url: '/json.php',
 				type: 'post',
 				data: {file: 'anc.json', func: 'write', data: arr},
 				success: function() {
+					_data = $(this).serialize();
+
+					$.post(window.location.href,_data, function(data){
+						if($.trim(data)!="success"){
+							console.log(data);
+						}
+						else{
+							alert('Saved Successfully!')
+						}
+						close_loader($);										
+					})
+
 					$('#settings-saved').show();
+					$('html,body').animate({
+						scrollTop: $("#settings-saved").offset().top - 50
+	     			}, 1000);
 				}
 			})
-			$.ajax({
-				url: '/json.php',
-				type: 'post',
-				data: {file: 'malnu.json', func: 'write', data: arr},
-				success: function() {
-					$('#settings-saved').show();
-				}
-			})
+			
 		});
 	});
 </script>

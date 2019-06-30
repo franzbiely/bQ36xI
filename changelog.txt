@@ -5,6 +5,9 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.30 | 28th of June 2019
+  - (New Feature) Malnutrition Enrollment on Consultation and Malnutrition Reporting
+
 v3.29 | 4th of April 2019
   - fixed session bug on logout
 	- bug on no report on unknown client report

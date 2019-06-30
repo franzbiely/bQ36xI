@@ -35,7 +35,9 @@ class Malnutrition extends DB{
 	}
 	private function fetchReportData() {
 		$stmt = $this->query("
-			SELECT a.record_number, CONCAT(a.lname, ', ', a.fname) as fullname, FLOOR(DATEDIFF(NOW(), a.date_birth)/365.25 * 12) as age_months, FLOOR(DATEDIFF(NOW(), a.date_birth)/365.25) as age_year,
+			SELECT a.record_number, CONCAT(a.lname, ', ', a.fname) as fullname, 
+					FLOOR(MOD(DATEDIFF(NOW(), a.date_birth)/365.25 * 12, 12)) as age_months, 
+					FLOOR(DATEDIFF(NOW(), a.date_birth)/365.25) as age_year,
 				   b.date, b.rutf, b.review_date_future, b.ref_hospital, b.outcome_review,
 				   c.series, c.tb_diagnosed, c.hiv_status, c.muac, c.oedema, c.wfh,
 				   d.area_name as province
@@ -48,10 +50,32 @@ class Malnutrition extends DB{
             AND d.entry_type='province'
             AND b.clinic_id=e.ID AND e.province=d.ID
             AND ((b.review_date_future >= CURDATE() AND c.isPrevious=0) OR MONTH(b.date) = MONTH(CURRENT_DATE()))
+            ORDER BY b.date ASC
 			", array());
 
 		// print_r($stmt->fetchAll(PDO::FETCH_ASSOC));
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
+	private function fetchNotEnrolledWithMalnutReason() {
+		$query = "SELECT b.record_number,  CONCAT(b.fname,' ',b.lname) AS fullname, 
+					FLOOR(MOD(DATEDIFF(NOW(), b.date_birth)/365.25 * 12, 12)) as age_months, 
+					FLOOR(DATEDIFF(NOW(), b.date_birth)/365.25) as age_year,
+				   a.date, a.rutf, 'n/a' as review_date_future, a.ref_hospital, a.outcome_review,
+				   '' as series, '' as tb_diagnosed, '' as hiv_status, '' as muac, '' as oedema, '' as wfh,
+				   province.area_name as province
+                FROM tbl_records as a
+                JOIN tbl_client as b ON b.ID = a.client_id
+                JOIN tbl_clinic AS c ON a.clinic_id = c.ID
+                JOIN tbl_area AS district ON c.llg_id = district.ID
+                JOIN tbl_area AS province ON district.parent_ids = province.ID 
+                JOIN tbl_area AS office ON office.ID = a.office_id
+                WHERE a.date >= :start_date AND a.date <= :end_date
+                AND a.visit_reasons LIKE '%Malnutrition%'
+                AND client_malnutrition_id='0'
+                ORDER BY a.date ASC";       
+        $bind_array = array("start_date"=>'2019-01-01', "end_date"=>'CURDATE()');
+        $stmt = $this->query($query,$bind_array);
+    	return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 	private function formatArraybyProvince($datas = null) {
 		$tmp = array();
@@ -116,6 +140,7 @@ class Malnutrition extends DB{
 				     <div class="body" style="padding:10px 15px;">
 				     	
 				        <strong>Province: </strong><span><?php echo $data['province'] ?></span><br /><br />
+				        <em><strong>Note :</strong> Please notice that the following datas <br />may include UNENROLLED consultations from January 1, 2019.</em><br /><br /><br />
 				        <table border="0" cellpadding="10" cellspacing="0" width="100%" style="font-size:11; font-family:monospace;border-left:1px solid #aaa;">
 				        	<thead>
 				        		<tr>
@@ -146,7 +171,15 @@ class Malnutrition extends DB{
 					        				<strong>WFH</strong> : <?php echo $_data['wfh']; ?><br />
 					        			</td>
 					        			<td style="<?php echo $td_style ?>">
-					        				<strong>Enrollment #</strong><?php echo $_data['series'] ?><br />
+					        				
+					        				<?php
+					        					if($_data['series'] === '') {
+					        						echo 'Not enrolled';
+					        					}  
+					        					else {
+					        						echo '<strong>Enrollment #</strong>'. $_data['series'];
+					        					}
+					        				?><br />
 					        				<!-- <strong>Visit #</strong>{under construction} -->
 					        			</td>
 					        			<td style="<?php echo $td_style ?>"><?php echo $_data['rutf'] ?></td>
@@ -176,7 +209,15 @@ class Malnutrition extends DB{
 		return $output;
 	}
 	public function reportEmailSend() {
+
+		// FETCH NOT Enrolled consultation with malnutrition
+		$unenrolled = $this->fetchNotEnrolledWithMalnutReason();
+
+		// FETCH Enrolled Malnutrition consultation datas
 		$datas = $this->fetchReportData();
+
+		$datas = array_merge($unenrolled, $datas);
+
 		// GROUP BY PROVINCE Name
 		$datas = $this->formatArraybyProvince($datas);
 		echo $this->renderEmailBody( $datas );

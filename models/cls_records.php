@@ -50,27 +50,34 @@ class Records extends DB{
     $_data = array_merge($_data, $arr2);
     
     if($_data['type']=="consultation"){
+
       $_data['visit_reasons']=json_encode($_data['visit_reasons'],JSON_FORCE_OBJECT);  
 
       // if malnutrition, then store malnut data to tbl_client_malnutrition
-      if(isset($_data['hiv_status'])) {
+      if( $_data['hiv_status']!=='' || $_data['is_final_consultation']==='Yes') {
 
         if(!isset($_data['client_malnutrition_id'])) {
           $_data['client_malnutrition_id'] = $Malnutrition_Blade_Popup->filter_and_save($_data);  
         }
         if(isset($_data['is_final_consultation'])) {
+
           $Malnutrition_Blade_Popup->markAsPrevious($_data['client_malnutrition_id']);
         }
-
-        unset($_data['hiv_status']);
-        unset($_data['tb_diagnosed']);
-        unset($_data['muac']);
-        unset($_data['uac']);
-        unset($_data['oedema']);
-        unset($_data['wfh']);
-        unset($_data['series']);
-        unset($_data['is_final_consultation']);
       }
+
+      if($_data['review_date_future']==='' && $_data['outcome_review']=='') {
+        unset($_data['client_malnutrition_id']);
+      }
+
+      unset($_data['hiv_status']);
+      unset($_data['tb_diagnosed']);
+      unset($_data['muac']);
+      unset($_data['uac']);
+      unset($_data['oedema']);
+      unset($_data['wfh']);
+      unset($_data['series']);
+      unset($_data['is_final_consultation']);
+
     }		
     unset($_data['type']);
     $data = $this->save($_data);
@@ -105,10 +112,13 @@ class Records extends DB{
 	function remove(){
     global $Malnutrition_Blade_Popup;
 		$_data = $_POST;
+
+    /* Use in the future if needed the delete consultation with malnutrition functionality. This code needs to be fixed when this is needed in the future 
     $client_malnutrition_id = $this->check_to_remove_malnut_record($_data['id']);
     if($client_malnutrition_id) {
       $Malnutrition_Blade_Popup->remove($client_malnutrition_id);
-    }
+    }*/
+    
 		$data = $this->delete($_data['id']);
 		if($data==false){
 			echo "error";
@@ -787,7 +797,16 @@ class Records extends DB{
       });
 
       $(document).on('change', '#malnutrition-mam-sam', function() {
-          $('#malnutgroup').toggle(this.checked)
+          $('#malnutgroup').toggle(this.checked);
+
+          $('.required_when_able').not(':focusable').prop('required', false);
+          $('.required_when_able:focusable').prop('required', true);
+          // if(this.checked) {
+          //   $('#malnutgroup').find('.required_when_able').prop('required', true)
+          // }  
+          // else {
+          //   $('#malnutgroup').find('.required_when_able').prop('required', false)
+          // }
       })
       
       
@@ -959,7 +978,7 @@ class Records extends DB{
             $(".container table").load(window.location.href+" table");
           }
           location.reload();
-          close_loader($);                    
+          //close_loader($); // don't close loader since we will reload                   
         })
         return false;
       });

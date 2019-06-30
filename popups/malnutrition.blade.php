@@ -171,7 +171,7 @@ class Malnutrition_Blade_Popup extends DB{
                         <div class="form-group">
                             <label>HIV Status</label><span class="required_field">*</span>
                             <input class="form-control fornoneditable" type="text" placeholder="<?php echo $this->data['hiv_status'] ?>" readonly/>
-                            <select class="form-control foreditable" id="hiv_status" name="hiv_status">
+                            <select class="form-control foreditable required_when_able" id="hiv_status" name="hiv_status">
                                 <option value="">Select HIV Status</option>
                                 <option value="Positive">Positive</option>
                                 <option value="Negative">Negative</option>
@@ -183,7 +183,7 @@ class Malnutrition_Blade_Popup extends DB{
                         <div class="form-group">
                             <label>TB Diagnosed</label><span class="required_field">*</span>
                             <input class="form-control fornoneditable" type="text" placeholder="<?php echo $this->data['tb_diagnosed'] ?>" readonly/>
-                            <select class="form-control foreditable" id="tb_diagnosed" name="tb_diagnosed">
+                            <select class="form-control foreditable required_when_able" id="tb_diagnosed" name="tb_diagnosed">
                                 <option value="">Select TB Diagnosed</option>
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option>
@@ -197,7 +197,7 @@ class Malnutrition_Blade_Popup extends DB{
                         <div class="form-group">
                             <label>MUAC < 11.5cm </label><span class="required_field">*</span>
                             <input class="form-control fornoneditable" type="text" placeholder="<?php echo $this->data['muac'] ?>" readonly/>
-                            <select class="form-control foreditable" id="muac" name="muac">
+                            <select class="form-control foreditable required_when_able" id="muac" name="muac">
                                 <option value="">Select MUAC</option>
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option>
@@ -208,7 +208,7 @@ class Malnutrition_Blade_Popup extends DB{
                         <div class="form-group">
                             <label>Oedema</label><span class="required_field">*</span>
                             <input class="form-control fornoneditable" type="text" placeholder="<?php echo $this->data['oedema'] ?>" readonly/>
-                            <select class="form-control foreditable" id="oedema" name="oedema">
+                            <select class="form-control foreditable required_when_able" id="oedema" name="oedema">
                                 <option value="">Select Oedema</option>
                                 <option value="0">0</option>
                                 <option value="+">+</option>
@@ -223,7 +223,7 @@ class Malnutrition_Blade_Popup extends DB{
                         <div class="form-group">
                             <label>WFH = or < -3 SD</label><span class="required_field">*</span>
                             <input class="form-control fornoneditable" type="text" placeholder="<?php echo $this->data['wfh'] ?>" readonly/>
-                            <select class="form-control foreditable" id="wfh" name="wfh">
+                            <select class="form-control foreditable required_when_able" id="wfh" name="wfh">
                                 <option value="">Select WFH</option>
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option>
@@ -237,13 +237,13 @@ class Malnutrition_Blade_Popup extends DB{
                 <div class="col-xs-12 col-sm-6">
                     <div class="form-group">
                     <label>No. of RUTF given </label><span class="required_field">*</span>
-                    <input id="rutf" name="rutf" type="number" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" value="-">
+                    <input id="rutf" name="rutf" type="number" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control required_when_able" value="-">
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-6">
                     <div class="form-group">
                         <label>Referral to Hospital </label><span class="required_field">*</span>
-                        <select class="form-control" id="ref_hospital" name="ref_hospital">
+                        <select class="form-control required_when_able" id="ref_hospital" name="ref_hospital">
                             <option value="">Select Referral to Hospital</option>
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
@@ -264,13 +264,13 @@ class Malnutrition_Blade_Popup extends DB{
                 <div class="col-xs-12 col-sm-6 notfinalconsultation">
                     <div class="form-group">
                     <label>Review Date (in future)</label><span class="required_field">*</span>
-                    <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="datepicker-malnu-review_date" name="review_date_future" placeholder="Enter Review Date" >
+                    <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control required_when_able" id="datepicker-malnu-review_date" name="review_date_future" placeholder="Enter Review Date" >
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-6 finalconsultation" style="display:none;">
                     <div class="form-group">
                     <label>Outcome of Consultation</label><span class="required_field">*</span>
-                    <select class="form-control" id="outcome_review" name="outcome_review">
+                    <select class="form-control required_when_able" id="outcome_review" name="outcome_review">
                         <option value="">Select Outcome of Consultation</option>
                         <option value="Discharged">Discharged</option>
                         <option value="Death">Death</option>
@@ -291,6 +291,10 @@ class Malnutrition_Blade_Popup extends DB{
                 $('#is_final_consultation').on('change', function() {
                     $('.finalconsultation').toggle(this.checked)
                     $('.notfinalconsultation').toggle(!this.checked)
+
+                    $('.required_when_able').not(':focusable').prop('required', false);
+                    $('.required_when_able:focusable').prop('required', true);
+
                 })
                 $('#oedema').on('change',function() {
                     if($(this).val()!=='0') {
@@ -303,6 +307,8 @@ class Malnutrition_Blade_Popup extends DB{
                 $('#btn-edit-malnutrition-info').on('click', function(e) {
                     e.preventDefault();
                     let button = this;
+                    $('.required_when_able').not(':focusable').prop('required', false);
+                    $('.required_when_able:focusable').prop('required', true);
                     const saveText = "Save Now";
                     $('.malnutinitinfo').toggleClass(function() {
                         if($(this).hasClass('editable')) {

@@ -39,7 +39,7 @@ font-size: 18px;"><strong>Maintenance Mode </strong> We are currently on mainten
 								
 							<!--displays banner-->
 							<?php if (preg_match('/testclients.susumamas.org.pg$/', $_SERVER['HTTP_HOST'])) { ?>
-      							<div style="background:#EC7A7A;text-align:center ;width:30%;padding:5px;position:relative;right:0%;top:20px;z-index:10000;overflow:hidden"><h3>This is the TEST SITE <br />(with auto deploy. T2)</h3></div><?php
+      							<div style="background:#EC7A7A;text-align:center ;width:30%;padding:5px;position:relative;right:0%;top:20px;z-index:10000;overflow:hidden"><h3>This is the TEST SITE <br />(with auto deploy. T3)</h3></div><?php
   							} ?>
 						</div>
 					</div>

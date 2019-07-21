@@ -19,6 +19,7 @@ class Malnutrition_Blade_Popup extends DB{
         $_data['oedema'] = $data['oedema'];
         $_data['wfh'] = $data['wfh'];
         $_data['client_id'] = $data['client_id'];
+        $_data['reason'] = $data['reason'];
         return $this->save($_data, array(), $this->table, 'lastInsertId');
     }
     public function remove($id) {
@@ -30,7 +31,8 @@ class Malnutrition_Blade_Popup extends DB{
             'hiv_status' => $_POST['hiv_status'],
             'muac' => $_POST['muac'],
             'wfh' => $_POST['wfh'],
-            'oedema' => $_POST['oedema']
+            'oedema' => $_POST['oedema'],
+            'reason' => $_POST['reason']
         );
         $this->save($data, array('id' => $_POST['id']));
         exit();

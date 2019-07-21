@@ -518,6 +518,7 @@ if($_GET['p'] != "update") {
 
         $(document).find('#viewMalnutritionDetails #series').attr('value',data.series);
         $(document).find('#viewMalnutritionDetails #tb_diagnosed').attr('value',data.tb_diagnosed);
+        $(document).find('#viewMalnutritionDetails #reason').attr('value',data.reason);
         $(document).find('#viewMalnutritionDetails #hiv_status').attr('value',data.hiv_status);
         $(document).find('#viewMalnutritionDetails #muac').attr('value',data.muac);
         $(document).find('#viewMalnutritionDetails #oedema').attr('value',data.oedema);

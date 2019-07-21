@@ -113,11 +113,10 @@ class Records extends DB{
     global $Malnutrition_Blade_Popup;
 		$_data = $_POST;
 
-    /* Use in the future if needed the delete consultation with malnutrition functionality. This code needs to be fixed when this is needed in the future 
     $client_malnutrition_id = $this->check_to_remove_malnut_record($_data['id']);
     if($client_malnutrition_id) {
       $Malnutrition_Blade_Popup->remove($client_malnutrition_id);
-    }*/
+    }
     
 		$data = $this->delete($_data['id']);
 		if($data==false){

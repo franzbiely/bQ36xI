@@ -68,6 +68,34 @@ class Malnutrition_Blade_Popup extends DB{
             $this->series = $this->data['series'];
         }
     }
+    private function render_readonlyfield($arg = []) {
+        ?>
+        <div class="col-xs-12 col-sm-6">
+            <div class="form-group">
+                <label><?php echo $arg['title'] ?></label><span class="required_field">*</span>
+                <input id="<?php echo $arg['slug'] ?>" class="form-control" readonly/>
+            </div>
+        </div>
+        <?php
+    }
+    private function render_selectfield($arg = array()) { // title, slug, options
+        ?>
+        <div class="col-xs-12 col-sm-6">
+            <div class="form-group">
+                <label><?php echo $arg['title'] ?></label><span class="required_field">*</span>
+                <input class="form-control fornoneditable" type="text" placeholder="<?php echo $this->data[ $arg['slug'] ] ?>" readonly/>
+                <select class="form-control foreditable required_when_able" id="<?php echo $arg['slug'] ?>" name="<?php echo $arg['slug'] ?>">
+                    <option value="">Select <?php echo $arg['title'] ?></option>
+                    <?php 
+                    foreach($arg['options'] as $key=>$val) {
+                        ?><option value="<?php echo $val ?>"><?php echo $val ?></option><?php
+                    }
+                    ?>
+                </select>
+            </div>
+        </div>
+        <?php
+    }
     public function render_readonly() {
         ?>
         <div class="consultation-sub-block" style="display: block;">
@@ -81,56 +109,30 @@ class Malnutrition_Blade_Popup extends DB{
             </div>
             <div class="malnutinitinfo noneditable">
                 <div class="row">
-                    <div class="col-xs-12 col-sm-6">
-                        <div class="form-group">
-                            <label>HIV Status</label><span class="required_field">*</span>
-                            <input id="hiv_status" class="form-control" readonly/>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-sm-6">
-                        <div class="form-group">
-                            <label>TB Diagnosed</label><span class="required_field">*</span>
-                            <input id="tb_diagnosed" class="form-control" readonly/>
-                        </div>
-                    </div>
+                    <?php
+                    $this->render_readonlyfield(['title'=>'Reason', 'slug'=>'reason']);
+                    $this->render_readonlyfield(['title'=>'HIV Status', 'slug'=>'hiv_status']);
+                    ?>
                 </div>
                 <div class="row">
-                    <div class="col-xs-12 col-sm-6">
-                        <div class="form-group">
-                            <label>MUAC < 11.5cm </label><span class="required_field">*</span>
-                            <input id="muac" class="form-control" readonly/>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-sm-6">
-                        <div class="form-group">
-                            <label>Oedema</label><span class="required_field">*</span>
-                            <input id="oedema" class="form-control fornoneditable" type="text" placeholder="<?php echo $this->data['oedema'] ?>" readonly/>
-                        </div>
-                    </div>
+                    <?php
+                    $this->render_readonlyfield(['title'=>'TB Diagnosed', 'slug'=>'tb_diagnosed']);
+                    $this->render_readonlyfield(['title'=>'MUAC < 11.5cm', 'slug'=>'muac']);
+                    ?>
                 </div>
                 <div class="row">
-                    <div class="col-xs-12 col-sm-6">
-                        <div class="form-group">
-                            <label>WFH = or < -3 SD</label><span class="required_field">*</span>
-                            <input id="wfh" class="form-control" readonly/>
-                        </div>
-                    </div>
+                    <?php
+                    $this->render_readonlyfield(['title'=>'Oedema', 'slug'=>'oedema']);
+                    $this->render_readonlyfield(['title'=>'WFH = or < -3 SD', 'slug'=>'wfh']);
+                    ?>
                 </div>
             </div>
             <hr />
             <div class="row">
-                <div class="col-xs-12 col-sm-6">
-                    <div class="form-group">
-                    <label>No. of RUTF given </label><span class="required_field">*</span>
-                    <input id="rutf" class="form-control" readonly>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-6">
-                    <div class="form-group">
-                        <label>Referral to Hospital </label><span class="required_field">*</span>
-                        <input id="ref_hospital" class="form-control" readonly>
-                    </div>
-                </div>
+                <?php
+                    $this->render_readonlyfield(['title'=>'No. of RUTF given', 'slug'=>'rutf']);
+                    $this->render_readonlyfield(['title'=>'Referral to Hospital', 'slug'=>'ref_hospital']);
+                ?>
             </div>
             <hr />
             <div class="row">
@@ -169,69 +171,35 @@ class Malnutrition_Blade_Popup extends DB{
             </div>
             <div class="malnutinitinfo <?php echo (!$this->isNew) ? 'noneditable' : 'editable'; ?>">
                 <div class="row">
-                    <div class="col-xs-12 col-sm-6">
-                        <div class="form-group">
-                            <label>HIV Status</label><span class="required_field">*</span>
-                            <input class="form-control fornoneditable" type="text" placeholder="<?php echo $this->data['hiv_status'] ?>" readonly/>
-                            <select class="form-control foreditable required_when_able" id="hiv_status" name="hiv_status">
-                                <option value="">Select HIV Status</option>
-                                <option value="Positive">Positive</option>
-                                <option value="Negative">Negative</option>
-                                <option value="Unknown">Unknown</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-sm-6">
-                        <div class="form-group">
-                            <label>TB Diagnosed</label><span class="required_field">*</span>
-                            <input class="form-control fornoneditable" type="text" placeholder="<?php echo $this->data['tb_diagnosed'] ?>" readonly/>
-                            <select class="form-control foreditable required_when_able" id="tb_diagnosed" name="tb_diagnosed">
-                                <option value="">Select TB Diagnosed</option>
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                                <option value="Unknown">Unknown</option>
-                            </select>
-                        </div>
-                    </div>
+                    <?php 
+                    $this->render_selectfield( ['title'=> 'Reason', 'slug'=>'reason', 'options' => [
+                        'New Enrollment', 'Unknown', 'Defaulter', 'Non respondent', 'Relapse'
+                    ]] );
+                    
+                    $this->render_selectfield( ['title'=> 'HIV Status', 'slug'=>'hiv_status', 'options' => [
+                        'Positive', 'Negative', 'Unknown'
+                    ]] );
+                    ?>
                 </div>
                 <div class="row">
-                    <div class="col-xs-12 col-sm-6">
-                        <div class="form-group">
-                            <label>MUAC < 11.5cm </label><span class="required_field">*</span>
-                            <input class="form-control fornoneditable" type="text" placeholder="<?php echo $this->data['muac'] ?>" readonly/>
-                            <select class="form-control foreditable required_when_able" id="muac" name="muac">
-                                <option value="">Select MUAC</option>
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-sm-6">
-                        <div class="form-group">
-                            <label>Oedema</label><span class="required_field">*</span>
-                            <input class="form-control fornoneditable" type="text" placeholder="<?php echo $this->data['oedema'] ?>" readonly/>
-                            <select class="form-control foreditable required_when_able" id="oedema" name="oedema">
-                                <option value="">Select Oedema</option>
-                                <option value="0">0</option>
-                                <option value="+">+</option>
-                                <option value="++">++</option>
-                                <option value="+++">+++</option>
-                            </select>
-                        </div>
-                    </div>
+                    <?php
+                    $this->render_selectfield( ['title'=> 'TB Diagnosed', 'slug'=>'tb_diagnosed', 'options' => [
+                        'Yes', 'No', 'Unknown'
+                    ]] );
+                    $this->render_selectfield( ['title'=> 'MUAC < 11.5cm', 'slug'=>'muac', 'options' => [
+                        'Yes', 'No'
+                    ]] );
+                    ?>
                 </div>
                 <div class="row">
-                    <div class="col-xs-12 col-sm-6">
-                        <div class="form-group">
-                            <label>WFH = or < -3 SD</label><span class="required_field">*</span>
-                            <input class="form-control fornoneditable" type="text" placeholder="<?php echo $this->data['wfh'] ?>" readonly/>
-                            <select class="form-control foreditable required_when_able" id="wfh" name="wfh">
-                                <option value="">Select WFH</option>
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                            </select>
-                        </div>
-                    </div>
+                    <?php
+                    $this->render_selectfield( ['title'=> 'Oedema', 'slug'=>'oedema', 'options' => [
+                        '0', '+', '++', '+++'
+                    ]] );
+                    $this->render_selectfield( ['title'=> 'WFH = or < -3 SD', 'slug'=>'wfh', 'options' => [
+                        'Yes', 'No'
+                    ]] );
+                    ?>
                 </div>
             </div>
             <hr />

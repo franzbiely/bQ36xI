@@ -37,6 +37,9 @@ class Malnutrition_Blade_Popup extends DB{
         $this->save($data, array('id' => $_POST['id']));
         exit();
     }
+    public function markAsNOTPrevious($malnutId) {
+        $this->save(array('isPrevious'=>0), array('id'=>$malnutId));
+    }
     public function markAsPrevious($malnutId) {
         $this->save(array('isPrevious'=>1), array('id'=>$malnutId));
     }

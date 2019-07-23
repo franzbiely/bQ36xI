@@ -54,12 +54,15 @@ class Records extends DB{
       $_data['visit_reasons']=json_encode($_data['visit_reasons'],JSON_FORCE_OBJECT);  
 
       // if malnutrition, then store malnut data to tbl_client_malnutrition
+      if(!isset($_data['is_final_consultation'])) {
+        $_data['is_final_consultation']='No';
+      }
       if( $_data['hiv_status']!=='' || $_data['is_final_consultation']==='Yes') {
 
         if(!isset($_data['client_malnutrition_id'])) {
           $_data['client_malnutrition_id'] = $Malnutrition_Blade_Popup->filter_and_save($_data);  
         }
-        if(isset($_data['is_final_consultation'])) {
+        if($_data['is_final_consultation']=="Yes") {
 
           $Malnutrition_Blade_Popup->markAsPrevious($_data['client_malnutrition_id']);
         }
@@ -79,8 +82,9 @@ class Records extends DB{
       unset($_data['series']);
       unset($_data['is_final_consultation']);
 
-    }		
+    }
     unset($_data['type']);
+
     $data = $this->save($_data);
 	    
 		if($data==false){ 
@@ -118,6 +122,10 @@ class Records extends DB{
     if($client_malnutrition_id) {
       $Malnutrition_Blade_Popup->remove($client_malnutrition_id);
     }
+    $client_malnutrition_id = $this->check_to_set_NOT_isPrevious($_data['id']);
+    if($client_malnutrition_id) {
+      $Malnutrition_Blade_Popup->markAsNOTPrevious($client_malnutrition_id);
+    }
     
 		$data = $this->delete($_data['id']);
 		if($data==false){
@@ -133,6 +141,19 @@ class Records extends DB{
     $record =  $this->select("*", array("client_id"=>$id),false, "tbl_records" );
     if ($record) {
       return true;
+    }else{
+      return false;
+    }
+  }
+  function check_to_set_NOT_isPrevious($id) {
+    $query = "SELECT client_malnutrition_id from tbl_records WHERE outcome_review <> '' AND id= :record_id";
+    $bind_array = array("record_id"=>$id);
+
+    $stmt = $this->query($query,$bind_array);
+    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    print_r($data);
+    if (count($data)>0) {
+      return $data[0]['client_malnutrition_id'];
     }else{
       return false;
     }
@@ -964,6 +985,7 @@ class Records extends DB{
 
           // $("#newClientModal").modal('hide');
           if($.trim(data)!="success"){
+            // alert(data);
             console.log(data);
           }
           else{
@@ -976,8 +998,9 @@ class Records extends DB{
             else
               show_alert_info("Record Modified Successfully!",$);
             $(".container table").load(window.location.href+" table");
+            location.reload();
           }
-          location.reload();
+          
           //close_loader($); // don't close loader since we will reload                   
         })
         return false;

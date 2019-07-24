@@ -330,7 +330,8 @@ if($_GET['p'] != "update") {
                       <?php if($record->has_MALNUTRITION_visits($data)) : ?>
                         <a type="button" title="View" class="btn btn-default view" 
                             style="padding: 0 5px;" data-original-title="View Records"><span class="glyphicon glyphicon-search"></span></a>  
-                      <?php else : ?>
+                      <?php endif; ?>
+                      <?php if(!$record->has_MALNUTRITION_visits($data) || strtotime($data['date']) < strtotime('2019-07-01')) : ?>
                         <a type="button" title="Delete" class="btn btn-default delete <?php if (enablea_and_disable_ele($_SESSION['type'], "delete_con_records", $_SESSION['records']) == false) { echo "hide"; }?>" 
                             style="padding: 0 5px;" data-original-title="Delete Records"><span class="glyphicon glyphicon-remove-circle"></span></a>  
                       <?php endif; ?>
@@ -517,6 +518,7 @@ if($_GET['p'] != "update") {
 
         $(document).find('#viewMalnutritionDetails #series').attr('value',data.series);
         $(document).find('#viewMalnutritionDetails #tb_diagnosed').attr('value',data.tb_diagnosed);
+        $(document).find('#viewMalnutritionDetails #reason').attr('value',data.reason);
         $(document).find('#viewMalnutritionDetails #hiv_status').attr('value',data.hiv_status);
         $(document).find('#viewMalnutritionDetails #muac').attr('value',data.muac);
         $(document).find('#viewMalnutritionDetails #oedema').attr('value',data.oedema);

@@ -54,12 +54,15 @@ class Records extends DB{
       $_data['visit_reasons']=json_encode($_data['visit_reasons'],JSON_FORCE_OBJECT);  
 
       // if malnutrition, then store malnut data to tbl_client_malnutrition
+      if(!isset($_data['is_final_consultation'])) {
+        $_data['is_final_consultation']='No';
+      }
       if( $_data['hiv_status']!=='' || $_data['is_final_consultation']==='Yes') {
 
         if(!isset($_data['client_malnutrition_id'])) {
           $_data['client_malnutrition_id'] = $Malnutrition_Blade_Popup->filter_and_save($_data);  
         }
-        if(isset($_data['is_final_consultation'])) {
+        if($_data['is_final_consultation']=="Yes") {
 
           $Malnutrition_Blade_Popup->markAsPrevious($_data['client_malnutrition_id']);
         }
@@ -72,14 +75,16 @@ class Records extends DB{
       unset($_data['hiv_status']);
       unset($_data['tb_diagnosed']);
       unset($_data['muac']);
+      unset($_data['reason']);
       unset($_data['uac']);
       unset($_data['oedema']);
       unset($_data['wfh']);
       unset($_data['series']);
       unset($_data['is_final_consultation']);
 
-    }		
+    }
     unset($_data['type']);
+
     $data = $this->save($_data);
 	    
 		if($data==false){ 
@@ -113,11 +118,14 @@ class Records extends DB{
     global $Malnutrition_Blade_Popup;
 		$_data = $_POST;
 
-    /* Use in the future if needed the delete consultation with malnutrition functionality. This code needs to be fixed when this is needed in the future 
     $client_malnutrition_id = $this->check_to_remove_malnut_record($_data['id']);
     if($client_malnutrition_id) {
       $Malnutrition_Blade_Popup->remove($client_malnutrition_id);
-    }*/
+    }
+    $client_malnutrition_id = $this->check_to_set_NOT_isPrevious($_data['id']);
+    if($client_malnutrition_id) {
+      $Malnutrition_Blade_Popup->markAsNOTPrevious($client_malnutrition_id);
+    }
     
 		$data = $this->delete($_data['id']);
 		if($data==false){
@@ -133,6 +141,19 @@ class Records extends DB{
     $record =  $this->select("*", array("client_id"=>$id),false, "tbl_records" );
     if ($record) {
       return true;
+    }else{
+      return false;
+    }
+  }
+  function check_to_set_NOT_isPrevious($id) {
+    $query = "SELECT client_malnutrition_id from tbl_records WHERE outcome_review <> '' AND id= :record_id";
+    $bind_array = array("record_id"=>$id);
+
+    $stmt = $this->query($query,$bind_array);
+    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    print_r($data);
+    if (count($data)>0) {
+      return $data[0]['client_malnutrition_id'];
     }else{
       return false;
     }
@@ -166,7 +187,7 @@ class Records extends DB{
   }
   function get_consultation_malnutrition_records() {
     $query = "SELECT b.date, b.rutf, b.review_date_future, b.ref_hospital, b.outcome_review,
-                     c.series, c.tb_diagnosed, c.hiv_status, c.muac, c.oedema, c.wfh
+                     c.series, c.tb_diagnosed, c.hiv_status, c.muac, c.oedema, c.wfh, c.reason
               FROM tbl_records b,
                    tbl_client_malnutrition c
               WHERE b.client_malnutrition_id=c.id 
@@ -964,6 +985,7 @@ class Records extends DB{
 
           // $("#newClientModal").modal('hide');
           if($.trim(data)!="success"){
+            // alert(data);
             console.log(data);
           }
           else{
@@ -976,8 +998,9 @@ class Records extends DB{
             else
               show_alert_info("Record Modified Successfully!",$);
             $(".container table").load(window.location.href+" table");
+            location.reload();
           }
-          location.reload();
+          
           //close_loader($); // don't close loader since we will reload                   
         })
         return false;

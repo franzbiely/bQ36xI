@@ -5,6 +5,12 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.31 | 24th of July 2019
+  -  Allow for deletion of Nutrition Consultation visits if prior to July 1st 2019
+  -  Include Gender in Reports http://testclients.susumamas.org.pg/?c=malnutrition&f=reportEmailSend
+  -  Include Reason as an Enrollment field and in Reports
+  -  Updated all enrolled reasons to Unknown
+
 v3.30 | 28th of June 2019
   - (New Feature) Malnutrition Enrollment on Consultation and Malnutrition Reporting
 

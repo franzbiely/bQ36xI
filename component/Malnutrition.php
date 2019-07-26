@@ -64,7 +64,7 @@ class Malnutrition extends DB{
 					FLOOR(MOD(DATEDIFF(NOW(), b.date_birth)/365.25 * 12, 12)) as age_months, 
 					FLOOR(DATEDIFF(NOW(), b.date_birth)/365.25) as age_year,
 				   a.date, a.rutf, 'n/a' as review_date_future, a.ref_hospital, a.outcome_review,
-				   '' as series, '' as tb_diagnosed, '' as hiv_status, '' as muac, '' as oedema, '' as wfh, '' as reason,
+				   '' as series, '' as tb_diagnosed, '' as hiv_status, '' as muac, '' as oedema, '' as wfh, 'Unknown' as reason,
 				   province.area_name as province
                 FROM tbl_records as a
                 JOIN tbl_client as b ON b.ID = a.client_id

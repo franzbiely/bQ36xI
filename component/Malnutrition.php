@@ -59,7 +59,7 @@ class Malnutrition extends DB{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 	private function fetchNotEnrolledWithMalnutReason() {
-		$query = "SELECT b.record_number,  CONCAT(b.fname,' ',b.lname) AS fullname, 
+		$query = "SELECT b.record_number,  CONCAT(b.lname,', ',b.fname) AS fullname, 
 					b.client_type as gender,
 					FLOOR(MOD(DATEDIFF(NOW(), b.date_birth)/365.25 * 12, 12)) as age_months, 
 					FLOOR(DATEDIFF(NOW(), b.date_birth)/365.25) as age_year,

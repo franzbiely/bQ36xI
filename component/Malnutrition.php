@@ -59,12 +59,12 @@ class Malnutrition extends DB{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 	private function fetchNotEnrolledWithMalnutReason() {
-		$query = "SELECT b.record_number,  CONCAT(b.fname,' ',b.lname) AS fullname, 
+		$query = "SELECT b.record_number,  CONCAT(b.lname,', ',b.fname) AS fullname, 
 					b.client_type as gender,
 					FLOOR(MOD(DATEDIFF(NOW(), b.date_birth)/365.25 * 12, 12)) as age_months, 
 					FLOOR(DATEDIFF(NOW(), b.date_birth)/365.25) as age_year,
 				   a.date, a.rutf, 'n/a' as review_date_future, a.ref_hospital, a.outcome_review,
-				   '' as series, '' as tb_diagnosed, '' as hiv_status, '' as muac, '' as oedema, '' as wfh, '' as reason,
+				   '' as series, '' as tb_diagnosed, '' as hiv_status, '' as muac, '' as oedema, '' as wfh, 'Unknown' as reason,
 				   province.area_name as province
                 FROM tbl_records as a
                 JOIN tbl_client as b ON b.ID = a.client_id
@@ -120,7 +120,7 @@ class Malnutrition extends DB{
 				        		<tr>
 				        			<th style="<?php echo $th_style ?>" width="80">Date</th>
 				        			<th style="<?php echo $th_style ?>" width="180">Patient</th>
-				        			<th style="<?php echo $th_style ?>" width="100">Visit Status</th>
+				        			<th style="<?php echo $th_style ?>" width="100">Enrollment Status</th>
 				        			<th style="<?php echo $th_style ?>">No of RUTF Given</th>
 				        			<th style="<?php echo $th_style ?>" width="80">Review Date</th>
 				        			<th style="<?php echo $th_style ?>">Outcome of Consultation</th>
@@ -143,13 +143,12 @@ class Malnutrition extends DB{
 				     <div class="body" style="padding:10px 15px;">
 				     	
 				        <strong>Province: </strong><span><?php echo $data['province'] ?></span><br /><br />
-				        <em><strong>Note :</strong> Please notice that the following datas <br />may include UNENROLLED consultations from January 1, 2019.</em><br /><br /><br />
 				        <table border="0" cellpadding="10" cellspacing="0" width="100%" style="font-size:11; font-family:monospace;border-left:1px solid #aaa;">
 				        	<thead>
 				        		<tr>
 				        			<th style="<?php echo $th_style ?>" width="80">Date</th>
 				        			<th style="<?php echo $th_style ?>" width="180">Patient</th>
-				        			<th style="<?php echo $th_style ?>" width="100">Visit Status</th>
+				        			<th style="<?php echo $th_style ?>" width="100">Enrollment Status</th>
 				        			<th style="<?php echo $th_style ?>">No of RUTF Given</th>
 				        			<th style="<?php echo $th_style ?>" width="80">Review Date</th>
 				        			<th style="<?php echo $th_style ?>">Outcome of Consultation</th>
@@ -180,7 +179,7 @@ class Malnutrition extends DB{
 					        				
 					        				<?php
 					        					if($_data['series'] === '') {
-					        						echo 'Not enrolled';
+					        						echo '';
 					        					}  
 					        					else {
 					        						echo '<strong>Enrollment #</strong>'. $_data['series'];

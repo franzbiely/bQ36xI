@@ -143,7 +143,6 @@ class Malnutrition extends DB{
 				     <div class="body" style="padding:10px 15px;">
 				     	
 				        <strong>Province: </strong><span><?php echo $data['province'] ?></span><br /><br />
-				        <em><strong>Note :</strong> Please notice that the following datas <br />may include UNENROLLED consultations from January 1, 2019.</em><br /><br /><br />
 				        <table border="0" cellpadding="10" cellspacing="0" width="100%" style="font-size:11; font-family:monospace;border-left:1px solid #aaa;">
 				        	<thead>
 				        		<tr>

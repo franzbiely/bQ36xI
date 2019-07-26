@@ -120,7 +120,7 @@ class Malnutrition extends DB{
 				        		<tr>
 				        			<th style="<?php echo $th_style ?>" width="80">Date</th>
 				        			<th style="<?php echo $th_style ?>" width="180">Patient</th>
-				        			<th style="<?php echo $th_style ?>" width="100">Visit Status</th>
+				        			<th style="<?php echo $th_style ?>" width="100">Enrollment Status</th>
 				        			<th style="<?php echo $th_style ?>">No of RUTF Given</th>
 				        			<th style="<?php echo $th_style ?>" width="80">Review Date</th>
 				        			<th style="<?php echo $th_style ?>">Outcome of Consultation</th>
@@ -149,7 +149,7 @@ class Malnutrition extends DB{
 				        		<tr>
 				        			<th style="<?php echo $th_style ?>" width="80">Date</th>
 				        			<th style="<?php echo $th_style ?>" width="180">Patient</th>
-				        			<th style="<?php echo $th_style ?>" width="100">Visit Status</th>
+				        			<th style="<?php echo $th_style ?>" width="100">Enrollment Status</th>
 				        			<th style="<?php echo $th_style ?>">No of RUTF Given</th>
 				        			<th style="<?php echo $th_style ?>" width="80">Review Date</th>
 				        			<th style="<?php echo $th_style ?>">Outcome of Consultation</th>
@@ -180,7 +180,7 @@ class Malnutrition extends DB{
 					        				
 					        				<?php
 					        					if($_data['series'] === '') {
-					        						echo 'Not enrolled';
+					        						echo '';
 					        					}  
 					        					else {
 					        						echo '<strong>Enrollment #</strong>'. $_data['series'];

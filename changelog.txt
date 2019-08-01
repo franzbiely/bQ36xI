@@ -5,6 +5,9 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.32 | 1st of Aug 2019
+  -  Resolved Allowed Memory issue when deleting consultation record
+
 v3.31 | 24th of July 2019
   -  Allow for deletion of Nutrition Consultation visits if prior to July 1st 2019
   -  Include Gender in Reports http://testclients.susumamas.org.pg/?c=malnutrition&f=reportEmailSend

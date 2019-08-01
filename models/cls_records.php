@@ -118,13 +118,15 @@ class Records extends DB{
     global $Malnutrition_Blade_Popup;
 		$_data = $_POST;
 
-    $client_malnutrition_id = $this->check_to_remove_malnut_record($_data['id']);
-    if($client_malnutrition_id) {
-      $Malnutrition_Blade_Popup->remove($client_malnutrition_id);
-    }
-    $client_malnutrition_id = $this->check_to_set_NOT_isPrevious($_data['id']);
-    if($client_malnutrition_id) {
-      $Malnutrition_Blade_Popup->markAsNOTPrevious($client_malnutrition_id);
+    if($this->has_MALNUTRITION_visits($_data)) {
+      $client_malnutrition_id = $this->check_to_remove_malnut_record($_data['id']);
+      if($client_malnutrition_id) {
+        $Malnutrition_Blade_Popup->remove($client_malnutrition_id);
+      }
+      $client_malnutrition_id = $this->check_to_set_NOT_isPrevious($_data['id']);
+      if($client_malnutrition_id) {
+        $Malnutrition_Blade_Popup->markAsNOTPrevious($client_malnutrition_id);
+      }
     }
     
 		$data = $this->delete($_data['id']);

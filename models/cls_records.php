@@ -974,6 +974,7 @@ class Records extends DB{
 
       /* ================== save consultation records */
       $(".consultation_modal_box form").on('submit',function(){
+        $(this).find('input[type="submit"]').attr("disabled", true);
         if($('.visitreasonsdiv :checkbox:checked').length <= 0) {
           alert('Please select at least one (1) Visit Reason');
           $('.visitreasonsdiv .help-block').show();

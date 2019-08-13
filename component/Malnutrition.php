@@ -50,8 +50,8 @@ class Malnutrition extends DB{
             WHERE b.client_id = a.ID
             AND b.client_malnutrition_id = c.id
             AND d.entry_type='province'
-            AND b.clinic_id=e.ID AND e.province=d.ID
-            AND ((b.review_date_future >= CURDATE() AND c.isPrevious=0) OR MONTH(b.date) = MONTH(CURRENT_DATE()))
+			AND b.clinic_id=e.ID AND e.province=d.ID
+            AND ((b.review_date_future >= b.date AND c.isPrevious=0) OR MONTH(b.date) = MONTH(CURRENT_DATE()))
             ORDER BY b.date ASC
 			", array());
 

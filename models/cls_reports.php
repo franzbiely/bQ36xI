@@ -504,26 +504,46 @@ class Reports extends DB{
                      for ($i=0; $i < count($visit_reason) ; $i++) { 
                             if($visit_reason[$i] == $visit){
                                 $content[] = array(
-                                              'record_number' => $data['record_number'],
-                                              'date_birth' => $data['date_birth'],
-                                              'client_type' => $data['client_type'],
-                                              'fullname' => $data['fullname'],
-                                              'province' => $data['province'],
-                                              'district' => $data['district'],
-                                              'office' => $data['office'],
-                                              'clinic_name' => $data['clinic_name'],
-                                              'date' => $data['date'],
-                                              'visit_reasons' => $data['visit_reasons'],
-                                              'ctr_consultation' => $data['ctr_consultation'],
-                                              'current_age' => $data['current_age'],
-                                              'age' => $data['age'],
-                                              "ID"=>$data['ID'], "client_id"=>$data['client_id'], "clinic_id"=>$data['clinic_id'],
-                                              "date"=>$data['date'], "feeding_type"=>$data['feeding_type'], "visit_reasons"=>$visit,
-                                              "followup_type"=>$data['followup_type'], "record_type"=>$data['record_type'], "office_id"=>$data['office_id'],
-                                              "record_number"=>$data['record_number'], "fname"=>$data['fname'], "lname"=>$data['lname'], 
-                                              "date_birth"=>$data['date_birth'], "date_death"=>$data['date_death'], "client_type"=>$data['client_type'],
-                                              "phone"=>$data['phone'], "place_of_birth"=>$data['place_of_birth'], "current_address"=>$data['current_address'],
-                                              "ctr_consultation"=>$data['ctr_consultation'], "age"=>$data['age']);
+                                  'record_number' => $data['record_number'],
+                                  'date_birth' => $data['date_birth'],
+                                  'client_type' => $data['client_type'],
+                                  'fullname' => $data['fullname'],
+                                  'province' => $data['province'],
+                                  'district' => $data['district'],
+                                  'office' => $data['office'],
+                                  'clinic_name' => $data['clinic_name'],
+                                  'date' => $data['date'],
+                                  'visit_reasons' => $data['visit_reasons'],
+                                  'ctr_consultation' => $data['ctr_consultation'],
+                                  'current_age' => $data['current_age'],
+                                  'age' => $data['age'],
+
+                                  "ID"=>$data['ID'] ?? null, 
+                                  "client_id"=>$data['client_id']  ?? null, 
+                                  "clinic_id"=>$data['clinic_id']  ?? null,
+                                  
+                                  "date"=>$data['date'] ?? null, 
+                                  "feeding_type"=>$data['feeding_type'] ?? null, 
+                                  "visit_reasons"=>$visit ?? null,
+
+                                  "followup_type"=>$data['followup_type'] ?? null, 
+                                  "record_type"=>$data['record_type'] ?? null, 
+                                  "office_id"=>$data['office_id'] ?? null,
+                                  
+                                  "record_number"=>$data['record_number'] ?? null, 
+                                  "fname"=>$data['fname'] ?? null, 
+                                  "lname"=>$data['lname'] ?? null, 
+
+                                  "date_birth"=>$data['date_birth'] ?? null, 
+                                  "date_death"=>$data['date_death'] ?? null, 
+                                  "client_type"=>$data['client_type'] ?? null,
+
+                                  "phone"=>$data['phone'] ?? null, 
+                                  "place_of_birth"=>$data['place_of_birth'] ?? null, 
+                                  "current_address"=>$data['current_address'] ?? null,
+                                  "ctr_consultation"=>$data['ctr_consultation'] ?? null, 
+                                  "age"=>$data['age'] ?? null
+                                );
                             }
                                             
                     }

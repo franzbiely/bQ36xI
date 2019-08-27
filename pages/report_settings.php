@@ -87,7 +87,7 @@ $json = json_decode(file_get_contents('anc.json'), true);
 								<p style="font-size: 90%;">**Monthly notifications are sent on the 1st at 12am.</p>
 							</div>
 						</div>
-						<div style="width:200px;float:left;margin:10px;display:none" id="weekly-select-div">
+						<div style="width:200px;float:left;margin:10px;<?php echo $json['schedule'] != 'weekly' ? 'display:none;' : '' ?>" id="weekly-select-div">
 							<div class="form-group">
 								<label>Every</label>
 								<select class="form-control" id="weekly-select">
@@ -122,11 +122,14 @@ $json = json_decode(file_get_contents('anc.json'), true);
 					<input type="hidden" name="class" value="Malnutrition" />
 					<input type="hidden" name="func" value="storeNotificationSettingsForMalnutrition" />
 					<p>
-						<p class="yellowme"><strong>Notice : </strong><br>Malnutrition reports are sent every 1st day of the month at 12am.</p>
-						
 						<?php
-
 						$malnutrition_data = $Malnutrition->fetchNotificationSettingsForMalnutrition();
+						$malnutrition_schedule = array_values(array_filter($malnutrition_data, function($var) {
+							return ($var['label'] == 'malnutrition_schedule');
+						}))[0]['value'];
+						$malnutrition_weekly = array_values(array_filter($malnutrition_data, function($var) {
+							return ($var['label'] == 'malnutrition_weekly');
+						}))[0]['value'];
 						$province = array(
 							array('label'=>'Central', 'value'=>''),
 							array('label'=>'Eastern Highlands', 'value'=>''),
@@ -140,6 +143,45 @@ $json = json_decode(file_get_contents('anc.json'), true);
 						if($malnutrition_data) {
 							$province = $malnutrition_data;
 						}
+						foreach($province as $key=>$val) {
+							switch($val['label']) {
+								case 'malnutrition_schedule':
+								case 'malnutrition_weekly':
+									unset($province[$key]);
+							}
+						}
+						?>
+						<div style="width:40%;float:left;margin:10px; margin-right:20px;" id="malnut-schedule-select-div">
+							<div class="form-group">
+								<label>Schedule</label>
+								<select class="form-control" name="malnutrition_schedule" id="malnut-schedule-select">
+									<option value="daily" <?= ($malnutrition_schedule == 'daily')?'selected':''; ?>>Daily</option>
+									<option value="weekly" <?= ($malnutrition_schedule == 'weekly')?'selected':''; ?>>Weekly</option>
+									<option value="monthly" <?= ($malnutrition_schedule == 'monthly')?'selected':''; ?>>Monthly</option>
+								</select>
+							</div>
+							<div>
+								<p style="padding-bottom: 0px; margin-bottom: 4px; font-size: 90%;">**Daily notifications are sent at 12am.</p>
+								<p style="padding-bottom: 0px; margin-bottom: 4px; font-size: 90%;">**Weekly notifications are sent every selected day of the week at 12am.</p>
+								<p style="font-size: 90%;">**Monthly notifications are sent on the 1st at 12am.</p>
+							</div>
+						</div>
+						<div style="width:40%;float:left;margin:10px;<?php echo $malnutrition_schedule!='weekly' ? 'display:none;' : '' ?>" id="malnut-weekly-select-div">
+							<div class="form-group">
+								<label>Every</label>
+								<select class="form-control" name="malnutrition_weekly" id="malnut-weekly-select">
+									<option value="sunday" <?= ($malnutrition_weekly == 'sunday')?'selected':''; ?>>Sunday</option>
+									<option value="monday" <?= ($malnutrition_weekly == 'monday')?'selected':''; ?>>Monday</option>
+									<option value="tuesday" <?= ($malnutrition_weekly == 'tuesday')?'selected':''; ?>>Tuesday</option>
+									<option value="wednesday" <?= ($malnutrition_weekly == 'wednesday')?'selected':''; ?>>Wednesday</option>
+									<option value="thursday" <?= ($malnutrition_weekly == 'thursday')?'selected':''; ?>>Thursday</option>
+									<option value="friday" <?= ($malnutrition_weekly == 'friday')?'selected':''; ?>>Friday</option>
+									<option value="saturday" <?= ($malnutrition_weekly == 'saturday')?'selected':''; ?>>Saturday</option>
+								</select>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+						<?php
 						foreach($province as $key=>$val) {
 							?>
 							<div style="width:250px;float:left;margin:10px">
@@ -171,6 +213,13 @@ $json = json_decode(file_get_contents('anc.json'), true);
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('#malnut-schedule-select').on('change', function() {
+			if($(this).val() == "weekly") {
+				$('#malnut-weekly-select-div').show();
+			} else {
+				$('#malnut-weekly-select-div').hide();
+			}
+		});
 		$('#schedule-select').on('change', function() {
 			if($(this).val() == "weekly") {
 				$('#weekly-select-div').show();

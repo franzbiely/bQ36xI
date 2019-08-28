@@ -25,8 +25,10 @@ class Records extends DB{
     $has_ANC = false;
     foreach($datas as $data) {
       $temp = json_decode( $data['visit_reasons'], true );
-      if(in_array(array('ANC 1stvisit', 'ANC 4th visit', 'ANC Other visit'),$temp)) {
-        $has_ANC = true;
+      if(isset($temp)) {
+        if(in_array(array('ANC 1stvisit', 'ANC 4th visit', 'ANC Other visit'),$temp)) {
+          $has_ANC = true;
+        }
       }
     }
     return $has_ANC;
@@ -34,8 +36,10 @@ class Records extends DB{
   function has_MALNUTRITION_visits($datas) {
     $has_MALNUTRITION = false;
     $datas = json_decode( $datas['visit_reasons'], true );
-    if(in_array('Malnutrition (MAM/SAM)',$datas)) {
-      $has_MALNUTRITION = true;
+    if(isset($datas)) {
+      if(in_array('Malnutrition (MAM/SAM)',$datas)) {
+        $has_MALNUTRITION = true;
+      }
     }
 
     return $has_MALNUTRITION;
@@ -974,6 +978,7 @@ class Records extends DB{
 
       /* ================== save consultation records */
       $(".consultation_modal_box form").on('submit',function(){
+        $(this).find('input[type="submit"]').attr("disabled", true);
         if($('.visitreasonsdiv :checkbox:checked').length <= 0) {
           alert('Please select at least one (1) Visit Reason');
           $('.visitreasonsdiv .help-block').show();

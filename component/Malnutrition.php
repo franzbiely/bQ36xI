@@ -54,8 +54,6 @@ class Malnutrition extends DB{
             AND ((b.review_date_future >= b.date AND c.isPrevious=0) OR MONTH(b.date) = MONTH(CURRENT_DATE()))
             ORDER BY b.date ASC
 			", array());
-
-		// print_r($stmt->fetchAll(PDO::FETCH_ASSOC));
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 	private function fetchNotEnrolledWithMalnutReason() {
@@ -103,7 +101,15 @@ class Malnutrition extends DB{
 		$th_style='background: #f5f5f2;padding:10px 5px;border-right:1px solid #999;border-top:1px solid #999;border-bottom:3px double #999;';
 		$td_style='border-right:1px solid #aaa;border-bottom: 1px solid #aaa; vertical-align: top;';
 		if(count($datas)>0) {
-			$province = $datas[0]['province'];
+			// if specific province
+			if(isset($datas['province'])) {
+				$province = $datas['province'];
+				$datas = array($datas); // the purpose is so that it will follow the same format as with sending for all provinces case. the purpose is for the foreach loop below.
+			}
+			else {
+				$province = $datas[0]['province'];
+			}
+			
 		}
 		ob_start(); ?>
 
@@ -213,8 +219,20 @@ class Malnutrition extends DB{
 		ob_end_clean();
 		return $output;
 	}
+	private function getEmailsByProvince($province) {
+		$stmt = $this->query("
+			SELECT * 
+            FROM tbl_notifications
+			WHERE label = :province
+			", array('province' => $province));
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
 	public function reportEmailSend() {
 
+		$data = $this->fetchNotificationSettingsForMalnutrition();
+		$schedule = array_values(array_filter($data, function($_d) {
+			return ($_d['label']==='malnutrition_schedule');
+		}))[0]['value'];
 		// FETCH NOT Enrolled consultation with malnutrition
 		$unenrolled = $this->fetchNotEnrolledWithMalnutReason();
 
@@ -225,28 +243,61 @@ class Malnutrition extends DB{
 
 		// GROUP BY PROVINCE Name
 		$datas = $this->formatArraybyProvince($datas);
-		echo $this->renderEmailBody( $datas );
-		exit();
-		// $file = 'anc.json';
-		// $json = json_decode(file_get_contents($file), true);
 
-		// $emails = $json['email'];
-		// $data = $reports->get_hb_level_from_today();
-		// $body = body($data);
-		// $emails = 'admin@test.com, mrthemetribe@gmail.com';
-		// $emails = str_replace(' ', '', $emails);
-		//    $emails = explode(',', $emails);
+		switch($schedule) {
+			case "daily": 
+				$date = date('Y-m-d', strtotime('-1 days'));
+				break;
+			case "weekly": 
+				if(strtolower(date('l', strtotime('now'))) != $json['every']) {
+					exit;
+				}
+				$start_date = date('Y-m-d', strtotime('-7 days'));
+				$end_date = date('Y-m-d', strtotime('-1 days'));
+				$every = array_values(array_filter($data, function($_d) {
+					return ($_d['label']==='malnutrition_weekly');
+				}))[0]['value'];
+				
+			break;
+			case "monthly": 
+				$start_date = date('Y-m-01', strtotime('-1 months'));
+				$this_year = date('Y', strtotime('-1 months'));
+				$this_month = date('m', strtotime('-1 months'));
+				$last_date = cal_days_in_month(CAL_GREGORIAN,$this_month,$this_year);
+				$end_date = $this_year . '-' . $this_month . '-' . $last_date;			
+			break;
+		}
 
-		// foreach($emails as $email) {
-		//    $mail = $this->send_mail(
-		//       array('email' => 'admin@susumamas.org.pg', 'name' => 'Susumamas'), 
-		//       array('email' => $email, 'name' => ''), 
-		//       array('email' => 'admin@susumamas.org.pg', 'name' => ''), 
-		//       'Susumamas | Malnutrition Report', 
-		//       $body,
-		//       htmlentities($body)
-		//    );
-		// }
+		// Loop through provinces and send mail
+		array_push($datas, array('province'=>'All Provinces'));
+		foreach($datas as $key=>$prov) {
+			
+			$emails = $this->getEmailsByProvince( str_replace(' ','_',trim($prov['province'])) );
+			if(isset($emails[0]['value']) && $emails[0]['value']) {
+				$emails = str_replace(' ', '', $emails[0]['value']);
+				$emails = explode(',', $emails);
+				
+				$body = $this->renderEmailBody($prov); // body for specific province
+				if($key==(count($datas)-1)) {
+					$body = $this->renderEmailBody($datas); //body for all provinces
+				}
+
+				// Loop each email addresses
+				foreach($emails as $email) {
+					$mail = $this->send_mail(
+						array('email' => 'admin@susumamas.org.pg', 'name' => 'Susumamas'), 
+						array('email' => $email, 'name' => ''), 
+						array('email' => 'admin@susumamas.org.pg', 'name' => ''), 
+						'Susumamas | ' . $prov['province'] . ' | Malnutrition Report ', 
+						$body,
+						htmlentities($body)
+					 );
+				}
+			}
+			else {
+				echo "<pre>No email address for ".str_replace(' ','_',trim($prov['province'])) . "</pre>";
+			}
+		}
 	}
 
 	/* ============================= Superadmin Settings > Notification Malnutrition =============*/

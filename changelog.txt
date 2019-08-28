@@ -5,6 +5,9 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.34 | 29th of Aug 2019
+  -  Setup malnutrition report emailer for CRON ready.
+
 v3.33 | 1st of Aug 2019
   -  Hotfix to multiple consultation records when Enter button is pressed multiple times.
 

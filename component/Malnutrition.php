@@ -233,6 +233,9 @@ class Malnutrition extends DB{
 		$schedule = array_values(array_filter($data, function($_d) {
 			return ($_d['label']==='malnutrition_schedule');
 		}))[0]['value'];
+		$every = array_values(array_filter($data, function($_d) {
+			return ($_d['label']==='malnutrition_weekly');
+		}))[0]['value'];
 		// FETCH NOT Enrolled consultation with malnutrition
 		$unenrolled = $this->fetchNotEnrolledWithMalnutReason();
 
@@ -243,33 +246,31 @@ class Malnutrition extends DB{
 
 		// GROUP BY PROVINCE Name
 		$datas = $this->formatArraybyProvince($datas);
-
 		switch($schedule) {
 			case "daily": 
-				$date = date('Y-m-d', strtotime('-1 days'));
+				// $date = date('Y-m-d', strtotime('-1 days'));
 				break;
 			case "weekly": 
-				if(strtolower(date('l', strtotime('now'))) != $json['every']) {
+				if(strtolower(date('l', strtotime('now'))) != $every) {
 					exit;
 				}
-				$start_date = date('Y-m-d', strtotime('-7 days'));
-				$end_date = date('Y-m-d', strtotime('-1 days'));
-				$every = array_values(array_filter($data, function($_d) {
-					return ($_d['label']==='malnutrition_weekly');
-				}))[0]['value'];
-				
+				// $start_date = date('Y-m-d', strtotime('-7 days'));
+				// $end_date = date('Y-m-d', strtotime('-1 days'));
 			break;
 			case "monthly": 
-				$start_date = date('Y-m-01', strtotime('-1 months'));
-				$this_year = date('Y', strtotime('-1 months'));
-				$this_month = date('m', strtotime('-1 months'));
-				$last_date = cal_days_in_month(CAL_GREGORIAN,$this_month,$this_year);
-				$end_date = $this_year . '-' . $this_month . '-' . $last_date;			
+				if(date('d', strtotime('now')) != "01") {
+					exit;
+				}
+				// $start_date = date('Y-m-01', strtotime('-1 months'));
+				// $this_year = date('Y', strtotime('-1 months'));
+				// $this_month = date('m', strtotime('-1 months'));
+				// $last_date = cal_days_in_month(CAL_GREGORIAN,$this_month,$this_year);
+				// $end_date = $this_year . '-' . $this_month . '-' . $last_date;			
 			break;
 		}
-
 		// Loop through provinces and send mail
 		array_push($datas, array('province'=>'All Provinces'));
+
 		foreach($datas as $key=>$prov) {
 			
 			$emails = $this->getEmailsByProvince( str_replace(' ','_',trim($prov['province'])) );
@@ -284,6 +285,7 @@ class Malnutrition extends DB{
 
 				// Loop each email addresses
 				foreach($emails as $email) {
+					echo "send mail";
 					$mail = $this->send_mail(
 						array('email' => 'admin@susumamas.org.pg', 'name' => 'Susumamas'), 
 						array('email' => $email, 'name' => ''), 

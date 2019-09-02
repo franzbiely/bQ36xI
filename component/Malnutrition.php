@@ -227,6 +227,9 @@ class Malnutrition extends DB{
 			", array('province' => $province));
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
+	public function mail_mal() {
+		$this->reportEmailSend();
+	}
 	public function reportEmailSend() {
 
 		$data = $this->fetchNotificationSettingsForMalnutrition();
@@ -248,24 +251,16 @@ class Malnutrition extends DB{
 		$datas = $this->formatArraybyProvince($datas);
 		switch($schedule) {
 			case "daily": 
-				// $date = date('Y-m-d', strtotime('-1 days'));
 				break;
 			case "weekly": 
 				if(strtolower(date('l', strtotime('now'))) != $every) {
 					exit;
 				}
-				// $start_date = date('Y-m-d', strtotime('-7 days'));
-				// $end_date = date('Y-m-d', strtotime('-1 days'));
 			break;
 			case "monthly": 
 				if(date('d', strtotime('now')) != "01") {
 					exit;
-				}
-				// $start_date = date('Y-m-01', strtotime('-1 months'));
-				// $this_year = date('Y', strtotime('-1 months'));
-				// $this_month = date('m', strtotime('-1 months'));
-				// $last_date = cal_days_in_month(CAL_GREGORIAN,$this_month,$this_year);
-				// $end_date = $this_year . '-' . $this_month . '-' . $last_date;			
+				}		
 			break;
 		}
 		// Loop through provinces and send mail
@@ -285,7 +280,6 @@ class Malnutrition extends DB{
 
 				// Loop each email addresses
 				foreach($emails as $email) {
-					echo "send mail";
 					$mail = $this->send_mail(
 						array('email' => 'admin@susumamas.org.pg', 'name' => 'Susumamas'), 
 						array('email' => $email, 'name' => ''), 

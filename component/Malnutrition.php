@@ -228,10 +228,6 @@ class Malnutrition extends DB{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 	public function mail_mal() {
-		$this->reportEmailSend();
-	}
-	public function reportEmailSend() {
-
 		$data = $this->fetchNotificationSettingsForMalnutrition();
 		$schedule = array_values(array_filter($data, function($_d) {
 			return ($_d['label']==='malnutrition_schedule');
@@ -239,16 +235,8 @@ class Malnutrition extends DB{
 		$every = array_values(array_filter($data, function($_d) {
 			return ($_d['label']==='malnutrition_weekly');
 		}))[0]['value'];
-		// FETCH NOT Enrolled consultation with malnutrition
-		$unenrolled = $this->fetchNotEnrolledWithMalnutReason();
-
-		// FETCH Enrolled Malnutrition consultation datas
-		$datas = $this->fetchReportData();
-
-		$datas = array_merge($unenrolled, $datas);
-
-		// GROUP BY PROVINCE Name
-		$datas = $this->formatArraybyProvince($datas);
+		$datas = $this->compileDataForReports();
+		
 		switch($schedule) {
 			case "daily": 
 				break;
@@ -294,6 +282,22 @@ class Malnutrition extends DB{
 				echo "<pre>No email address for ".str_replace(' ','_',trim($prov['province'])) . "</pre>";
 			}
 		}
+	}
+	private function compileDataForReports() {
+		// FETCH NOT Enrolled consultation with malnutrition
+		$unenrolled = $this->fetchNotEnrolledWithMalnutReason();
+
+		// FETCH Enrolled Malnutrition consultation datas
+		$datas = $this->fetchReportData();
+
+		$datas = array_merge($unenrolled, $datas);
+
+		// GROUP BY PROVINCE Name
+		return $this->formatArraybyProvince($datas);
+	}
+	public function reportEmailSend() {
+		echo $this->renderEmailBody( $this->compileDataForReports() );
+		exit();
 	}
 
 	/* ============================= Superadmin Settings > Notification Malnutrition =============*/

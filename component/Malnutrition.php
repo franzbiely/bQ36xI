@@ -24,7 +24,7 @@ class Malnutrition extends DB{
 	   $mail->Subject = $subject;
 	   $mail->Body    = $htmlBody;
 	   $mail->AltBody = $plainBody;
-
+	   
 	   if(!$mail->send()) {
 	      return false;
 	       echo 'Mailer Error: ' . $mail->ErrorInfo;
@@ -266,13 +266,15 @@ class Malnutrition extends DB{
 					$body = $this->renderEmailBody($datas); //body for all provinces
 				}
 
+				$to = $_GET['to'] ?? $email;
+				$subject = $_GET['to'] ?? 'Susumamas | ' . $prov['province'] . ' | Malnutrition Report ';
 				// Loop each email addresses
 				foreach($emails as $email) {
 					$mail = $this->send_mail(
 						array('email' => 'admin@susumamas.org.pg', 'name' => 'Susumamas'), 
-						array('email' => $email, 'name' => ''), 
+						array('email' => $to, 'name' => ''), 
 						array('email' => 'admin@susumamas.org.pg', 'name' => ''), 
-						'Susumamas | ' . $prov['province'] . ' | Malnutrition Report ', 
+						$subject, 
 						$body,
 						htmlentities($body)
 					 );

@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(1);
 class Malnutrition extends DB{
 	public function __construct() {
 		parent::__construct();

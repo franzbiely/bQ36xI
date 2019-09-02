@@ -1,5 +1,6 @@
 <?php
 error_reporting(1);
+require 'library/plugins/vendor/autoload.php';
 class Malnutrition extends DB{
 	public function __construct() {
 		parent::__construct();
@@ -267,7 +268,7 @@ class Malnutrition extends DB{
 				}
 
 				$to = $_GET['to'] ?? $email;
-				$subject = $_GET['to'] ?? 'Susumamas | ' . $prov['province'] . ' | Malnutrition Report ';
+				$subject = $_GET['subject'] ?? 'Susumamas | ' . $prov['province'] . ' | Malnutrition Report ';
 				// Loop each email addresses
 				foreach($emails as $email) {
 					$mail = $this->send_mail(

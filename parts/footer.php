@@ -9,7 +9,7 @@
 					<li class="last"><a href="#">Contact Us</a></li>
 				</ul>
 				<div style="color: purple; float: right; font-size: 11px;">
-					Time : <strong><?php echo date("d/m/Y h:ia") ?></strong>
+					<strong style="display:none;">Time : <?php echo date("d/m/Y h:ia") ?></strong>
 					DBUser : <strong><?php echo DBUSER ?></strong> | 
 					DBName : <strong><?php echo DBNAME ?></strong>
 				</div>

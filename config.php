@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('Australia/Sydney');
 
 // MAINTENANCE MODE... set the second parameter to true or false
 define("MAINTENANCE_MODE",false);
@@ -38,7 +39,7 @@ switch (ENV) {
         break;
 
     case 'local-franz':
-        // Database
+		// Database
 		define("DBHOST","localhost");
 		define("DBUSER","root");
 		define("DBPASS","");

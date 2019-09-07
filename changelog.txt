@@ -5,6 +5,8 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.36 | 7th of Sep 2019
+  - Refactored ANC Reporting code and CRON settings.
 
 v3.35 | 3rd of Sep 2019
   - Finalize Malnutrition Reporting for CRON.

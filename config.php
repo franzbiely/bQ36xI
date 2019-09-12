@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('Australia/Sydney');
 
 // MAINTENANCE MODE... set the second parameter to true or false
 define("MAINTENANCE_MODE",false);
@@ -20,7 +21,6 @@ else {
 
 switch (ENV) {
 	case 'testsite':
-    	error_reporting(0);
         define("DBHOST","localhost");
 		define("DBUSER","cldbtest_clients");
 		define("DBPASS","hMD6QFrGELnL");
@@ -29,7 +29,6 @@ switch (ENV) {
         break;
 
     case 'stage':
-    	error_reporting(0);
         define("DBHOST","localhost");
 		define("DBUSER","clientsu_ssmclsu");
 		define("DBPASS","hMD6QFrGELnL");
@@ -38,7 +37,7 @@ switch (ENV) {
         break;
 
     case 'local-franz':
-        // Database
+		// Database
 		define("DBHOST","localhost");
 		define("DBUSER","root");
 		define("DBPASS","");

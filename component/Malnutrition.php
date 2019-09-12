@@ -1,5 +1,6 @@
 <?php
-
+error_reporting(1);
+require 'library/plugins/vendor/autoload.php';
 class Malnutrition extends DB{
 	public function __construct() {
 		parent::__construct();
@@ -24,7 +25,7 @@ class Malnutrition extends DB{
 	   $mail->Subject = $subject;
 	   $mail->Body    = $htmlBody;
 	   $mail->AltBody = $plainBody;
-
+	   
 	   if(!$mail->send()) {
 	      return false;
 	       echo 'Mailer Error: ' . $mail->ErrorInfo;
@@ -78,21 +79,39 @@ class Malnutrition extends DB{
         $stmt = $this->query($query,$bind_array);
     	return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
+	private function in_array_2d($id, $array) {
+		foreach ($array as $key => $val) {
+			if ($val['province'] === $id) {
+				return true;
+			}
+		}
+		return false;
+	}
 	private function formatArraybyProvince($datas = null) {
 		$tmp = array();
-
+		
 		foreach($datas as $data) {
 			$province = $data['province'];
 			unset($data['province']);
-		    $tmp[$province][] = $data;
+		    $tmp[trim($province)][] = $data;
 		}
-
 		$output = array();
 		foreach($tmp as $key => $val) {
 		    $output[] = array(
 		        'province' => $key,
 		        'datas' => $val
 		    );
+		}
+		$fetchNotif = $this->fetchNotificationSettingsForMalnutrition();
+		$provinces = array_splice($fetchNotif, 0, -3);
+		foreach($provinces as $prov) {
+			$foo = $this->in_array_2d( str_replace('_',' ',$prov['label']) , $output );
+			if( !$foo ) {
+				array_push($output, array(
+					'province' => $prov['label'],
+					'datas' => array()
+				)); 
+			}
 		}
 		return $output;
 	}
@@ -134,7 +153,7 @@ class Malnutrition extends DB{
 				        	</thead>
 				        	<tbody>
 				        		<tr>
-			        				<td colspan="6" style="<?php echo $td_style ?>">No consultation done with Malnutrition this month.</td>
+			        				<td colspan="6" style="<?php echo $td_style ?>">No data available.</td>
 			        			</tr>
 				        	</tbody>
 				        </table>
@@ -161,7 +180,7 @@ class Malnutrition extends DB{
 				        		</tr>
 				        	</thead>
 				        	<tbody>
-				        		<?php 
+								<?php 
 			        			foreach($data['datas'] as $_data) : 
 				        			$visit_counter++;
 				        			?>
@@ -199,9 +218,9 @@ class Malnutrition extends DB{
 					        		</tr>
 				        		<?php 
 				        		endforeach; 
-				        		if(count($datas)==0) : ?>
+				        		if(count($data['datas'])===0) : ?>
 				        			<tr>
-				        				<td colspan="6" style="<?php echo $td_style ?>">No consultation done with Malnutrition this month.</td>
+				        				<td colspan="6" style="<?php echo $td_style ?>">No consultation done with Malnutrition.</td>
 				        			</tr>
 
 				        		<?php endif; ?>
@@ -236,7 +255,6 @@ class Malnutrition extends DB{
 			return ($_d['label']==='malnutrition_weekly');
 		}))[0]['value'];
 		$datas = $this->compileDataForReports();
-		
 		switch($schedule) {
 			case "daily": 
 				break;
@@ -251,37 +269,47 @@ class Malnutrition extends DB{
 				}		
 			break;
 		}
+		$body_all_prov = $this->renderEmailBody($datas); //body for all provinces
+		
 		// Loop through provinces and send mail
 		array_push($datas, array('province'=>'All Provinces'));
-
 		foreach($datas as $key=>$prov) {
 			
 			$emails = $this->getEmailsByProvince( str_replace(' ','_',trim($prov['province'])) );
 			if(isset($emails[0]['value']) && $emails[0]['value']) {
 				$emails = str_replace(' ', '', $emails[0]['value']);
 				$emails = explode(',', $emails);
-				
 				$body = $this->renderEmailBody($prov); // body for specific province
 				if($key==(count($datas)-1)) {
-					$body = $this->renderEmailBody($datas); //body for all provinces
+					$body = $body_all_prov;
 				}
 
 				// Loop each email addresses
 				foreach($emails as $email) {
+					$to = $_GET['to'] ?? $email;
+					$subject = $_GET['subject'] ?? 'Susumamas | ' . $prov['province'] . ' | Malnutrition Report ';
+				
 					$mail = $this->send_mail(
 						array('email' => 'admin@susumamas.org.pg', 'name' => 'Susumamas'), 
-						array('email' => $email, 'name' => ''), 
+						array('email' => $to, 'name' => ''), 
 						array('email' => 'admin@susumamas.org.pg', 'name' => ''), 
-						'Susumamas | ' . $prov['province'] . ' | Malnutrition Report ', 
+						$subject, 
 						$body,
 						htmlentities($body)
 					 );
+					 if($mail) {
+						echo "<pre>Mail Sent to : {$to} for {$subject}.</pre>";
+					 }
+					 else {
+						echo "<pre>Error Mail (to : {$to} for {$subject}).</pre>";
+					 }
 				}
 			}
 			else {
 				echo "<pre>No email address for ".str_replace(' ','_',trim($prov['province'])) . "</pre>";
 			}
 		}
+		exit();
 	}
 	private function compileDataForReports() {
 		// FETCH NOT Enrolled consultation with malnutrition

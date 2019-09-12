@@ -41,6 +41,7 @@ include("models/cls_relationship.php");
 include("models/cls_catchment.php");
 include('./popups/malnutrition.blade.php');
 include('./component/Malnutrition.php');
+include('./component/Anchblevel.php');
 
 // DECLARING THE OBJECTS
 global $users,$catchment, $office, $client, $clinic, $province, $district, $llg, $type, $record, $reports, $main, $permission, $relationship, $Malnutrition_Blade_Popup;

@@ -5,7 +5,6 @@ class Client extends DB{
 		$this->table = "tbl_client";
 		
 	}
-
 	function get_age($date_birth){
 		// GETTING THE AGE from birth date
         if($date_birth!=null || $date_birth!=""){
@@ -60,6 +59,19 @@ class Client extends DB{
 		if($data==false) return array();
 		else return $data;
 		
+	}
+	function search_finger_print() {
+		$query = "select * from tbl_fingerprint";
+		$bind_array= array("office_id"=>$_SESSION['office_id']);
+		$results = $this->query($query,$bind_array);
+		$object = array();
+		
+		if($results->num_rows > 0){
+			while($row = $results->fetch_assoc()){
+				$object[] = $row; 
+			}
+		}
+		echo json_encode($object);
 	}
 	function get_all_unknown($paged=1){
 		$start =  ($paged > 1) ? ($paged-1)*ITEM_DISPLAY_COUNT : 0;
@@ -132,10 +144,27 @@ class Client extends DB{
 	function add(){
 		$this->table = "tbl_client";
 		$_data = $_POST;
-		unset($_data['class']);
-		unset($_data['func']);		
 		$arr2 = array("office_id"=>$_SESSION['office_id']);		
 		$_data = array_merge($_data, $arr2);
+		
+		$finger_1 =  $_data['right_side_finger'];
+		$finger_2 =  $_data['center_finger'];
+		$finger_3 =  $_data['left_side_finger'];
+
+		unset($_data['class']);
+		unset($_data['func']);
+		unset($_data['right_side_finger']);
+		unset($_data['center_finger']);
+		unset($_data['left_side_finger']);
+		unset($_data['imageDiv']);
+		unset($_data['image_id']);
+		unset($_data['image11']);
+		unset($_data['image2']);
+		unset($_data['image3']);
+		unset($_data['es']);
+		unset($_data['btn_add_client']);
+		unset($_data['source']);
+		//var_dump($_data);
 		if(isset($_data['is_archived'])){
 			$_data['is_archived']=($_data['is_archived']=="on") ? 1 : 0;	
 			$_data['date_archived']=date("m.d.y");
@@ -143,12 +172,13 @@ class Client extends DB{
 		else{
 			$_data['is_archived'] = 0;
 		}
-
+		
 		$check_record_nuber =  $this->select("record_number", array("record_number"=>$_data['record_number']),true, "tbl_client" );
 		
-		if ($check_record_nuber!=false){
-			echo "double-record";
-			exit();
+		if ($check_record_nuber!=false){ 
+		?>
+			<script> alert("Double record !");</script>
+		<?php
 		}
 		else{	
 			//Code added by Joe [to fix ajax error when adding a new client record "this error will show as undefined in the network tab by pressing F12 goto network tab then response" using ajax call]
@@ -168,9 +198,20 @@ class Client extends DB{
 			if($_data['date_death']=='') {
 				unset($_data['date_death']);
 			}		
-
 			$data = $this->save($_data, array(), "tbl_client", "lastInsertId");
-			
+
+			$dataFinger['client_id'] = $data;
+			$dataFinger['finger_data'] = $finger_1;
+			$data1 = $this->save($dataFinger, array(), "tbl_fingerprint", "lastInsertId");
+			$dataFinger['client_id'] = $data;
+			$dataFinger['finger_data'] = $finger_2;
+			$data2 = $this->save($dataFinger, array(), "tbl_fingerprint", "lastInsertId");
+			$dataFinger['client_id'] = $data;
+			$dataFinger['finger_data'] = $finger_3;
+			$data3 = $this->save($dataFinger, array(), "tbl_fingerprint", "lastInsertId");
+			if ($data == 0 ){
+				$data = true;
+			}
 			if($data==false){
 				echo "error";
 			}else{
@@ -186,19 +227,62 @@ class Client extends DB{
 										);
 						$data = $this->save($_mother_data);
 					}
+				} 
+				?>
+				<script> 
+					alert("Success !");
+					window.location.href = "?page=clients";
+				</script> 
+				<?php //echo "success";
 				}
-				echo "success";
-			}
-			exit();
+			//exit();
 		}		
 	}
 	function edit(){
 		ob_start();
 		$_data = $_POST;
 		$id = $_data['id'];
+		var_dump($_data);
+		if($_data['source'] == "record"){
+			$finger_1 =  $_data['u_right_side_finger'];
+		    $finger_2 =  $_data['u_center_finger'];
+		    $finger_3 =  $_data['u_left_side_finger'];
+		    unset($_data['u_right_side_finger']);
+		    unset($_data['u_center_finger']);
+		    unset($_data['u_left_side_finger']);
+		    unset($_data['u_imageDiv']);
+		    unset($_data['u_image_id']);
+		    unset($_data['u_image11']);
+		    unset($_data['u_image2']);
+		    unset($_data['u_image3']);
+		    unset($_data['u_es']);
+		    unset($_data['source']);
+		    unset($_data['save_info']);
+		}
+		if($_data['source'] == "modal"){
+			$finger_1 =  $_data['right_side_finger'];
+			$finger_2 =  $_data['center_finger'];
+			$finger_3 =  $_data['left_side_finger'];
+			unset($_data['class']);
+			unset($_data['func']);
+			unset($_data['right_side_finger']);
+			unset($_data['center_finger']);
+			unset($_data['left_side_finger']);
+			unset($_data['imageDiv']);
+			unset($_data['image_id']);
+			unset($_data['image11']);
+			unset($_data['image2']);
+			unset($_data['image3']);
+			unset($_data['es']);
+			unset($_data['source']);
+			unset($_data['btn_add_client']);
+		}
+	    
 		unset($_data['id']);
 		unset($_data['class']);
 		unset($_data['func']);
+
+		var_dump($_data);
 		if(isset($_data['is_archived'])){
 			$_data['is_archived']=($_data['is_archived']=="on") ? 1 : 0;	
 			$_data['date_archived']=date("m.d.y");
@@ -227,12 +311,25 @@ class Client extends DB{
 		// 	echo ""; //"error on delete";
 		// }
 		// else
-		// 	echo "";//"success on delete";
+		// 	echo "";//"success on delete()te";
+
+		//unset($_data['relation_to']);
 		if(isset($_data['relation_to'])) {
 			if ($_data['relation_to'] !== "undefined"){
 				unset($_data['relation_to']);
 			}		
 		}
+
+		$query = "SELECT * FROM tbl_fingerprint WHERE client_id = '$id'";
+		$stmt = $this->query($query,array());
+		$_all_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		var_dump($_all_data[0]['ID']);
+		var_dump($_all_data[1]['ID']);
+		var_dump($_all_data[2]['ID']);
+		$data1 = $this->update($finger_1, $_all_data[0]['ID'], $_all_data[0]['client_id'] );
+		$data2 = $this->update($finger_2, $_all_data[1]['ID'], $_all_data[1]['client_id'] );
+		$data3 = $this->update($finger_3, $_all_data[2]['ID'], $_all_data[2]['client_id'] );
+
 		$this->table = 'tbl_client';
 		$data = $this->save($_data,array("ID"=>$id));
 
@@ -240,8 +337,11 @@ class Client extends DB{
 			echo "error";
 		}
 		else{
-			echo "success";
-			// echo'<script type="text/javascript">alert();</script>';
+			if ($_all_data){
+				echo "success $_all_data";
+			}else {
+				echo "success";
+			}
 		}
 
 		if($_data['client_type']=='Child') {
@@ -551,10 +651,10 @@ class Client extends DB{
 		global $district;
 		global $province;
 		ob_start();
-		?>
+				?>
 		<!-- <div id="modal-body"> -->
 		<form role="form" action="" method="post">
-		
+			
           <input type="hidden" name="class" value="client" />
           <input type="hidden" name="func" value="add" />
           <span class="required_field">* <span class="required_label">required fields.</span></span>
@@ -620,7 +720,6 @@ class Client extends DB{
               ?>  
             </select>
           </div> 
-
           <div class="div-district">
           	<div class="alert alert-warning no-distirct"><strong></strong></div> 
           </div> 
@@ -628,19 +727,43 @@ class Client extends DB{
             <label for="current_address">Client Address (where client currently resides)</label>
             <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" class="form-control" id="current_address" placeholder="Enter Client current address" name="current_address">
           </div>
-
-					<?php if (isset($_GET['modal']) && $_GET['modal']  === "add" ){ ?> 
-						<div class="form-group edit_only hide">  
-							<input type="checkbox" name="is_archived" id="is_archived" style="top: 2px;position: relative;">
-							<label for="is_archived" style="font-weight:normal;">Check this if you want to archive this client record. </label>
-						</div>
-					<?php } else {?>
-						<div class="form-group edit_only">  
-							<input type="checkbox" name="is_archived" id="is_archived" style="top: 2px;position: relative;">
-							<label for="is_archived" style="font-weight:normal;">Check this if you want to archive this client record. </label>
-						</div>
-					<?php }?>
-          <input style="margin-top: 20px;" type="submit" class="btn btn-success btn-default">
+          <?php if (isset($_GET['modal']) && $_GET['modal']  === "add" ){ ?> 
+				  	<div class="form-group edit_only hide">  
+			            <input type="checkbox" name="is_archived" id="is_archived" style="top: 2px;position: relative;">
+			            <label for="is_archived" style="font-weight:normal;">Check this if you want to archive this client record. </label>
+		          	</div>
+      	  <?php } else {?>
+      	  		<div class="form-group edit_only">  
+			            <input type="checkbox" name="is_archived" id="is_archived" style="top: 2px;position: relative;">
+			            <label for="is_archived" style="font-weight:normal;">Check this if you want to archive this client record. </label>
+		          	</div>
+      	  <?php }?>
+          <div class="form-group " >    
+		    <input class="btn btn-primary" style="text-align: center; font-size: 13px;" type="button" id="image_id" value="Click this to register finger print !" />
+	      </div>
+		  <div class="form-group">
+		    <input name="right_side_finger" type="text" id="right_side_finger" value="" readonly style = " display: none; border: 0px; font-size: 12px"/>
+		    <input name="center_finger" type="text" id="center_finger" value="" readonly style = " display: none; border: 0px; font-size: 12px"/>
+		    <input name="left_side_finger" type="text" id="left_side_finger" value="" readonly style = " display: none; border: 0px; font-size: 12px"/>
+		  </div>
+          <div id="imgDiv" style="margin-top: 10px; float: right; padding: 2px; margin-right: 7px;">
+          <input name="source" type="text" id="source" value="modal" readonly style = "display: none;"/>
+		  <input name="es" type="text" id="es" value="Scanner not ready! " readonly style = "border: 0px; font-size: 12px"/>
+			<span class = ""> 
+				<small style="margin-left: 7px; margin-top: 18px; text-align: center; position: absolute; font-size: 10px;">&nbsp;Right</small>
+				<img id = "image11" alt="" width="45px" height="45px" style = "border-radius: 5px;"/>
+			</span>
+			<span class = ""> 
+				<small style="margin-left: 5px; margin-top: 18px; text-align: center; position: absolute; font-size: 10px;">&nbsp;Center</small>
+				<img id = "image2" alt="" width="45px" height="45px" style = "border-radius: 5px;"/>
+			</span>
+			<span class = ""> 
+				<small style="margin-left: 9px; margin-top: 18px; text-align: center; position: absolute; font-size: 10px;">&nbsp;Left</small>
+				<img id = "image3" alt="" width="45px" height="45px" style = "border-radius: 5px;"/>
+			</span>
+		  </div>
+		  
+		  <input id="btn_add_client" disabled style="margin-top: 20px;" type="submit" class="btn btn-success btn-default">
         </form>
 		<!-- </div>  --><!-- ===== id: modal-body ===== -->
 		
@@ -653,7 +776,137 @@ class Client extends DB{
 	function scripts(){
 		?>
 		<script>
+		var hidden = true;
+		var finger_value = 1;
+		var checked = false;
 		$(document).ready(function(){
+			$("#image_id").click(function(){
+				document.getElementById("source").value = "modal";
+				checked = true;
+				if ("WebSocket" in window) {
+					console.log("ready");
+					connect("ws://127.0.0.1:21187/fps");
+				} else {
+					$('#es').val('Browser does not support!');
+				};
+				function ws_send(str) {
+					try {
+						ws.send(str);
+					} catch (err) {
+						$('#es').val('error');
+					}
+				}
+				function connect(host) {
+				$('#es').val("Connecting to " + host + " ...");
+				try {
+					ws = new WebSocket(host); // create the web socket
+				} catch (err) {
+					$('#es').val('error');
+				}
+				ws.onopen = function () {
+					$('#es').val('Connected OK!');
+					EnrollTemplate();
+				};
+				ws.onmessage = function (evt) {
+					var obj = eval("("+evt.data+")");
+					var status = document.getElementById("es");
+					switch (obj.workmsg) {
+						case 1:
+							status.value = "Please Open Device";
+							break;
+						case 2:
+							if(finger_value == 1){
+								status.value = "Place Left Side Thumb";
+							}else if (finger_value == 2){
+								status.value = "Place Center Thumb";
+							}else if (finger_value == 3){
+								status.value = "Place Right Side Thumb";
+							}
+							document.getElementById("image_id").disabled = true;
+							break;
+						case 3:
+							status.value = "Lift Thumb";
+							break;
+						case 6:
+							if (obj.retmsg == 1) {
+								if (obj.data1 != "null") {
+									status.value = "Finger Print Save !";
+									if(finger_value == 1){
+										document.getElementById("right_side_finger").value = obj.data1;
+										document.getElementById("image11").setAttribute("style", "border-radius: 0px; border:2px solid green;");
+										finger_value = 2;
+										EnrollTemplate();
+									}else if (finger_value == 2){
+										document.getElementById("center_finger").value = obj.data1;
+										document.getElementById("image2").setAttribute("style", "border-radius: 0px; border:2px solid green;");
+										finger_value = 3;
+										EnrollTemplate();
+									}else if (finger_value == 3){
+										document.getElementById("left_side_finger").value = obj.data1;
+										document.getElementById("image3").setAttribute("style", "border-radius: 0px; border:2px solid green;");
+										finger_value = 1;
+										document.getElementById("btn_add_client").disabled = false;
+										document.getElementById("image_id").disabled = true;
+										console.log("Finger final value "+finger_value);
+									}
+								} else {
+									status.value = "Please Click Again !";    
+								}
+							} else {
+								status.value = "Enrol Template Fail";
+								EnrollTemplate();
+							}
+							break;
+						case 7:
+							if (obj.image == "null") {
+								alert("Please try again !")
+							} else {
+								if(finger_value == 1){
+									var img = document.getElementById("image11");
+									img.src = "data:image/png;base64,"+obj.image;
+								}else if (finger_value == 2){
+									var img = document.getElementById("image2");
+									img.src = "data:image/png;base64,"+obj.image;
+								}else if (finger_value == 3){
+									var img = document.getElementById("image3");
+									img.src = "data:image/png;base64,"+obj.image;
+								}
+							}
+							break;
+						case 8:
+							status.value = "Time Out";
+							document.getElementById("image_id").disabled = false;
+							break;
+						case 9:
+
+							if(obj.retmsg >= 100){
+								window.result = 1; 
+							}
+								results.push(obj.retmsg); 
+								count_occur++;            
+							break;
+						}
+					};
+					ws.onclose = function () {
+						document.getElementById("es").value = "Closed!";
+					};
+				};
+			});
+			function EnrollTemplate(){
+				try {
+					var cmd = "{\"cmd\":\"enrol\",\"data1\":\"\",\"data2\":\"\"}";
+					ws.send(cmd);
+				} catch (err) {
+				}
+				if(finger_value == 1){
+					document.getElementById("es").value = "Place Left Side Thumb";
+				}else if (finger_value == 2){
+					document.getElementById("es").value = "Place Center Thumb";
+				}else if (finger_value == 3){
+					document.getElementById("es").value = "Place Right Side Thumb";
+				}
+				document.getElementById("image_id").disabled = true;
+			}
 			//Code added by Eric
 			var hold_dob = ""; //this will hold the previous birthdate value
 			$("#date_birth").click(function(){
@@ -662,7 +915,6 @@ class Client extends DB{
 				}
 			});
 			//End added code here
-
 			$("#date_birth").on( 'change', function(){
 				var dob = new Date($(this).val());
 
@@ -811,10 +1063,10 @@ class Client extends DB{
 			$(".alert .btn-default, .alert .close").on('click',function(){
 				$(this).parent().fadeOut();
 			});
-			
 		}
 		function add_button($){
 			$("#addClient").on('click',function(){
+				var i = $('.edit_or_add').html();
 				$('.edit_or_add').html('Add New');
 				$("#newClientModal input[name='func']").val('add');
 				$("#newClientModal input[name='id']").remove();
@@ -822,7 +1074,27 @@ class Client extends DB{
 				resetForm();
 			});
 		}
-
+		$("#addClient").on('click',function(){
+        	$(".edit_only").hide();
+        	<?php if (isset($_GET['modal'])){ ?>
+	        	$(".edit_only").removeClass('show');
+	        	$(".edit_only").addClass('hide');
+	        <?php } ?>
+        	console.log("addClient");
+	    })
+	    $(".addNewCli").on('click',function(){
+	        $(".edit_only").hide();
+        	console.log("addCli");
+	    })
+	    $(".edit").on('click',function(){
+	        <?php if (isset($_GET['modal'])){ ?>
+	        	$(".edit_only").removeClass('hide');
+	        	$(".edit_only").addClass('show');
+	        <?php } else { ?>
+	        	$(".edit_only").show();
+	        <?php }  ?>
+        	console.log("edit");
+	    })
 		function delete_button($,_this){
 			$(_this).on('click',"a.delete",function(){
 				$("#alert-sure-delete").fadeIn();

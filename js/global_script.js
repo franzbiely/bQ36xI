@@ -2,6 +2,9 @@ $(document).ready(function (){
 	show_loading_in_pagination();
 	show_loading_in_search();
 	// autologout($);
+	//----------------finger print demo start
+	 // test if the browser supports web sockets
+	//----------------finger print demo end
 
 });
 

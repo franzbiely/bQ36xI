@@ -21,7 +21,51 @@ body{
   padding: 0;
   margin: 0;
 }
-
+.searching-right {
+  float: right;
+  border: 0px solid green;
+  margin: 20px;
+  padding: 7px;
+  width: 70%;
+  border-radius: 20px;
+}
+.filled-in {
+  border: 2px solid green;
+}
+.filled-out {
+  border: 0px solid white;
+} 
+.edit_only {
+  border-top: 1px solid #eee;
+  margin-top: 20px;
+}
+.searching-right input {
+  margin-top: 30px;
+  float: left;
+  border: 0px solid green;
+  width: 60%;
+  font-size: 20px;
+  border-radius: 20px;
+}
+.searching-left {
+    float: left;
+    align-items: center;
+    border: 0px solid green;
+    margin: 20px;
+    padding: 7px;
+    width: 20%;
+    border-radius: 20px;
+}
+.searching-left img {
+  float: right;
+  border: 0px solid green;
+  border-radius: 20px;
+}
+.searching-left small {
+  float: right;
+  border: 0px solid green;
+  border-radius: 20px;
+}
 .modal-body button.close {display: none}
 textarea#email-inp {min-height:200px;padding:10px}
 .clearfix:after {

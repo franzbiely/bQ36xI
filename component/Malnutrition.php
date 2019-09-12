@@ -1,5 +1,5 @@
 <?php
-error_reporting(1);
+// error_reporting(1);
 require 'library/plugins/vendor/autoload.php';
 class Malnutrition extends DB{
 	public function __construct() {

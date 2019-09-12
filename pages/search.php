@@ -55,13 +55,13 @@
               <?php $client_details[] = array($data['record_number'], $data['fname'], $data['lname'],
                                      $data['last_clinic'], $data['last_date'], $data['client_type']);  
               ?>
-                <tr <?php if($data['is_archived']==1) echo 'class="is_archived" data-archived-date="'.$data['date_archived'].'"'; ?>>
+                <tr <?php if(isset($data['is_archived']) && $data['is_archived']==1) echo 'class="is_archived" data-archived-date="'.$data['date_archived'].'"'; ?>>
                 <td class="id record" data-id="<?php echo $data['ID']; ?>"><?php echo $data['record_number']; ?></td>
                 <td class="fname"><?php echo $data['fname']; ?></td>
                 <td class="lname"><?php echo $data['lname']; ?></td>
                 <td class="last_clinic"><?php /*echo $clinic->get_name($data['last_clinic']);*/ echo $data['last_clinic']; ?></td>
                 <td class="last_date"><?php echo $data['last_date']; ?></td>
-                <td class="client_type"><?php echo $data['client_type']; ?></td>
+                <td class="client_type"><?php echo ($data['client_type'] != 'Child') ? $data['client_type'] : "Unknown"; ?></td>
                 <td><a href="<?php echo SITE_URL ?>/?page=records&cid=<?php echo $data['ID'] ?>&p=view">Check Records</a></td>
                  <td>
                     <div class="btn-group">

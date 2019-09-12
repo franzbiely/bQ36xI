@@ -19,23 +19,24 @@ class Client extends DB{
 		$data = $this->select("*",array("id"=>$id),true);
 		return $data;
 	}
-
 	function pagination(){
 		$paged = (isset($_GET['paged'])) ? $_GET['paged'] : 1;
+		$r = (isset($_GET['r'])) ? '&r='.$_GET['r'] : '';
 		$query = "SELECT COUNT(*) as count FROM tbl_client";
 		$stmt = $this->query($query,array());
 		$count = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		$count = $count[0]['count'];
 		$pages_count = ceil($count/ITEM_DISPLAY_COUNT);
+		$pages_count = (isset($_GET['r'])) ? ceil($this->get_record_count()/ITEM_DISPLAY_COUNT)+1 : $pages_count;
 		if($paged>1){
-			echo '<a href="?page=clients&paged='.($paged-1).'" class="prev btn btn-default">Previous</a>';
+			echo '<a href="?page=clients&paged='.($paged-1).$r.'" class="prev btn btn-default">Previous</a>';
 		}
 		if($paged<($pages_count-1)){
-			echo '<a href="?page=clients&paged='.($paged+1).'" class="next btn btn-default">Next</a>';
+			echo '<a href="?page=clients&paged='.($paged+1).$r.'" class="next btn btn-default">Next</a>';
 		}
 	}
 	function get_all($paged=1){
-		$start = ($paged==1) ? 0 : $paged*ITEM_DISPLAY_COUNT;
+		$start =  ($paged > 1) ? ($paged-1)*ITEM_DISPLAY_COUNT : 0;
 		if ($_SESSION['type'] == 'superadmin' || $_SESSION['type'] == 'superreporting') {
 			$data = $this->select("*"); 
 		}else{
@@ -59,7 +60,7 @@ class Client extends DB{
 		else return $data;
 		
 	}
-	public function search_finger_print(){
+	function search_finger_print() {
 		$query = "select * from tbl_fingerprint";
 		$bind_array= array("office_id"=>$_SESSION['office_id']);
 		$results = $this->query($query,$bind_array);
@@ -71,6 +72,50 @@ class Client extends DB{
 			}
 		}
 		echo json_encode($object);
+	}
+	function get_all_unknown($paged=1){
+		$start =  ($paged > 1) ? ($paged-1)*ITEM_DISPLAY_COUNT : 0;
+		if ($_SESSION['type'] == 'superadmin' || $_SESSION['type'] == 'superreporting') {
+			$data = $this->select("*"); 
+		}else{
+			$end = ITEM_DISPLAY_COUNT;
+			
+			$query = "SELECT DISTINCT a.*, b.*  
+								FROM tbl_records as a
+								INNER JOIN tbl_client as b ON b.ID = a.client_id
+								INNER JOIN tbl_area AS office ON office.ID = a.office_id
+								
+								WHERE a.date >= :start_date AND a.date <= CURDATE()
+								AND a.office_id = :office_id
+								AND (b.client_type='Child' 
+								OR b.date_birth ='0000-00-00')
+								
+								GROUP BY a.ID
+								ORDER BY a.date DESC
+								LIMIT $start, $end;";      
+			// Only get records starting for 2019 consultations.
+			$bind_array = array("start_date"=>'2019-01-01', "office_id"=>$_SESSION['office_id']);
+			$stmt = $this->query($query,$bind_array);
+			$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		}
+		if($data==false) return array();
+		else return $data;
+	}
+	// get the count of all unknown clients
+	function get_record_count($paged=1){
+		$query = "SELECT COUNT(*) as count  
+								FROM tbl_records as a
+								INNER JOIN tbl_client as b ON b.ID = a.client_id
+								INNER JOIN tbl_area AS office ON office.ID = a.office_id
+								WHERE a.date >= :start_date AND a.date <= CURDATE()
+								AND a.office_id = :office_id
+								AND (b.client_type='Child' 
+								OR b.date_birth ='0000-00-00')
+								GROUP BY a.ID";   
+			$bind_array = array("start_date"=>'2019-01-01', "office_id"=>$_SESSION['office_id']);
+			$stmt = $this->query($query,$bind_array);
+			$count = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			return (count($count) > 0) ? $count[0]['count'] : 0;
 	}
 	function get_mother(){
 		$start = ($paged==1) ? 0 : $paged*ITEM_DISPLAY_COUNT;
@@ -194,6 +239,7 @@ class Client extends DB{
 		}		
 	}
 	function edit(){
+		ob_start();
 		$_data = $_POST;
 		$id = $_data['id'];
 		var_dump($_data);
@@ -252,12 +298,15 @@ class Client extends DB{
 			$review_date=new DateTime($d[0] . ' ' . $d[1]);
 			$_data['review_date'] = $review_date->getTimestamp();
 		}*/
+		if(isset($_data['relation_to'])) {
+			if ($_data['relation_to'] !== "undefined"){
+				$relation_to = $_data['relation_to'];
+			}
+		}
 		
-		// $relation_to = $_data['relation_to'];
-
-		// $query = "DELETE FROM tbl_relationship WHERE base_client = '$id'";
-		// $stmt = $this->connect();
-		// $data = $stmt->exec($query);
+		$query = "DELETE FROM tbl_relationship WHERE base_client = '$id'";
+		$stmt = $this->connect();
+		$data = $stmt->exec($query);
 		// if($data==false){
 		// 	echo ""; //"error on delete";
 		// }
@@ -265,7 +314,11 @@ class Client extends DB{
 		// 	echo "";//"success on delete()te";
 
 		//unset($_data['relation_to']);
-
+		if(isset($_data['relation_to'])) {
+			if ($_data['relation_to'] !== "undefined"){
+				unset($_data['relation_to']);
+			}		
+		}
 
 		$query = "SELECT * FROM tbl_fingerprint WHERE client_id = '$id'";
 		$stmt = $this->query($query,array());
@@ -343,7 +396,6 @@ class Client extends DB{
 		$stmt = $this->query($query,$bind_array);
 		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
 		$data2 = $this->quick_search2($_data,$key);
 		
 		// combine $data and $data2;
@@ -363,9 +415,7 @@ class Client extends DB{
 		}
 	}
 	function search(){
-
 		$temp = $_POST;
-
 		if (isset($temp['quick_search'])) { 
 			$_SESSION['quick'] = "yes";
 			unset($_SESSION['advanced']);
@@ -1092,7 +1142,11 @@ class Client extends DB{
 					$(this).find("#record_number").val( $(_this).find('.record').html() );
 					$(this).find("#fname").val( $(_this).find('.fname').html() );
 					$(this).find("#lname").val( $(_this).find('.lname').html() );
-					$(this).find("#date_birth").val( $(_this).find('.date_birth').html() );
+					
+					//Replace datefield to null if has value 0000-00-00 for validation
+					if($(_this).find('.date_birth').html() !== '0000-00-00') {
+						$(this).find("#date_birth").val( $(_this).find('.date_birth').html() );
+					}
 					$(this).find("#date_death").val( $(_this).find('.date_birth').data("date-death") );
 
 					//Code added by Joe [to set the datetimelocal format value when "dataEntry user" clicks the edit button for client records]

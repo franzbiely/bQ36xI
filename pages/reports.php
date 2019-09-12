@@ -18,6 +18,10 @@
                     <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-user" style="margin-right: 10px;"></span>Clients</h4>
                     <p class="list-group-item-text">shows client reports by clinic, Health Facility, District and Province.</p>
                   </a>
+                  <a class="list-group-item" href="?page=unknown_clients">
+                    <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-user" style="margin-right: 10px;"></span>Unknown Clients Types</h4>
+                    <p class="list-group-item-text">Unknown client types with consultation from January 2019.</p>
+                  </a>
                   <a class="list-group-item" href="?page=consultation_reports">
                     <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-phone-alt" style="margin-right: 10px;"></span>Consultation</h4>
                     <p class="list-group-item-text">shows consultation reports by clinic, Health Facility, District and Province.</p>

@@ -1,6 +1,5 @@
 <?php
 
-
 if(isset($_POST['func']) && isset($_POST['class'])){
     $class = new $_POST['class']();
     $func = $_POST['func'];
@@ -76,20 +75,20 @@ function export_client_records(){
 }
 function export_client(){
       require_once dirname(__FILE__) . '/models/Classes/PHPExcel.php';
+      
       global $reports;
+      $province = (isset($_POST['province'])) ? $_POST['province'] : null;   
       extract($_POST);
-
       if($visit_type != ""){
-        $data = $reports->get_client_record($sDate,$eDate,$client_type,$visit_type,$clinic);
+        $data = $reports->get_client_record($sDate,$eDate,$client_type,$visit_type,$clinic, $province);
         $data2 = $reports->search_by_visit_reason($data, $visit_type);  
-
-        $client_details = $reports->get_client_record_details($sDate,$eDate,$client_type,$visit_type,$clinic);
-        $client_details2 = $reports->search_visit_reason_details($client_details, $visit_type);  
+        // $client_details = $reports->get_client_record_details($sDate,$eDate,$client_type,$visit_type);
+        // $client_details2 = $reports->search_visit_reason_details($client_details, $visit_type);  
       }else{
-         $data2 = $reports->get_client_record($sDate,$eDate,$client_type,$visit_type,$clinic);
-         $client_details2 = $reports->get_client_record_details($sDate,$eDate,$client_type,$visit_type,$clinic);
+         $data2 = $reports->get_client_record($sDate,$eDate,$client_type,$visit_type,$clinic, $province);
+        //  $client_details2 = $reports->get_client_record_details($sDate,$eDate,$client_type,$visit_type);
       }
-     
+      
       $visit_type_report = $reports->visit_type_reports_excel($data2);
 
       switch($_POST['client_type']) {
@@ -104,15 +103,15 @@ function export_client(){
         }
       }
       
-      $client_record_header = array("Record Number", "Gender", "Full Name", "Province", "District", "Health Facility", "Clinic", "Date","Visit Reasons", "Consultation", "Review Date", "Current Age");
+      $client_record_header = array("Record Number", "Birthdate", "Gender", "Full Name", "Province", "District", "Health Facility", "Clinic", "Date","Visit Reasons", "Consultation", "Review Date", "Current Age");
       
 
       if ($param1 == "excel") {
            $reports->generate_report_client($sDate, $eDate,  $data2, $visit_type_report, $visit_type_reports_header, 
-                                        $client_record_header,  $client_details2, 'Excel2007','Client Report.xlsx');
+                                        $client_record_header,  $data2, 'Excel2007','Client Report.xlsx');
       }else{
            $reports->generate_report_client($sDate, $eDate,  $data2, $visit_type_report, $visit_type_reports_header, 
-                                        $client_record_header,  $client_details2, 'CSV', 'Client Report.csv');
+                                        $client_record_header,  $data2, 'CSV', 'Client Report.csv');
       }
   }
 function export_consultation(){
@@ -139,7 +138,7 @@ function export_consultation(){
 	                  $client_record_header , $client_details, 'Excel2007','Consultation Report.xlsx');
 	  }else{
 	      $reports->generate_report_consultation($sDate, $eDate,   $overview_row, 
-	                  $client_record_header , $client_details, 'CSV', 'Client Report.csv');
+	                  $client_record_header , $client_details, 'CSV', 'Consultation Report.csv');
 	}
      
 }
@@ -447,4 +446,9 @@ function loader_modal(){
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
   <?php
+}
+
+function toSlug($str, $delimiter = '-'){
+  $slug = strtolower(trim(preg_replace('/[\s-]+/', $delimiter, preg_replace('/[^A-Za-z0-9-]+/', $delimiter, preg_replace('/[&]/', 'and', preg_replace('/[\']/', '', iconv('UTF-8', 'ASCII//TRANSLIT', $str))))), $delimiter));
+  return $slug;
 }

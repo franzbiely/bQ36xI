@@ -5,6 +5,53 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.36 | 7th of Sep 2019
+  - Refactored ANC Reporting code and CRON settings.
+
+v3.35 | 3rd of Sep 2019
+  - Finalize Malnutrition Reporting for CRON.
+
+v3.34 | 29th of Aug 2019
+  -  Setup malnutrition report emailer for CRON ready.
+
+v3.33 | 1st of Aug 2019
+  -  Hotfix to multiple consultation records when Enter button is pressed multiple times.
+
+v3.32 | 1st of Aug 2019
+  -  Resolved Allowed Memory issue when deleting consultation record
+
+v3.31 | 24th of July 2019
+  -  Allow for deletion of Nutrition Consultation visits if prior to July 1st 2019
+  -  Include Gender in Reports http://testclients.susumamas.org.pg/?c=malnutrition&f=reportEmailSend
+  -  Include Reason as an Enrollment field and in Reports
+  -  Updated all enrolled reasons to Unknown
+
+v3.30 | 28th of June 2019
+  - (New Feature) Malnutrition Enrollment on Consultation and Malnutrition Reporting
+
+v3.29 | 4th of April 2019
+  - fixed session bug on logout
+	- bug on no report on unknown client report
+	- fix bug on Show Advance Filter dropdown on Reports > Clients after first submition.
+
+v3.28 | 25th of March 2019
+	- Change logic of ANC Report (before it fetch all the data, now it just fetch datas for upcoming review dates starting from the current day)
+
+v3.27 | 14th of March 2019
+	- New reporting for Unknown Client Type
+	- Added validation on gender and birthdate every adding new consultation
+	- Refactor and fixed old php code
+	- Fix Exporting to Excel file bug
+	- Set new STMP (mailer) settings
+	- Fix mail.php (initial fix)
+  Tickets resolved : 
+  	- https://kuakawa.atlassian.net/browse/CSR-255 	(Client DB Issues)
+  	- https://kuakawa.atlassian.net/browse/CSR-273  (Exporting unknown clients with missing DOB)
+
+v3.26 | 13th of Feb 2019
+ - Reporting > Client Reports > Export Button Fix
+ - Fix Archive trigger to only show for edit
+
 v3.25 | 12th of Sept 2018
  - Superreporting > Consultation Reports > Filter by Province fix
 

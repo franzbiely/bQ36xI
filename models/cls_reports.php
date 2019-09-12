@@ -22,11 +22,7 @@ class Reports extends DB{
   }
 
   function generate_report_search($client_record_header , $client_details, $file_type, $file_name){
-
-     error_reporting(E_ALL);
-            ini_set('display_errors', TRUE);
-            ini_set('display_startup_errors', TRUE);
-            date_default_timezone_set('Asia/Manila');
+  date_default_timezone_set('Asia/Manila');
 
           if (PHP_SAPI == 'cli')
            die('This example should only be run from a Web Browser');
@@ -54,9 +50,6 @@ class Reports extends DB{
           exit;
   }
   function generate_report_catchment($sDate, $eDate, $overview_row, $client_record_header , $client_details, $file_type, $file_name){
-     error_reporting(E_ALL);
-            ini_set('display_errors', TRUE);
-            ini_set('display_startup_errors', TRUE);
             date_default_timezone_set('Asia/Manila');
 
           if (PHP_SAPI == 'cli')
@@ -101,9 +94,6 @@ class Reports extends DB{
           exit;
   }
   function generate_report_consultation($sDate, $eDate, $overview_row, $client_record_header , $client_details, $file_type, $file_name){
-     error_reporting(E_ALL);
-            ini_set('display_errors', TRUE);
-            ini_set('display_startup_errors', TRUE);
             date_default_timezone_set('Asia/Manila');
 
           if (PHP_SAPI == 'cli')
@@ -156,9 +146,6 @@ class Reports extends DB{
   }
 
   function generate_report_fedding($sDate, $eDate,  $data_overview, $client_record_header , $client_details, $file_type, $file_name){
-     error_reporting(E_ALL);
-            ini_set('display_errors', TRUE);
-            ini_set('display_startup_errors', TRUE);
             date_default_timezone_set('Asia/Manila');
 
           if (PHP_SAPI == 'cli')
@@ -300,9 +287,6 @@ class Reports extends DB{
         return $rows;
   }  
   function generate_client_records($name, $b_date, $d_date, $type, $phone,  $client_record_header, $data, $file_type, $file_name){
-     error_reporting(E_ALL);
-          ini_set('display_errors', TRUE);
-          ini_set('display_startup_errors', TRUE);
           date_default_timezone_set('Asia/Manila');
 
           if (PHP_SAPI == 'cli')
@@ -343,9 +327,6 @@ class Reports extends DB{
           exit;
   }
   function generate_report_client($sDate, $eDate,  $data, $visit_type_report, $visit_type_reports_header, $client_record_header, $client_row, $file_type, $file_name){
-          error_reporting(E_ALL);
-          ini_set('display_errors', TRUE);
-          ini_set('display_startup_errors', TRUE);
           date_default_timezone_set('Asia/Manila');
 
           if (PHP_SAPI == 'cli')
@@ -523,26 +504,46 @@ class Reports extends DB{
                      for ($i=0; $i < count($visit_reason) ; $i++) { 
                             if($visit_reason[$i] == $visit){
                                 $content[] = array(
-                                              'record_number' => $data['record_number'],
-                                              'date_birth' => $data['date_birth'],
-                                              'client_type' => $data['client_type'],
-                                              'fullname' => $data['fullname'],
-                                              'province' => $data['province'],
-                                              'district' => $data['district'],
-                                              'office' => $data['office'],
-                                              'clinic_name' => $data['clinic_name'],
-                                              'date' => $data['date'],
-                                              'visit_reasons' => $data['visit_reasons'],
-                                              'ctr_consultation' => $data['ctr_consultation'],
-                                              'current_age' => $data['current_age'],
-                                              'age' => $data['age'],
-                                              "ID"=>$data['ID'], "client_id"=>$data['client_id'], "clinic_id"=>$data['clinic_id'],
-                                              "date"=>$data['date'], "feeding_type"=>$data['feeding_type'], "visit_reasons"=>$visit,
-                                              "followup_type"=>$data['followup_type'], "record_type"=>$data['record_type'], "office_id"=>$data['office_id'],
-                                              "record_number"=>$data['record_number'], "fname"=>$data['fname'], "lname"=>$data['lname'], 
-                                              "date_birth"=>$data['date_birth'], "date_death"=>$data['date_death'], "client_type"=>$data['client_type'],
-                                              "phone"=>$data['phone'], "place_of_birth"=>$data['place_of_birth'], "current_address"=>$data['current_address'],
-                                              "ctr_consultation"=>$data['ctr_consultation'], "age"=>$data['age']);
+                                  'record_number' => $data['record_number'],
+                                  'date_birth' => $data['date_birth'],
+                                  'client_type' => $data['client_type'],
+                                  'fullname' => $data['fullname'],
+                                  'province' => $data['province'],
+                                  'district' => $data['district'],
+                                  'office' => $data['office'],
+                                  'clinic_name' => $data['clinic_name'],
+                                  'date' => $data['date'],
+                                  'visit_reasons' => $data['visit_reasons'],
+                                  'ctr_consultation' => $data['ctr_consultation'],
+                                  'current_age' => $data['current_age'],
+                                  'age' => $data['age'],
+
+                                  "ID"=>$data['ID'] ?? null, 
+                                  "client_id"=>$data['client_id']  ?? null, 
+                                  "clinic_id"=>$data['clinic_id']  ?? null,
+                                  
+                                  "date"=>$data['date'] ?? null, 
+                                  "feeding_type"=>$data['feeding_type'] ?? null, 
+                                  "visit_reasons"=>$visit ?? null,
+
+                                  "followup_type"=>$data['followup_type'] ?? null, 
+                                  "record_type"=>$data['record_type'] ?? null, 
+                                  "office_id"=>$data['office_id'] ?? null,
+                                  
+                                  "record_number"=>$data['record_number'] ?? null, 
+                                  "fname"=>$data['fname'] ?? null, 
+                                  "lname"=>$data['lname'] ?? null, 
+
+                                  "date_birth"=>$data['date_birth'] ?? null, 
+                                  "date_death"=>$data['date_death'] ?? null, 
+                                  "client_type"=>$data['client_type'] ?? null,
+
+                                  "phone"=>$data['phone'] ?? null, 
+                                  "place_of_birth"=>$data['place_of_birth'] ?? null, 
+                                  "current_address"=>$data['current_address'] ?? null,
+                                  "ctr_consultation"=>$data['ctr_consultation'] ?? null, 
+                                  "age"=>$data['age'] ?? null
+                                );
                             }
                                             
                     }
@@ -680,7 +681,6 @@ class Reports extends DB{
         $_data = array_filter($temp);
         $where = "";
         $bind_query = array();
-
         if(array_key_exists("client_type", $_data)){
           $where .= "b.client_type =  :client_type AND ";
           $bind_query['client_type']=$_data['client_type'];
@@ -710,7 +710,7 @@ class Reports extends DB{
               a.visit_reasons,      
               a.date,        
               COUNT(*) AS ctr_consultation,
-              floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) as current_age    
+              IF(b.date_birth='0000-00-00', 'Unknown age', floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 )) as current_age
               FROM tbl_records AS a
               JOIN tbl_client AS b ON a.client_id = b.ID
               JOIN tbl_clinic AS c ON a.clinic_id = c.ID
@@ -735,7 +735,7 @@ class Reports extends DB{
                       a.visit_reasons, 
                       a.date,               
                       COUNT(*) AS ctr_consultation,
-                      floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) as current_age
+                      IF(b.date_birth='0000-00-00', 'Unknown age', floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 )) as current_age
                       FROM tbl_records AS a
                       JOIN tbl_client AS b ON a.client_id = b.ID
                       JOIN tbl_clinic AS c ON a.clinic_id = c.ID
@@ -750,6 +750,7 @@ class Reports extends DB{
                       ORDER BY a.client_id";
                       $bind_query['office_id'] = $_SESSION['office_id'];
           }
+          
         // $bind_array = array("start_date"=>$start_date, "end_date"=>$end_date);
         $stmt = $this->query($query,$bind_query);
         $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -865,7 +866,7 @@ class Reports extends DB{
                   a.visit_reasons,  
                   COUNT(*) AS ctr_consultation,
                   a.review_date,
-                  floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) as current_age
+                  IF(b.date_birth='0000-00-00', 'Unknown age', floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 )) as current_age
                   FROM tbl_records AS a
                   JOIN tbl_client AS b ON a.client_id = b.ID
                   JOIN tbl_clinic AS c ON a.clinic_id = c.ID
@@ -887,7 +888,7 @@ class Reports extends DB{
                       a.visit_reasons,  
                       COUNT(*) AS ctr_consultation,
                       a.review_date,
-                      floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 ) as current_age
+                      IF(b.date_birth='0000-00-00', 'Unknown age', floor( DATEDIFF(CURDATE(),STR_TO_DATE(b.date_birth, '%Y-%m-%d')) / 365 )) as current_age
                       FROM tbl_records AS a
                       JOIN tbl_client AS b ON a.client_id = b.ID
                       JOIN tbl_clinic AS c ON a.clinic_id = c.ID
@@ -1121,47 +1122,126 @@ class Reports extends DB{
     }
     return $array;
   }
-
-  function get_hb_level_all() {
-    
-    $query = "SELECT DISTINCT client_id FROM tbl_records 
-          WHERE hb_level != '' and hb_level != '10+' 
-          
-          ORDER BY hb_level DESC
-    ";
-
-    // GROUP BY hb_level        
+  function get_hb_level($query) {
     $arr = array();
     $qobj = $this->query($query, $arr);
     $array = $qobj->fetchAll(PDO::FETCH_ASSOC);
+    $new_array = array();
+    foreach($array as $i => $a) {
+      $arr_records = array(
+        'ID' => $a['tbl_records_ID'],
+        'client_id' => $a['client_id'],
+        'clinic_id' => $a['clinic_id'],
+        'date' => $a['date'],
+        'feeding_type' => $a['feeding_type'],
+        'visit_reasons' => $a['visit_reasons'],
+        'consultation_time' => $a['consultation_time'],
+        'review_date' => $a['review_date'],
+        'referral_time' => $a['referral_time'],
+        'referral_id' => $a['referral_id'],
+        'followup_type' => $a['followup_type'],
+        'record_type' => $a['record_type'],
+        'office_id' => $a['office_id'],
+        'hb_level' => $a['hb_level'],
+        'catchment' => $a['catchment'],
+        'clinic_name' => $a['clinic_name'],
+        'clinic_type' => $a['clinic_type'],
+        'province' => $a['province'],
+        'location' => $a['location'],
+        'llg_id' => $a['llg_id'],
+        'officer_in_charge' => $a['officer_in_charge'],
+        'contact' => $a['contact'],
+        'area_name' => $a['area_name']
+      );
 
-   // print_r($array);
-
-    //exit;
-
-    foreach($array as $idx => $a) {
-      //get the client info
-      $query = "SELECT * from tbl_client where ID = :client_id";
-      $arr = array('client_id' => $a['client_id']);
-      $qobj = $this->query($query, $arr);
-      $client = $qobj->fetchAll(PDO::FETCH_ASSOC);
-      $array[$idx]['client']  = $client[0];
-
-      //get the hb_levels;
-      $query = "SELECT tbl_records.*, tbl_clinic.*, tbl_area.area_name FROM tbl_records  INNER JOIN tbl_clinic on tbl_records.clinic_id = tbl_clinic.ID left join tbl_area on tbl_area.ID = tbl_records.office_id WHERE client_id = :client_id AND hb_level != ''  
-            ORDER BY date DESC  limit 1
-      ";
-
-      //AND hb_level != '10+'
-      $arr = array('client_id' => $a['client_id']);
-      $qobj = $this->query($query, $arr);
-      $records = $qobj->fetchAll(PDO::FETCH_ASSOC);
-      $array[$idx]['records'] = $records;
-      
+      $searched_key = array_search($a['client_id'], array_column($new_array, 'client_id'));
+      if(!$searched_key) {      
+        array_push($new_array, array(
+          client_id => $a['client_id'],
+          client => array(
+            'ID' => $a['client_id'],
+            'record_number' => $a['record_number'],
+            'fname' => $a['fname'],
+            'lname' => $a['lname'],
+            'date_birth' => $a['date_birth'],
+            'date_death' => $a['date_death'],
+            'client_type' => $a['client_type'],
+            'feeding_type' => $a['feeding_type'],
+            'phone' => $a['phone'],
+            'place_of_birth' => $a['place_of_birth'],
+            'district' => $a['district'],
+            'province' => $a['province'],
+            'office_id' => $a['office_id'],
+            'current_address' => $a['current_address'],
+            'is_archived' => $a['is_archived'],
+            'date_archived' => $a['date_archived']
+          ),
+          records =>  array($arr_records)
+        ));
+      }
+      else {
+        array_push($new_array[$searched_key]['records'], $arr_records);
+      }
     }
-    return $array;
+    return $new_array;
   }
-
+  //==================== Not yet used 
+  function get_hb_level_all() {
+    $query = "SELECT a.*, b.ID as tbl_records_ID, b.*, c.*, d.*
+              FROM tbl_client as a 
+              INNER JOIN tbl_records as b ON b.client_id = a.ID 
+              INNER JOIN tbl_clinic as c ON b.clinic_id = c.ID
+              LEFT JOIN tbl_area as d ON b.office_id = d.ID
+              WHERE b.hb_level != '' and b.hb_level != '10+'
+              ORDER BY b.hb_level DESC";
+    return $this->get_hb_level($query);
+  }
+  function get_hb_level_today() {
+    $query = "SELECT a.*, b.ID as tbl_records_ID, b.*, c.*, d.*
+              FROM tbl_client as a 
+              INNER JOIN tbl_records as b ON b.client_id = a.ID 
+              INNER JOIN tbl_clinic as c ON b.clinic_id = c.ID
+              LEFT JOIN tbl_area as d ON b.office_id = d.ID
+              WHERE b.hb_level != '' and b.hb_level != '10+'
+              AND b.review_date = CURDATE()
+              ORDER BY b.hb_level DESC";
+    return $this->get_hb_level($query);
+  }
+  function get_hb_level_this_week() {
+    $query = "SELECT a.*, b.ID as tbl_records_ID, b.*, c.*, d.*
+              FROM tbl_client as a 
+              INNER JOIN tbl_records as b ON b.client_id = a.ID 
+              INNER JOIN tbl_clinic as c ON b.clinic_id = c.ID
+              LEFT JOIN tbl_area as d ON b.office_id = d.ID
+              WHERE b.hb_level != '' and b.hb_level != '10+'
+              AND b.review_date BETWEEN CURDATE() AND  DATE_ADD(CURDATE(), INTERVAL 6 DAY) 
+              ORDER BY b.hb_level DESC";
+    return $this->get_hb_level($query);
+  }
+  function get_hb_level_this_month() {
+    $query = "SELECT a.*, b.ID as tbl_records_ID, b.*, c.*, d.*
+              FROM tbl_client as a 
+              INNER JOIN tbl_records as b ON b.client_id = a.ID 
+              INNER JOIN tbl_clinic as c ON b.clinic_id = c.ID
+              LEFT JOIN tbl_area as d ON b.office_id = d.ID
+              WHERE b.hb_level != '' and b.hb_level != '10+'
+              AND MONTH(b.review_date) = MONTH(CURRENT_DATE())
+              AND YEAR(b.review_date) = YEAR(CURRENT_DATE())
+              ORDER BY b.hb_level DESC";
+    return $this->get_hb_level($query);
+  }
+  // =========================
+  function get_hb_level_from_today() {
+    $query = "SELECT a.*, b.ID as tbl_records_ID, b.*, c.*, d.*
+              FROM tbl_client as a 
+              INNER JOIN tbl_records as b ON b.client_id = a.ID 
+              INNER JOIN tbl_clinic as c ON b.clinic_id = c.ID
+              LEFT JOIN tbl_area as d ON b.office_id = d.ID
+              WHERE b.hb_level != '' and b.hb_level != '10+'
+              AND b.review_date >= CURDATE()
+              ORDER BY b.hb_level DESC";
+    return $this->get_hb_level($query);
+  }
   function get_hb_level_record_exact($start_date,$end_date,$by, $id) {
     $query = "SELECT DISTINCT client_id FROM tbl_records 
           WHERE date >= :start_date AND date <= :end_date AND hb_level != ''
@@ -1520,7 +1600,7 @@ class Reports extends DB{
           close_loader($);
         });
       });
-      $("#advance_filter_toggle").on('click',function(){
+      $(document).on('click', '#advance_filter_toggle',function(){
         if($(this).html()=="Show Advance Filter"){
           $(".advance_filter").addClass('active');
           $(this).html("Hide Advance Filter");
@@ -1570,6 +1650,7 @@ class Reports extends DB{
                         
                       <?php endforeach; endif; ?>
               break;
+            <?php if(isset($province) && is_object($province)) :  ?>
             case "llg":
               element += "<option value=''>--[Choose "+choice.toLowerCase()+"]--</option>";
               <?php $data = $llg->get_all();
@@ -1591,9 +1672,9 @@ class Reports extends DB{
                         element += "<option value='<?php echo $data['ID']; ?>'><?php echo $data['area_name']; ?></option>";
                       <?php endforeach; endif; ?>
                       break;
+            <?php endif; ?>
           } 
           element += "</select></div>";
-          //close_loader($,"#newClientModal");
           $(this).parent().after(element);
         }
       })

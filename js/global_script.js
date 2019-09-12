@@ -43,6 +43,7 @@ function resetForm() {
    consultation_modal_box.find('#clinic_id').val('');
    consultation_modal_box.find('#referral_id').val('');
    consultation_modal_box.find('#datepicker-review_date').val('');
+   consultation_modal_box.find('#datepicker-malnu-review_date').val('');
    consultation_modal_box.find('#referral_time').val('');
    consultation_modal_box.find(':checkbox').attr('checked', false);
    // End added code here

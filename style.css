@@ -710,3 +710,35 @@ a.list-group-item{
 .is_archived:hover td{background: transparent !important;}
 #overview > span{color:maroon; font-weight: bold;font-size: 25px;}
 .ui-datepicker{z-index:99999 !important;}
+
+.consultation-sub-block {
+  border-top: 1px solid #ddd;
+  margin-top: 20px;
+  background: #ffffb2;
+  padding: 0 20px 10px;
+  display:none;
+}
+
+#malnutgroup {
+  font-size: 15px;
+}
+#btn-edit-malnutrition-info { float:right; }
+
+.editable .foreditable,
+.noneditable .fornoneditable{display: block;}
+
+.noneditable .foreditable,
+.editable .fornoneditable{display: none;}
+
+
+.outcome_review_readonly,
+.review_date_future_readonly {display:none;}
+
+.typeoffeedingblock {
+  background: #c2f4ff;
+}
+.field-description {
+      font-size: 12px;
+    font-style: italic;
+    padding: 5px;
+}

@@ -20,7 +20,7 @@
             ><i class ="glyphicon glyphicon-search"></i> Search By FingerPrint </a>
             <a id="addClient" type="button" class="btn btn-default
               <?php if($_SESSION['type']!='superadmin') {
-                 if (enablea_and_disable_ele($_SESSION['type'], "add", $_SESSION['client_section']) == false) { echo "hide"; }
+                  if (enablea_and_disable_ele($_SESSION['type'], "add", $_SESSION['client_section']) == false) { echo "hide"; }
                }else{  echo "hide"; }
                ?>" 
               style="float: right;"data-toggle="modal" href="#newClientModal"
@@ -68,25 +68,25 @@
                   <td class="relationship hide"><?php echo $data['relation_to']; ?></td>
                   <td class="current_address hide"><?php echo $data['current_address']; ?></td>
                   <td  <?php if (enablea_and_disable_ele($_SESSION['type'], "view_con_records", $_SESSION['records']) == false) { echo 'class="hide"'; }?>>
-                     <a class="check_records" href="<?php echo SITE_URL ?>/?page=records&cid=<?php echo $data['ID'] ?>&p=view">Check Records</a></td>
+                      <a class="check_records" href="<?php echo SITE_URL ?>/?page=records&cid=<?php echo $data['ID'] ?>&p=view">Check Records</a></td>
                   <td>
                     <div class="btn-group">
                         <a type="button" title="Edit" class="btn btn-default edit
-                         <?php if (enablea_and_disable_ele($_SESSION['type'], "edit", $_SESSION['client_section']) == false || $_SESSION['type'] == 'superadmin') { echo "hide"; }?>"
-                         style="padding: 0 5px;" data-original-title="Edit Records" data-toggle="modal" href="#newClientModal"><span class="glyphicon glyphicon-edit"></span></a>
+                          <?php if (enablea_and_disable_ele($_SESSION['type'], "edit", $_SESSION['client_section']) == false || $_SESSION['type'] == 'superadmin') { echo "hide"; }?>"
+                          style="padding: 0 5px;" data-original-title="Edit Records" data-toggle="modal" href="#newClientModal"><span class="glyphicon glyphicon-edit"></span></a>
                         <a type="button" title="Delete" class="btn btn-default delete  <?php if (enablea_and_disable_ele($_SESSION['type'], "add", $_SESSION['client_section']) == false || $_SESSION['type'] == 'superadmin') { echo "hide"; }?>" 
                         style="padding: 0 5px;" data-original-title="Delete Records"><span class="glyphicon glyphicon-remove-circle"></span></a>  
 
                       
                     </div> 
                   </td>  
-              </tr>
+                </tr>
               <?php endforeach; else: ?>
-              <tr><td colspan="7">No Client record found.</td></tr>
+                <tr><td colspan="7">No Client record found.</td></tr>
               <?php endif; ?>                                         
           </tbody>
         </table>  
-        <?php $client->pagination() ?>      
+        <?php $client->pagination(); ?>      
       </div><!--/span-->        
     </div>
   </div>

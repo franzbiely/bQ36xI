@@ -32,11 +32,16 @@ if($_GET['p'] != "update") {
       </div>
       <div class="col-md-9" role="main" style="margin-bottom:30px;">
         <div class="row">
-          <?php  success_message($_GET['page'], $_GET['p']); ?>
-           
+          <?php  success_message($_GET['page'], $_GET['p']);
+          $status_check = '';
+          if(($client_info['client_type'] != 'Male' && $client_info['client_type'] != 'Female' ) || $client_info['date_birth']=="0000-00-00" || $client_info['date_birth']==null) { $status_check='true';}
+          ?>
           <div class="page-header" style="margin-top: 45px;margin-bottom: 50px;">
-            <h1 id="overview" style="width: 100%; padding-top: 10px;">Personal Info<?php if($client_info['is_archived']=="1") echo " <span>- (Archived - <span style='font-size: 18px;'>".$client_info['date_archived']."</span>)</span>"; ?></h1> 
-
+          <h1 id="overview" style="width: 100%; padding-top: 10px;">Personal Info<?php if($client_info['is_archived']=="1") echo " <span>- (Archived - <span style='font-size: 18px;'>".$client_info['date_archived']."</span>)</span>"; ?>
+            <?php if($status_check === 'true'){ ?>
+              <a type="button" class="btn btn-default" id="overview" href="?page=clients&r=unknown_clients"> See all Unknown client lists</a>
+            <?php } ?>
+          </h1> 
               <?php if($_GET['p']=="delete") : ?>
                   <div class="delete-options-entry" style="margin: 0 125px 45px 0;">
                     <form id="frm_client_personal_info_update" role="form" action="" method="post">
@@ -54,6 +59,10 @@ if($_GET['p'] != "update") {
               <?php if($showDeprecatedMessage) : ?>
                 <p class="yellowme"><strong>Notice : </strong><br />Visit Reasons for Consultations prior to the <strong>1st of April, 2018</strong> have been deprecated and cannot be displayed. <br />Please refer to Client paper Record.</p>
               <?php endif; ?>
+              <div id = "warning-p" class = "form-group hide">
+                <i id="close-p" style = "font-size: 15px; top: 11px; right: 10px; cursor: pointer" class= "glyphicon glyphicon-remove-circle pull-right" ></i>
+                <p  class="redme "><strong>Warning : </strong>Please update your <strong>personal profile first! </strong></p>
+              </div>
               <form id="frm_client_personal_info_update" role="form" action="" method="post">
                 <input type="hidden" name="class" value="client" />
                 <input type="hidden" name="func" value="edit" />
@@ -97,6 +106,7 @@ if($_GET['p'] != "update") {
                 if($client_info['date_birth']=="0000-00-00" || $client_info['date_birth']==null) {
                   $addClass=" redme";
                   $note = "Please adjust the birth date.";
+                  $status_check = 'true';
                 }         
                 ?>
                 <div class="form-group<?php echo $addClass ?>">
@@ -135,6 +145,7 @@ if($_GET['p'] != "update") {
                 if($client_info['client_type'] != 'Male' && $client_info['client_type'] != 'Female' ) {
                   $addClass = " redme";
                   $note = "Please adjust the client gender.";
+                  $status_check = "true";
                 }
                              
                 ?>
@@ -286,16 +297,20 @@ if($_GET['p'] != "update") {
                 </div> -->
               <?php //endif ?>
             <?php if($_GET['p']!="delete") : ?>
+            <input type="text" style = "display: none" id="status-check" name="gender-check" class="form-control" value="<?php echo $status_check ?>">         
+
              <a type="button" class="btn btn-default <?php if (enablea_and_disable_ele($_SESSION['type'], "add_con_records", $_SESSION['records']) == false) { echo "hide"; }?>" 
               style="float: right; " id="add-consultation-btn" href="#">Add Consultation Schedule</a> 
             <?php endif; ?>
+
             <!-- Modal -->
             <?php $record->consultation_modal($client_info) ?> 
+            <?php $record->malnutrition_view_modal($client_info) ?> 
           </h1> 
         </div>
 
         <div class="tblcontainer" data-type="client">
-        <table class="table  table-striped table-hover table-condensed">
+        <table class="table table-striped table-hover table-condensed">
           <thead>
             <tr>
               <th>Consultation Date</th>
@@ -314,7 +329,7 @@ if($_GET['p'] != "update") {
           </thead>
           <tbody>
               <?php 
-              if($datas!=false): foreach($datas as $data ):  ?>
+              if($datas!=false): foreach($datas as $data ): ?>
                <tr>
                 <td class="id record hide" data-id="<?php echo $data['ID']; ?>"><?php echo $data['ID'] ?></td>
                 <td><?php echo $data['date'] ?></td>
@@ -342,15 +357,21 @@ if($_GET['p'] != "update") {
                     echo '<td>&nbsp;</td>';
                   }
                 } ?>
-                 <?php if ($_GET['p'] != 'delete'): ?>
-                    <td>
-                      <div class="btn-group">
+                <?php if ($_GET['p'] != 'delete'): ?>
+                  <td>
+                    <div class="btn-group">                
+                      <?php if($record->has_MALNUTRITION_visits($data)) : ?>
+                        <a type="button" title="View" class="btn btn-default view" 
+                            style="padding: 0 5px;" data-original-title="View Records"><span class="glyphicon glyphicon-search"></span></a>  
+                      <?php endif; ?>
+                      <?php if(!$record->has_MALNUTRITION_visits($data) || strtotime($data['date']) < strtotime('2019-07-01')) : ?>
                         <a type="button" title="Delete" class="btn btn-default delete <?php if (enablea_and_disable_ele($_SESSION['type'], "delete_con_records", $_SESSION['records']) == false) { echo "hide"; }?>" 
-                          style="padding: 0 5px;" data-original-title="Delete Records"><span class="glyphicon glyphicon-remove-circle"></span></a>  
-                      </div> 
-                    </td>
-                 <?php endif ?>
-              </tr>
+                            style="padding: 0 5px;" data-original-title="Delete Records"><span class="glyphicon glyphicon-remove-circle"></span></a>  
+                      <?php endif; ?>
+                    </div> 
+                  </td>
+                <?php endif ?>
+                </tr>
               <?php endforeach; else: ?>
                 <tr><td colspan="4">No consultation record found.</td></tr>
               <?php endif; ?>           
@@ -538,18 +559,30 @@ if($_GET['p'] != "update") {
         }
       }
     })
-
+   
     $('#add-consultation-btn').on('click', function() {
-	  
-      console.log($('#client_type').val());
-      if($('#client_type').val() == "Female") {
-        $('#newClientModal').find('input[value="ANC 1stvisit"], input[value="ANC 4th visit"], input[value="ANC Other visit"]').parent().show()
-      } else {
-        $('#newClientModal').find('input[value="ANC 1stvisit"], input[value="ANC 4th visit"], input[value="ANC Other visit"]').parent().hide()
+      if ($('#status-check').val() !== "true") {
+        $('#warning-p').removeClass("show");
+        $('#warning-p').addClass("hide");
+        console.log($('#client_type').val());
+        if($('#client_type').val() == "Female") {
+          $('#newClientModal').find('input[value="ANC 1stvisit"], input[value="ANC 4th visit"], input[value="ANC Other visit"]').parent().show()
+        } else {
+          $('#newClientModal').find('input[value="ANC 1stvisit"], input[value="ANC 4th visit"], input[value="ANC Other visit"]').parent().hide()
+        }
+        $('#newClientModal').modal('show');
+        $('#hb-warning').hide();
+      }else {
+        $('#warning-p').removeClass("hide");
+        $('#warning-p').addClass("show");
+        $('#warning-p').fadeIn("slow");
       }
-      $('#newClientModal').modal('show');
-	  $('#hb-warning').hide();
     })
+    $('#close-p').on('click', function() {
+      $('#warning-p').removeClass("show");
+      $('#warning-p').addClass("hide");
+      $('#warning-p').fadeOut("slow");
+    });
 
     $('#hb_level').on('change', function() {
       if($(this).val() == '8-') {
@@ -642,6 +675,44 @@ if($_GET['p'] != "update") {
       if($('#hb_level').val() == '10-') {
         $('#datepicker-review_date').val(moment($('#datepicker3').val(), 'YYYY-MM-DD').add(2, 'months').format('YYYY-MM-DD'));
       }
+    });
+    $(document).on('click',"a.view",function(){
+      // get consultation data with malnutrition and
+      $.get('/?c=records&f=get_consultation_malnutrition_records&rid='+ $(this).closest('tr').find('td.record').data('id'), function(_data) {
+        if(_data==='error') {
+          alert('Something went wrong.');
+          return false;
+        }
+        const data = JSON.parse(_data);
+        console.log(data);
+        $('#viewMalnutritionDetails').modal('show');
+        $(document).find('#viewMalnutritionDetails #rutf').attr('value',data.rutf);
+        $(document).find('#viewMalnutritionDetails #ref_hospital').attr('value',data.ref_hospital);
+
+        $(document).find('.review_date_future_readonly').removeAttr('style');
+        $(document).find('#viewMalnutritionDetails #outcome_review').parent().removeAttr('style');
+
+        if(data.outcome_review.trim()!==''){
+          $(document).find('#viewMalnutritionDetails #outcome_review').attr('value',data.outcome_review).parent().show();  
+        }
+        if(data.review_date_future.trim()!=="0000-00-00"){
+          $(document).find('#viewMalnutritionDetails #review_date_future').attr('value',data.review_date_future).parent().show();
+        }
+
+
+
+        $(document).find('#viewMalnutritionDetails #series').attr('value',data.series);
+        $(document).find('#viewMalnutritionDetails #tb_diagnosed').attr('value',data.tb_diagnosed);
+        $(document).find('#viewMalnutritionDetails #reason').attr('value',data.reason);
+        $(document).find('#viewMalnutritionDetails #hiv_status').attr('value',data.hiv_status);
+        $(document).find('#viewMalnutritionDetails #muac').attr('value',data.muac);
+        $(document).find('#viewMalnutritionDetails #oedema').attr('value',data.oedema);
+        $(document).find('#viewMalnutritionDetails #wfh').attr('value',data.wfh);
+
+      })
+      
+
+      return false;
     });
    })
 </script>

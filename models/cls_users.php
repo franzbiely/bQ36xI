@@ -26,8 +26,10 @@ class User extends DB{
 			$data2 = $this->select("*", array("user_id" =>$data['ID']),true, "tbl_permissions" );
 			if ($data2 != false) {
 				/* user already given permissions */
-				error_reporting(0);
-				session_start();
+				// error_reporting(0);
+				if(!isset($_SESSION)) {
+					session_start();
+				}
 				$_SESSION['id']=$data['ID'];
 				$_SESSION['username']=$data['username'];
 				$_SESSION['office_id']=$data['office_id'];
@@ -56,7 +58,7 @@ class User extends DB{
 					}
 				}
 				if($_SESSION['type'] != 'superreporting') { 
-					error_reporting(0);
+					// error_reporting(0);
 					header( "Location:?page=reports");	
 				}elseif($_SESSION['type'] == 'dataentry' || $_SESSION['type'] == 'enquiry'){ 
 					header("Location:?page=clients");
@@ -88,8 +90,10 @@ class User extends DB{
 		return $user_type['type'];
 	}
 	function logout(){
-		error_reporting(0);
-		session_start();
+		// error_reporting(0);
+		if(!isset($_SESSION)) {
+			session_start();
+		}
 		session_destroy();
 		header("Location: ".SITE_URL."/?page=".FRONT_PAGE);
 		

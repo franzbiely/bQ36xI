@@ -28,7 +28,10 @@ switch (ENV) {
 		define("SITE_URL","http://testclients.susumamas.org.pg");
         break;
 
-    case 'stage':
+	case 'stage':
+		error_reporting(0);
+		error_reporting(E_ALL ^ E_WARNING); 
+	
         define("DBHOST","localhost");
 		define("DBUSER","clientsu_ssmclsu");
 		define("DBPASS","hMD6QFrGELnL");

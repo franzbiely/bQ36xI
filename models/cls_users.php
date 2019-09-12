@@ -1,6 +1,4 @@
 <?php
-// error_reporting(0);
-# error_reporting(E_ALL ^ E_WARNING); 
 
 class User extends DB{
 	public $username;

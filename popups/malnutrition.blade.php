@@ -25,7 +25,7 @@ class Malnutrition_Blade_Popup extends DB{
     public function remove($id) {
         $this->delete($id);
     }
-    public function update() {
+    public function update($data=null, $ID=null, $CLIENT_ID=null) { // this fix was only for php7 compaitbility
         $data = array(
             'tb_diagnosed' => $_POST['tb_diagnosed'],
             'hiv_status' => $_POST['hiv_status'],

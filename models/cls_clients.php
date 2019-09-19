@@ -164,7 +164,6 @@ class Client extends DB{
 		unset($_data['es']);
 		unset($_data['btn_add_client']);
 		unset($_data['source']);
-		//var_dump($_data);
 		if(isset($_data['is_archived'])){
 			$_data['is_archived']=($_data['is_archived']=="on") ? 1 : 0;	
 			$_data['date_archived']=date("m.d.y");
@@ -315,9 +314,6 @@ class Client extends DB{
 		$stmt = $this->query($query,array());
 		$_all_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		if(count($_all_data) > 0) {
-			var_dump($_all_data[0]['ID']);
-			var_dump($_all_data[1]['ID']);
-			var_dump($_all_data[2]['ID']);
 			$data1 = $this->update($finger_1, $_all_data[0]['ID'], $_all_data[0]['client_id'] );
 			$data2 = $this->update($finger_2, $_all_data[1]['ID'], $_all_data[1]['client_id'] );
 			$data3 = $this->update($finger_3, $_all_data[2]['ID'], $_all_data[2]['client_id'] );
@@ -334,16 +330,16 @@ class Client extends DB{
 		$this->table = 'tbl_client';
 		$data = $this->save($_data,array("ID"=>$id));
 
-		if($data==false){
-			echo "error";
-		}
-		else{
-			if ($_all_data){
-				echo "success $_all_data";
-			}else {
+		// if($data==false){
+		// 	echo "error";
+		// }
+		// else{
+			// if ($_all_data){
+			// 	echo "success $_all_data";
+			// }else {
 				echo "success";
-			}
-		}
+			// }
+		// }
 
 		if($_data['client_type']=='Child') {
 			$_mother_data = array(
@@ -353,11 +349,11 @@ class Client extends DB{
 							);
 			$this->table = "tbl_relationship";
 			$data = $this->save($_mother_data);
-			if($data==false){
-				echo "";//"error on adding relationship";
-			}
-			else
-				echo "";//"success on adding relationship";
+			// if($data==false){
+			// 	echo "";//"error on adding relationship";
+			// }
+			// else
+			// 	echo "";//"success on adding relationship";
 		}
 		//End added code here
 		exit();
@@ -548,7 +544,6 @@ class Client extends DB{
 			}	
 		$stmt = $this->query($query,$bind_array);
 		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-		//print_r($data);
 		if($data==false){
 			return array();				
 		}

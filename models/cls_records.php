@@ -1086,7 +1086,7 @@ class Records extends DB{
         $('.required_field').hide();  
         _data = $(this).serialize();  
         _this = $(this);
-        console.log(_data);
+        // console.log(_data);
         $.post(window.location.href,_data, function(data){
          if($.trim(data)!="success"){
            console.log(data);

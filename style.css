@@ -742,3 +742,9 @@ a.list-group-item{
     font-style: italic;
     padding: 5px;
 }
+
+.fingerprint-preview-on-modal {
+  display:inline-block;
+  border:1px solid grey;
+  border-radius: 5px;
+}

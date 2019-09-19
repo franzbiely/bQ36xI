@@ -131,6 +131,7 @@
   				  $('#ess').val("Connecting to " + host + " ...");
     				try {
     					ws = new WebSocket(host); // create the web socket
+              console.log('Websocket created')
     				} catch (err) {
     					$('#ess').val('error');
     				}
@@ -153,6 +154,7 @@
   							break;
   						case 5:
   							if (obj.retmsg == 1) {
+                  results = [];
   								status.value = "Searching Client...!";
   								if (obj.data2 != "null") {
   									attempt = obj.data2;
@@ -184,7 +186,9 @@
   							if(obj.retmsg >= 100){
   								window.result = 1; 
   							}
+                
   								results.push(obj.retmsg); 
+                  console.log('result called', results)
   								count_occur++;            
   							break;
   						}
@@ -195,11 +199,14 @@
   				};
 			  });
 			function EnrollTemplate1(){
+        console.log('EnrollTemplate1');
 				try {
           var cmd = "{\"cmd\":\"capture\",\"data1\":\"\",\"data2\":\"\"}";
 					ws.send(cmd);
-				} catch (err) {}
-				  document.getElementById("ess").value = "Place Right Thumb";
+          document.getElementById("ess").value = "Place Right Thumb";
+				} catch (err) {
+          console.log('Something is wrong', err);
+        }
 			}
       function MatchTemplate () {
         $.ajax({
@@ -209,13 +216,10 @@
           success:function(response){
             content = response;
             $.each(response, function(key, value){
-              //alert();
-              console.log(value["finger_data"]);
               var str = value["finger_data"];
               var concat = "";
               var count = 0;
-              client_id = value["client_id"];
-              console.log(value);
+              var client_id = value["client_id"];
               for( x = 0; x < str.length; x++){
                 if(str.charAt(x) != " "){
                   concat += str.charAt(x);
@@ -230,13 +234,14 @@
                 ws.send(cmd);
                 var cmd = "{\"cmd\":\"match\",\"data1\":\"\",\"data2\":\"\"}";
                   ws.send(cmd);
-                  console.log(window.result);
+                  console.log('Result', window.result);
                 } catch (err) {}	
             });
           }
         });
         timer = setInterval(function(){
           if(window.result == 1){
+            console.log('Result success')
             window.result = 0;
             let prevMatch = 0;
             let prevIndex = -1;
@@ -247,8 +252,6 @@
               }
             }
             window.location.href = "?page=records&cid=" +content[results.indexOf(100)].client_id+ "&p=view";
-            console.log('Results', results, content[prevIndex]);
-            console.log(results, content[results.indexOf(100)].client_id);
             clearInterval(timer);
           }else{
             console.log("PLease try again!");

@@ -176,19 +176,17 @@ class Client extends DB{
 		$check_record_nuber =  $this->select("record_number", array("record_number"=>$_data['record_number']),true, "tbl_client" );
 		
 		if ($check_record_nuber!=false){ 
-		?>
-			<script> alert("Double record !");</script>
-		<?php
+			echo "double-record";
 		}
 		else{	
 			//Code added by Joe [to fix ajax error when adding a new client record "this error will show as undefined in the network tab by pressing F12 goto network tab then response" using ajax call]
-			/*if (empty($_data['review_date'])) {
+			if (empty($_data['review_date'])) {
 				unset($_data['review_date']);
 			} else {
 				$d = explode('T', $_data['review_date']);
 				$review_date=new DateTime($d[0] . ' ' . $d[1]);
 				$_data['review_date'] = $review_date->getTimestamp();
-			}*/
+			}
 			$mother = '';
 			//End added code here
 			if($_data['client_type']=='Child'){
@@ -228,21 +226,15 @@ class Client extends DB{
 						$data = $this->save($_mother_data);
 					}
 				} 
-				?>
-				<script> 
-					alert("Success !");
-					window.location.href = "?page=clients";
-				</script> 
-				<?php //echo "success";
-				}
-			//exit();
-		}		
+				echo "success";
+			}
+		}	
+		exit();	
 	}
 	function edit(){
 		ob_start();
 		$_data = $_POST;
 		$id = $_data['id'];
-		var_dump($_data);
 		if($_data['source'] == "record"){
 			$finger_1 =  $_data['u_right_side_finger'];
 		    $finger_2 =  $_data['u_center_finger'];
@@ -282,7 +274,6 @@ class Client extends DB{
 		unset($_data['class']);
 		unset($_data['func']);
 
-		var_dump($_data);
 		if(isset($_data['is_archived'])){
 			$_data['is_archived']=($_data['is_archived']=="on") ? 1 : 0;	
 			$_data['date_archived']=date("m.d.y");
@@ -291,13 +282,13 @@ class Client extends DB{
 			$_data['is_archived'] = 0;
 		}
 		//Code added by Joe [to validate the value from datetimelocal value and to fixed existing but in not saving the edited client records]
-		/*if (empty($_data['review_date'])) {
+		if (empty($_data['review_date'])) {
 			unset($_data['review_date']);
 		} else {
 			$d = explode('T', $_data['review_date']);
 			$review_date=new DateTime($d[0] . ' ' . $d[1]);
 			$_data['review_date'] = $review_date->getTimestamp();
-		}*/
+		}
 		if(isset($_data['relation_to'])) {
 			if ($_data['relation_to'] !== "undefined"){
 				$relation_to = $_data['relation_to'];
@@ -323,13 +314,23 @@ class Client extends DB{
 		$query = "SELECT * FROM tbl_fingerprint WHERE client_id = '$id'";
 		$stmt = $this->query($query,array());
 		$_all_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-		var_dump($_all_data[0]['ID']);
-		var_dump($_all_data[1]['ID']);
-		var_dump($_all_data[2]['ID']);
-		$data1 = $this->update($finger_1, $_all_data[0]['ID'], $_all_data[0]['client_id'] );
-		$data2 = $this->update($finger_2, $_all_data[1]['ID'], $_all_data[1]['client_id'] );
-		$data3 = $this->update($finger_3, $_all_data[2]['ID'], $_all_data[2]['client_id'] );
-
+		if(count($_all_data) > 0) {
+			var_dump($_all_data[0]['ID']);
+			var_dump($_all_data[1]['ID']);
+			var_dump($_all_data[2]['ID']);
+			$data1 = $this->update($finger_1, $_all_data[0]['ID'], $_all_data[0]['client_id'] );
+			$data2 = $this->update($finger_2, $_all_data[1]['ID'], $_all_data[1]['client_id'] );
+			$data3 = $this->update($finger_3, $_all_data[2]['ID'], $_all_data[2]['client_id'] );
+		}
+		else {
+			$dataFinger['client_id'] = $id;
+			$dataFinger['finger_data'] = $finger_1;
+			$data1 = $this->save($dataFinger, array(), "tbl_fingerprint", "lastInsertId");
+			$dataFinger['finger_data'] = $finger_2;
+			$data2 = $this->save($dataFinger, array(), "tbl_fingerprint", "lastInsertId");
+			$dataFinger['finger_data'] = $finger_3;
+			$data3 = $this->save($dataFinger, array(), "tbl_fingerprint", "lastInsertId");
+		}
 		$this->table = 'tbl_client';
 		$data = $this->save($_data,array("ID"=>$id));
 
@@ -751,15 +752,15 @@ class Client extends DB{
 		  <input name="es" type="text" id="es" value="Scanner not ready! " readonly style = "border: 0px; font-size: 12px"/>
 			<span class = ""> 
 				<small style="margin-left: 7px; margin-top: 18px; text-align: center; position: absolute; font-size: 10px;">&nbsp;Right</small>
-				<img id = "image11" alt="" width="45px" height="45px" style = "border-radius: 5px;"/>
+				<img id = "image11" class="fingerprint-preview-on-modal" alt="" width="45px" height="45px"/>
 			</span>
 			<span class = ""> 
 				<small style="margin-left: 5px; margin-top: 18px; text-align: center; position: absolute; font-size: 10px;">&nbsp;Center</small>
-				<img id = "image2" alt="" width="45px" height="45px" style = "border-radius: 5px;"/>
+				<img id = "image2" alt="" width="45px" height="45px" class="fingerprint-preview-on-modal" />
 			</span>
 			<span class = ""> 
 				<small style="margin-left: 9px; margin-top: 18px; text-align: center; position: absolute; font-size: 10px;">&nbsp;Left</small>
-				<img id = "image3" alt="" width="45px" height="45px" style = "border-radius: 5px;"/>
+				<img id = "image3" alt="" width="45px" height="45px" class="fingerprint-preview-on-modal" />
 			</span>
 		  </div>
 		  
@@ -797,115 +798,119 @@ class Client extends DB{
 					}
 				}
 				function connect(host) {
-				$('#es').val("Connecting to " + host + " ...");
-				try {
-					ws = new WebSocket(host); // create the web socket
-				} catch (err) {
-					$('#es').val('error');
-				}
-				ws.onopen = function () {
-					$('#es').val('Connected OK!');
-					EnrollTemplate();
-				};
-				ws.onmessage = function (evt) {
-					var obj = eval("("+evt.data+")");
-					var status = document.getElementById("es");
-					switch (obj.workmsg) {
-						case 1:
-							status.value = "Please Open Device";
-							break;
-						case 2:
-							if(finger_value == 1){
-								status.value = "Place Left Side Thumb";
-							}else if (finger_value == 2){
-								status.value = "Place Center Thumb";
-							}else if (finger_value == 3){
-								status.value = "Place Right Side Thumb";
-							}
-							document.getElementById("image_id").disabled = true;
-							break;
-						case 3:
-							status.value = "Lift Thumb";
-							break;
-						case 6:
-							if (obj.retmsg == 1) {
-								if (obj.data1 != "null") {
-									status.value = "Finger Print Save !";
-									if(finger_value == 1){
-										document.getElementById("right_side_finger").value = obj.data1;
-										document.getElementById("image11").setAttribute("style", "border-radius: 0px; border:2px solid green;");
-										finger_value = 2;
-										EnrollTemplate();
-									}else if (finger_value == 2){
-										document.getElementById("center_finger").value = obj.data1;
-										document.getElementById("image2").setAttribute("style", "border-radius: 0px; border:2px solid green;");
-										finger_value = 3;
-										EnrollTemplate();
-									}else if (finger_value == 3){
-										document.getElementById("left_side_finger").value = obj.data1;
-										document.getElementById("image3").setAttribute("style", "border-radius: 0px; border:2px solid green;");
-										finger_value = 1;
-										document.getElementById("btn_add_client").disabled = false;
-										document.getElementById("image_id").disabled = true;
-										console.log("Finger final value "+finger_value);
+					$('#es').val("Connecting to " + host + " ...");
+					try {
+						ws = new WebSocket(host); // create the web socket
+						console.log('Websocket created')
+					} catch (err) {
+						$('#es').val('error');
+					}
+					ws.onopen = function () {
+						$('#es').val('Connected OK!');
+						EnrollTemplate();
+					};
+					ws.onmessage = function (evt) {
+						var obj = eval("("+evt.data+")");
+						var status = document.getElementById("es");
+						switch (obj.workmsg) {
+							case 1:
+								status.value = "Please Open Device";
+								break;
+							case 2:
+								if(finger_value == 1){
+									status.value = "Place Thumb First Specimen";
+								}else if (finger_value == 2){
+									status.value = "Place Thumb Second Specimen";
+								}else if (finger_value == 3){
+									status.value = "Place Thumb Third Specimen";
+								}
+								document.getElementById("image_id").disabled = true;
+								break;
+							case 3:
+								status.value = "Lift Thumb";
+								break;
+							case 6:
+								if (obj.retmsg == 1) {
+									if (obj.data1 != "null") {
+										status.value = "Finger Print Specimen Ready";
+										if(finger_value == 1){
+											document.getElementById("right_side_finger").value = obj.data1;
+											document.getElementById("image11").setAttribute("style", "border-radius: 0px; border:2px solid green;");
+											finger_value = 2;
+											EnrollTemplate();
+										}else if (finger_value == 2){
+											document.getElementById("center_finger").value = obj.data1;
+											document.getElementById("image2").setAttribute("style", "border-radius: 0px; border:2px solid green;");
+											finger_value = 3;
+											EnrollTemplate();
+										}else if (finger_value == 3){
+											document.getElementById("left_side_finger").value = obj.data1;
+											document.getElementById("image3").setAttribute("style", "border-radius: 0px; border:2px solid green;");
+											finger_value = 1;
+											document.getElementById("btn_add_client").disabled = false;
+											document.getElementById("image_id").disabled = true;
+											console.log("Finger final value "+finger_value);
+										}
+									} else {
+										status.value = "Please Click Again !";    
 									}
 								} else {
-									status.value = "Please Click Again !";    
+									status.value = "Enrol Template Fail";
+									EnrollTemplate();
 								}
-							} else {
-								status.value = "Enrol Template Fail";
-								EnrollTemplate();
-							}
-							break;
-						case 7:
-							if (obj.image == "null") {
-								alert("Please try again !")
-							} else {
-								if(finger_value == 1){
-									var img = document.getElementById("image11");
-									img.src = "data:image/png;base64,"+obj.image;
-								}else if (finger_value == 2){
-									var img = document.getElementById("image2");
-									img.src = "data:image/png;base64,"+obj.image;
-								}else if (finger_value == 3){
-									var img = document.getElementById("image3");
-									img.src = "data:image/png;base64,"+obj.image;
+								break;
+							case 7:
+								if (obj.image == "null") {
+									alert("Please try again !")
+								} else {
+									if(finger_value == 1){
+										var img = document.getElementById("image11");
+										img.src = "data:image/png;base64,"+obj.image;
+									}else if (finger_value == 2){
+										var img = document.getElementById("image2");
+										img.src = "data:image/png;base64,"+obj.image;
+									}else if (finger_value == 3){
+										var img = document.getElementById("image3");
+										img.src = "data:image/png;base64,"+obj.image;
+									}
 								}
-							}
-							break;
-						case 8:
-							status.value = "Time Out";
-							document.getElementById("image_id").disabled = false;
-							break;
-						case 9:
+								break;
+							case 8:
+								status.value = "Time Out";
+								document.getElementById("image_id").disabled = false;
+								break;
+							case 9:
 
-							if(obj.retmsg >= 100){
-								window.result = 1; 
+								if(obj.retmsg >= 100){
+									window.result = 1; 
+								}
+									results.push(obj.retmsg); 
+									count_occur++;            
+								break;
 							}
-								results.push(obj.retmsg); 
-								count_occur++;            
-							break;
-						}
-					};
-					ws.onclose = function () {
-						document.getElementById("es").value = "Closed!";
-					};
+						};
+						ws.onclose = function () {
+							document.getElementById("es").value = "Closed!";
+						};
 				};
 			});
 			function EnrollTemplate(){
+				console.log('Enrolling Template')
 				try {
 					var cmd = "{\"cmd\":\"enrol\",\"data1\":\"\",\"data2\":\"\"}";
 					ws.send(cmd);
+					if(finger_value == 1){
+						document.getElementById("es").value = "Place Left Side Thumb";
+					}else if (finger_value == 2){
+						document.getElementById("es").value = "Place Center Thumb";
+					}else if (finger_value == 3){
+						document.getElementById("es").value = "Place Right Side Thumb";
+					}
+					document.getElementById("image_id").disabled = true;
 				} catch (err) {
+					console.log('Something is wrong')
 				}
-				if(finger_value == 1){
-					document.getElementById("es").value = "Place Left Side Thumb";
-				}else if (finger_value == 2){
-					document.getElementById("es").value = "Place Center Thumb";
-				}else if (finger_value == 3){
-					document.getElementById("es").value = "Place Right Side Thumb";
-				}
-				document.getElementById("image_id").disabled = true;
+				
 			}
 			//Code added by Eric
 			var hold_dob = ""; //this will hold the previous birthdate value
@@ -980,7 +985,8 @@ class Client extends DB{
 				}
 		    });
 
-			$(document).on('submit',".col-md-9 form",function(){
+			$(document).on('submit',".col-md-9 form",function(e){
+				e.preventDefault();
 				show_loader($);
 				$(this).find('.btn-success').prop('disabled', true);
 				$(this).find('.btn-success').html('Saving...');
@@ -1053,6 +1059,8 @@ class Client extends DB{
 		
 		$('#newClientModal').on('hidden.bs.modal', function () {
 			// do something…
+			$("#image11, #image2, #image3").removeAttr("src style");
+			$("#image_id").prop('disabled',false);
 			$("#client_type").next().html("");
 		});
 		

@@ -813,11 +813,11 @@ class Client extends DB{
 								break;
 							case 2:
 								if(finger_value == 1){
-									status.value = "Place Thumb First Specimen";
+									status.value = "Place Right Index Finger";
 								}else if (finger_value == 2){
-									status.value = "Place Thumb Second Specimen";
+									status.value = "Place Right Index Finger";
 								}else if (finger_value == 3){
-									status.value = "Place Thumb Third Specimen";
+									status.value = "Place Right Index Finger";
 								}
 								document.getElementById("image_id").disabled = true;
 								break;

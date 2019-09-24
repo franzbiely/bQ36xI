@@ -536,11 +536,11 @@ if($_GET['p'] != "update") {
         } catch (err) {
         }
         if(finger_value == 1){
-          document.getElementById("u_es").value = "Place Left Side Thumb";
+          document.getElementById("u_es").value = "Place Left Side Index Finger";
         }else if (finger_value == 2){
-          document.getElementById("u_es").value = "Place Center Thumb";
+          document.getElementById("u_es").value = "Place Center Index Finger";
         }else if (finger_value == 3){
-          document.getElementById("u_es").value = "Place Right Side Thumb";
+          document.getElementById("u_es").value = "Place Right Side Index Finger";
         }
         //document.getElementById("es").value = "Place Right Thumb";
         document.getElementById("u_image_id").disabled = true;

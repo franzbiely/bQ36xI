@@ -147,7 +147,7 @@
   							status.value = "Please Open Device";
   							break;
   						case 2:
-  							status.value = "Place Right Thumb";
+  							status.value = "Place Right Index Finger";
   							break;
   						case 3:
   							status.value = "Lift Finger";
@@ -203,7 +203,7 @@
 				try {
           var cmd = "{\"cmd\":\"capture\",\"data1\":\"\",\"data2\":\"\"}";
 					ws.send(cmd);
-          document.getElementById("ess").value = "Place Right Thumb";
+          document.getElementById("ess").value = "Place Right Index Finger";
 				} catch (err) {
           console.log('Something is wrong', err);
         }
@@ -254,8 +254,7 @@
             window.location.href = "?page=records&cid=" +content[results.indexOf(100)].client_id+ "&p=view";
             clearInterval(timer);
           }else{
-            console.log("PLease try again!");
-            alert("try again !");
+            alert("The system does not recognize the fingerprint. You may need to TRY AGAIN or register your fingerprint.");
             clearInterval(timer);
             EnrollTemplate1();
           }           

@@ -1,7 +1,6 @@
-
-
-
-<?php header_nav_bar("home", "Records") ?>
+<?php 
+global $Fingerprint;
+header_nav_bar("home", "Records") ?>
 
   <?php $client_info = $client->get_personal_info($_GET['cid']); ?>
   <?php 
@@ -235,31 +234,13 @@ if($_GET['p'] != "update") {
                 <?php endif; ?>
                 <?php if($_GET['p']=="update") :?>
                 <br />
-                 <div class="form-group">
-                <input name="u_right_side_finger" type="text" id="u_right_side_finger" value="" readonly style = " display: none; border: 0px; font-size: 12px"/>
-                <input name="u_center_finger" type="text" id="u_center_finger" value="" readonly style = " display: none; border: 0px; font-size: 12px"/>
-                <input name="u_left_side_finger" type="text" id="u_left_side_finger" value="" readonly style = " display: none; border: 0px; font-size: 12px"/>
-              </div>
-                <div class="form-group " >    
-                  <input class="btn btn-default form-control" style="text-align: center;" type="button" id="u_image_id" value="Click this to update finger print !" />
+                <div class="form-group " >
+                  <?php $Fingerprint->register_starter() ?>
                 </div>
-                <div id="u_imgDiv" class="col-xs-4" style="top: 10px; ">
-                <input name="source" type="text" id="source" value="record" readonly style = "display: none;"/>
-                <input name="u_es" type="text" id="u_es" value="Scanner not ready! " readonly style = "position: relative; left: 54px; border: 0px; font-size: 12px"/>
-                <div style="display: flex; flex-direction: row; padding: 5px; margin-top: 10px ">
-                  <div style="position: relative; left: 20px;"> 
-                    <small style="margin-left: 10px; margin-top: 21px; text-align: center; position: absolute; font-size: 13px;color: gray">&nbsp;Right</small>
-                    <img id = "u_image11" alt="" width="60px" height="60px" style = "border-radius: 15px; border: 1px solid black;"/>
-                  </div>
-                  <div style="position: relative; left:22px;" > 
-                    <small style="margin-left: 5px; margin-top: 21px; text-align: center; position: absolute; font-size: 13px;color: gray">&nbsp;Center</small>
-                    <img id = "u_image2" alt="" width="60px" height="60px" style = "border-radius: 15px; border: 1px solid black;"/>
-                  </div>
-                  <div style="position: relative; left: 24px;"> 
-                    <small style="margin-left: 14px; margin-top: 21px; text-align: center; position: absolute; font-size: 13px;color: gray">&nbsp;Left</small>
-                    <img id = "u_image3" alt="" width="60px" height="60px" style = "border-radius: 15px; border: 1px solid black;"/>
-                  </div>
-                </div>
+                <?php 
+                $Fingerprint->register_fields();
+                $Fingerprint->register_preview(); 
+                ?>
                 <?php endif;?>
 
               </div>
@@ -386,165 +367,19 @@ if($_GET['p'] != "update") {
   ?>    
   <?php $relationship_data = $record->relationship_modal($client_info) ?> 
   <?php $relationship_data = $record->relationship_detail_modal() ?> 
-  <?php $record->script();  ?>
+  <?php $record->script(); 
+
+  ?>
 
 
 <script type="text/javascript" src="/js/moment.js"></script>
 <script type="text/javascript">
   
     var hidden = true;
-    var finger_value = 1;
     var checked = false;
     $(document).ready(function(){
-      // finger print input
-      $("#u_image_id").click(function(){
-
-        document.getElementById("source").value = "record";
-        checked = true;
-        // test if the browser supports web sockets
-        if ("WebSocket" in window) {
-          console.log("ready");
-          connect("ws://127.0.0.1:21187/fps");
-        } else {
-          $('#u_es').val('Browser does not support!');
-        };
-        // function to send data on the web socket
-        function ws_send(str) {
-          try {
-            ws.send(str);
-          } catch (err) {
-            $('#u_es').val('error');
-          }
-        }
-        function connect(host) {
-        $('#u_es').val("Connecting to " + host + " ...");
-        try {
-          ws = new WebSocket(host); // create the web socket
-        } catch (err) {
-          $('#u_es').val('error');
-        }
-        ws.onopen = function () {
-          $('#u_es').val('Connected OK!');
-          EnrollTemplate();
-        };
-        ws.onmessage = function (evt) {
-          var obj = eval("("+evt.data+")");
-          var status = document.getElementById("u_es");
-          switch (obj.workmsg) {
-            case 1:
-              status.value = "Please Open Device";
-              break;
-            case 2:
-              if(finger_value == 1){
-                status.value = "Place Left Side Thumb";
-              }else if (finger_value == 2){
-                status.value = "Place Center Thumb";
-              }else if (finger_value == 3){
-                status.value = "Place Right Side Thumb";
-              }
-              document.getElementById("u_image_id").disabled = true;
-              break;
-            case 3:
-              status.value = "Lift Thumb";
-              break;
-            case 4:
-              //status.value = "";
-              break;
-            // case 5:
-            //  if (obj.retmsg == 1) {
-            //    status.value = "Get Template";
-            //    if (obj.data2 != "null") {
-            //      attempt = obj.data2;
-            //      //MatchTemplate();
-            //    } else {
-            //      status.value = "Get Template Fail";
-            //    }
-            //  }else {
-            //    status.value = "Get Template Fail";
-            //  }
-            //  break;
-            case 6:
-              if (obj.retmsg == 1) {
-                if (obj.data1 != "null") {
-                  status.value = "Finger Print Save !";
-                  if(finger_value == 1){
-                    document.getElementById("u_right_side_finger").value = obj.data1;
-                    document.getElementById("u_image11").setAttribute("style", "border-radius: 10px; border:2px solid green;");
-                    finger_value = 2;
-                    EnrollTemplate();
-                  }else if (finger_value == 2){
-                    document.getElementById("u_center_finger").value = obj.data1;
-                    document.getElementById("u_image2").setAttribute("style", "border-radius: 10px; border:2px solid green;");
-                    finger_value = 3;
-                    EnrollTemplate();
-                  }else if (finger_value == 3){
-                    document.getElementById("u_left_side_finger").value = obj.data1;
-                    document.getElementById("u_image3").setAttribute("style", "border-radius: 10px; border:2px solid green;");
-                    finger_value = 0;
-                    document.getElementById("save_info").disabled = false;
-                    document.getElementById("u_image_id").disabled = true;
-                  }
-                } else {
-                  status.value = "Please Click Again !";    
-                }
-              } else {
-                status.value = "Enrol Template Fail";
-                EnrollTemplate();
-              }
-              break;
-            case 7:
-              if (obj.image == "null") {
-                alert("Please try again !")
-              } else {
-                if(finger_value == 1){
-                  var img = document.getElementById("u_image11");
-                  img.src = "data:image/png;base64,"+obj.image;
-                    
-                }else if (finger_value == 2){
-                  var img = document.getElementById("u_image2");
-                  img.src = "data:image/png;base64,"+obj.image;
-                    
-                }else if (finger_value == 3){
-                  var img = document.getElementById("u_image3");
-                  img.src = "data:image/png;base64,"+obj.image;
-                }
-              }
-              break;
-            case 8:
-              status.value = "Time Out";
-              document.getElementById("u_image_id").disabled = false;
-              break;
-            case 9:
-              if(obj.retmsg >= 100){
-                window.result = 1; 
-              }
-                results.push(obj.retmsg); 
-                count_occur++;            
-              break;
-            }
-          };
-          ws.onclose = function () {
-            document.getElementById("u_es").value = "Closed!";
-          };
-        };
-      });
-      function EnrollTemplate(){
-        try {
-          //ws.send("enrol");
-          var cmd = "{\"cmd\":\"enrol\",\"data1\":\"\",\"data2\":\"\"}";
-          ws.send(cmd);
-        } catch (err) {
-        }
-        if(finger_value == 1){
-          document.getElementById("u_es").value = "Place Left Side Index Finger";
-        }else if (finger_value == 2){
-          document.getElementById("u_es").value = "Place Center Index Finger";
-        }else if (finger_value == 3){
-          document.getElementById("u_es").value = "Place Right Side Index Finger";
-        }
-        //document.getElementById("es").value = "Place Right Thumb";
-        document.getElementById("u_image_id").disabled = true;
-      }
+      
+      
     $(document).on('change','input[value="ANC 1stvisit"], input[value="ANC 4th visit"], input[value="ANC Other visit"]', function() {
       if($('input[value="ANC 1stvisit"]').prop('checked') || 
          $('input[value="ANC 4th visit"]').prop('checked') || 

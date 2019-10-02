@@ -91,7 +91,7 @@
     </div>
   </div>
 
-  <?php $client->scripts(); ?>
+  <?php //$client->scripts(); ?>
     <script>
       var hidden = true;
       var attempt = null;

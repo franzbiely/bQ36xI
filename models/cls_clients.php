@@ -142,14 +142,12 @@ class Client extends DB{
 		exit();
 	}
 	function add(){
+		global $Fingerprint;
+
 		$this->table = "tbl_client";
 		$_data = $_POST;
 		$arr2 = array("office_id"=>$_SESSION['office_id']);		
 		$_data = array_merge($_data, $arr2);
-		
-		$finger_1 =  $_data['right_side_finger'];
-		$finger_2 =  $_data['center_finger'];
-		$finger_3 =  $_data['left_side_finger'];
 
 		unset($_data['class']);
 		unset($_data['func']);
@@ -197,21 +195,10 @@ class Client extends DB{
 			}		
 			$data = $this->save($_data, array(), "tbl_client", "lastInsertId");
 
-			$dataFinger['client_id'] = $data;
-			$dataFinger['finger_data'] = $finger_1;
-			$data1 = $this->save($dataFinger, array(), "tbl_fingerprint", "lastInsertId");
-			$dataFinger['client_id'] = $data;
-			$dataFinger['finger_data'] = $finger_2;
-			$data2 = $this->save($dataFinger, array(), "tbl_fingerprint", "lastInsertId");
-			$dataFinger['client_id'] = $data;
-			$dataFinger['finger_data'] = $finger_3;
-			$data3 = $this->save($dataFinger, array(), "tbl_fingerprint", "lastInsertId");
-			if ($data == 0 ){
-				$data = true;
-			}
 			if($data==false){
 				echo "error";
 			}else{
+				$Fingerprint->fpupdate($data);
 				if($mother!=''){
 					if($_data['client_type']=='Child'){
 						//$_last_id = mysql_insert_id();
@@ -231,13 +218,13 @@ class Client extends DB{
 		exit();	
 	}
 	function edit(){
+		
+		global $Fingerprint;
+		
 		ob_start();
 		$_data = $_POST;
 		$id = $_data['id'];
 		if($_data['source'] == "record"){
-			$finger_1 =  $_data['u_right_side_finger'];
-		    $finger_2 =  $_data['u_center_finger'];
-		    $finger_3 =  $_data['u_left_side_finger'];
 		    unset($_data['u_right_side_finger']);
 		    unset($_data['u_center_finger']);
 		    unset($_data['u_left_side_finger']);
@@ -251,9 +238,6 @@ class Client extends DB{
 		    unset($_data['save_info']);
 		}
 		if($_data['source'] == "modal"){
-			$finger_1 =  $_data['right_side_finger'];
-			$finger_2 =  $_data['center_finger'];
-			$finger_3 =  $_data['left_side_finger'];
 			unset($_data['class']);
 			unset($_data['func']);
 			unset($_data['right_side_finger']);
@@ -268,7 +252,10 @@ class Client extends DB{
 			unset($_data['source']);
 			unset($_data['btn_add_client']);
 		}
-	    
+		$Fingerprint->clean_data($_data);
+		if($_data['date_death']==='') {
+			unset($_data['date_death']);
+		}
 		unset($_data['id']);
 		unset($_data['class']);
 		unset($_data['func']);
@@ -310,26 +297,12 @@ class Client extends DB{
 			}		
 		}
 
-		$query = "SELECT * FROM tbl_fingerprint WHERE client_id = '$id'";
-		$stmt = $this->query($query,array());
-		$_all_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-		if(count($_all_data) > 0) {
-			$data1 = $this->update($finger_1, $_all_data[0]['ID'], $_all_data[0]['client_id'] );
-			$data2 = $this->update($finger_2, $_all_data[1]['ID'], $_all_data[1]['client_id'] );
-			$data3 = $this->update($finger_3, $_all_data[2]['ID'], $_all_data[2]['client_id'] );
-		}
-		else {
-			$dataFinger['client_id'] = $id;
-			$dataFinger['finger_data'] = $finger_1;
-			$data1 = $this->save($dataFinger, array(), "tbl_fingerprint", "lastInsertId");
-			$dataFinger['finger_data'] = $finger_2;
-			$data2 = $this->save($dataFinger, array(), "tbl_fingerprint", "lastInsertId");
-			$dataFinger['finger_data'] = $finger_3;
-			$data3 = $this->save($dataFinger, array(), "tbl_fingerprint", "lastInsertId");
-		}
+		
+		$Fingerprint->fpupdate($id);
 		$this->table = 'tbl_client';
 		$data = $this->save($_data,array("ID"=>$id));
-
+		
+		
 		// if($data==false){
 		// 	echo "error";
 		// }
@@ -646,6 +619,7 @@ class Client extends DB{
 		global $type;
 		global $district;
 		global $province;
+		global $Fingerprint;
 		ob_start();
 				?>
 		<!-- <div id="modal-body"> -->
@@ -735,29 +709,12 @@ class Client extends DB{
 		          	</div>
       	  <?php }?>
           <div class="form-group " >    
-		    <input class="btn btn-primary" style="text-align: center; font-size: 13px;" type="button" id="image_id" value="Click this to register finger print !" />
+		    <?php $Fingerprint->register_starter() ?>
 	      </div>
-		  <div class="form-group">
-		    <input name="right_side_finger" type="text" id="right_side_finger" value="" readonly style = " display: none; border: 0px; font-size: 12px"/>
-		    <input name="center_finger" type="text" id="center_finger" value="" readonly style = " display: none; border: 0px; font-size: 12px"/>
-		    <input name="left_side_finger" type="text" id="left_side_finger" value="" readonly style = " display: none; border: 0px; font-size: 12px"/>
-		  </div>
-          <div id="imgDiv" style="margin-top: 10px; float: right; padding: 2px; margin-right: 7px;">
-          <input name="source" type="text" id="source" value="modal" readonly style = "display: none;"/>
-		  <input name="es" type="text" id="es" value="Scanner not ready! " readonly style = "border: 0px; font-size: 12px"/>
-			<span class = ""> 
-				<small style="margin-left: 7px; margin-top: 18px; text-align: center; position: absolute; font-size: 10px;">&nbsp;Right</small>
-				<img id = "image11" class="fingerprint-preview-on-modal" alt="" width="45px" height="45px"/>
-			</span>
-			<span class = ""> 
-				<small style="margin-left: 5px; margin-top: 18px; text-align: center; position: absolute; font-size: 10px;">&nbsp;Center</small>
-				<img id = "image2" alt="" width="45px" height="45px" class="fingerprint-preview-on-modal" />
-			</span>
-			<span class = ""> 
-				<small style="margin-left: 9px; margin-top: 18px; text-align: center; position: absolute; font-size: 10px;">&nbsp;Left</small>
-				<img id = "image3" alt="" width="45px" height="45px" class="fingerprint-preview-on-modal" />
-			</span>
-		  </div>
+		  <?php 
+			$Fingerprint->register_fields();
+			$Fingerprint->register_preview(); 
+		  ?>
 		  
 		  <input id="btn_add_client" disabled style="margin-top: 20px;" type="submit" class="btn btn-success btn-default">
         </form>
@@ -770,143 +727,13 @@ class Client extends DB{
 	    modal_container("Client",$output);
 	}	
 	function scripts(){
+		global $Fingerprint;
+		$Fingerprint->scripts();
 		?>
 		<script>
 		var hidden = true;
-		var finger_value = 1;
 		var checked = false;
 		$(document).ready(function(){
-			$("#image_id").click(function(){
-				document.getElementById("source").value = "modal";
-				checked = true;
-				if ("WebSocket" in window) {
-					console.log("ready");
-					connect("ws://127.0.0.1:21187/fps");
-				} else {
-					$('#es').val('Browser does not support!');
-				};
-				function ws_send(str) {
-					try {
-						ws.send(str);
-					} catch (err) {
-						$('#es').val('error');
-					}
-				}
-				function connect(host) {
-					$('#es').val("Connecting to " + host + " ...");
-					try {
-						ws = new WebSocket(host); // create the web socket
-						console.log('Websocket created')
-					} catch (err) {
-						$('#es').val('error');
-					}
-					ws.onopen = function () {
-						$('#es').val('Connected OK!');
-						EnrollTemplate();
-					};
-					ws.onmessage = function (evt) {
-						var obj = eval("("+evt.data+")");
-						var status = document.getElementById("es");
-						switch (obj.workmsg) {
-							case 1:
-								status.value = "Please Open Device";
-								break;
-							case 2:
-								if(finger_value == 1){
-									status.value = "Place Right Index Finger";
-								}else if (finger_value == 2){
-									status.value = "Place Right Index Finger";
-								}else if (finger_value == 3){
-									status.value = "Place Right Index Finger";
-								}
-								document.getElementById("image_id").disabled = true;
-								break;
-							case 3:
-								status.value = "Lift Thumb";
-								break;
-							case 6:
-								if (obj.retmsg == 1) {
-									if (obj.data1 != "null") {
-										status.value = "Finger Print Specimen Ready";
-										if(finger_value == 1){
-											document.getElementById("right_side_finger").value = obj.data1;
-											document.getElementById("image11").setAttribute("style", "border-radius: 0px; border:2px solid green;");
-											finger_value = 2;
-											EnrollTemplate();
-										}else if (finger_value == 2){
-											document.getElementById("center_finger").value = obj.data1;
-											document.getElementById("image2").setAttribute("style", "border-radius: 0px; border:2px solid green;");
-											finger_value = 3;
-											EnrollTemplate();
-										}else if (finger_value == 3){
-											document.getElementById("left_side_finger").value = obj.data1;
-											document.getElementById("image3").setAttribute("style", "border-radius: 0px; border:2px solid green;");
-											finger_value = 1;
-											document.getElementById("btn_add_client").disabled = false;
-											document.getElementById("image_id").disabled = true;
-											console.log("Finger final value "+finger_value);
-										}
-									} else {
-										status.value = "Please Click Again !";    
-									}
-								} else {
-									status.value = "Enrol Template Fail";
-									EnrollTemplate();
-								}
-								break;
-							case 7:
-								if (obj.image == "null") {
-									alert("Please try again !")
-								} else {
-									if(finger_value == 1){
-										var img = document.getElementById("image11");
-										img.src = "data:image/png;base64,"+obj.image;
-									}else if (finger_value == 2){
-										var img = document.getElementById("image2");
-										img.src = "data:image/png;base64,"+obj.image;
-									}else if (finger_value == 3){
-										var img = document.getElementById("image3");
-										img.src = "data:image/png;base64,"+obj.image;
-									}
-								}
-								break;
-							case 8:
-								status.value = "Time Out";
-								document.getElementById("image_id").disabled = false;
-								break;
-							case 9:
-
-								if(obj.retmsg >= 100){
-									window.result = 1; 
-								}
-									results.push(obj.retmsg); 
-									count_occur++;            
-								break;
-							}
-						};
-						ws.onclose = function () {
-							document.getElementById("es").value = "Closed!";
-						};
-				};
-			});
-			function EnrollTemplate(){
-				console.log('Enrolling Template')
-				try {
-					var cmd = "{\"cmd\":\"enrol\",\"data1\":\"\",\"data2\":\"\"}";
-					ws.send(cmd);
-					if(finger_value == 1){
-						document.getElementById("es").value = "Place Left Side Thumb";
-					}else if (finger_value == 2){
-						document.getElementById("es").value = "Place Center Thumb";
-					}else if (finger_value == 3){
-						document.getElementById("es").value = "Place Right Side Thumb";
-					}
-					document.getElementById("image_id").disabled = true;
-				} catch (err) {
-					console.log('Something is wrong')
-				}
-				
-			}
 			//Code added by Eric
 			var hold_dob = ""; //this will hold the previous birthdate value
 			$("#date_birth").click(function(){
@@ -1006,7 +833,10 @@ class Client extends DB{
 							show_alert_info("Record Modified Successfully!",$);
 						}						
 					}
-					else { $("#newClientModal").modal('hide'); console.log(data); }	
+					else { 
+						// $("#newClientModal").modal('hide'); 
+						console.log(data); 
+					}	
 					$(".container table").load(window.location.href+" table",function(){
 						close_loader($);
 					});

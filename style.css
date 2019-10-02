@@ -748,3 +748,27 @@ a.list-group-item{
   border:1px solid grey;
   border-radius: 5px;
 }
+
+
+
+
+/* New finger print preview */
+.fingerprint-preview-container {
+  border:1px solid #ccc;
+  text-align: center;
+  position:relative;
+}
+.fingerprint-preview {
+  background: url(./images/fingerprint.png) no-repeat;
+  width: 200px;
+  height: 200px;
+  display: inline-block;
+  background-size: contain;
+  opacity:0;
+}
+#fingerprint-status {
+  position:absolute;
+  right:10px;
+  top:10px;
+  font-size:12px;
+}

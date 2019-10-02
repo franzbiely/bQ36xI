@@ -42,9 +42,10 @@ include("models/cls_catchment.php");
 include('./popups/malnutrition.blade.php');
 include('./component/Malnutrition.php');
 include('./component/Anchblevel.php');
+include('./component/Fingerprint.php');
 
 // DECLARING THE OBJECTS
-global $users,$catchment, $office, $client, $clinic, $province, $district, $llg, $type, $record, $reports, $main, $permission, $relationship, $Malnutrition_Blade_Popup;
+global $users,$catchment, $office, $client, $clinic, $province, $district, $llg, $type, $record, $reports, $main, $permission, $relationship, $Malnutrition_Blade_Popup, $Fingerprint;
 
 $user = new User(); 
 $office = new Office();
@@ -61,6 +62,7 @@ $main = new Client();
 $permission = new Permission();
 $relationship = new Relationship();
 $Malnutrition_Blade_Popup = new Malnutrition_Blade_Popup();
+$Fingerprint = new Fingerprint();
 
 $Malnutrition = new Malnutrition();
 

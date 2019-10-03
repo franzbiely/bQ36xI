@@ -71,7 +71,7 @@ if($_GET['p'] != "update") {
                         Edit Personal Info</a>
                     <?php endif; ?>
                      <?php if($_GET['p']=="update") : ?>
-                        <input type="submit" id="save_info" disabled class="btn btn-default pull-right btnedit" value="Save Personal Info"> 
+                        <input type="submit" id="save_info" class="btn btn-default pull-right btnedit" value="Save Personal Info"> 
                       <?php endif; ?> 
                       
                 </div>

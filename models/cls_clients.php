@@ -146,8 +146,13 @@ class Client extends DB{
 
 		$this->table = "tbl_client";
 		$_data = $_POST;
-		$arr2 = array("office_id"=>$_SESSION['office_id']);		
-		$_data = array_merge($_data, $arr2);
+		if(!isset($_data['district'])) { // provinces without district like 'Oro'
+			$_data['district']=0;
+		}
+		if(!isset($_data['office_id'])) {
+			$arr2 = array("office_id"=>$_SESSION['office_id']);		
+			$_data = array_merge($_data, $arr2);
+		}
 
 		unset($_data['class']);
 		unset($_data['func']);
@@ -162,6 +167,7 @@ class Client extends DB{
 		unset($_data['es']);
 		unset($_data['btn_add_client']);
 		unset($_data['source']);
+		$Fingerprint->clean_data($_data);
 		if(isset($_data['is_archived'])){
 			$_data['is_archived']=($_data['is_archived']=="on") ? 1 : 0;	
 			$_data['date_archived']=date("m.d.y");
@@ -253,7 +259,7 @@ class Client extends DB{
 			unset($_data['btn_add_client']);
 		}
 		$Fingerprint->clean_data($_data);
-		if($_data['date_death']==='') {
+		if($_data['date_death']==='' || $_data['date_death']==='Unset') {
 			unset($_data['date_death']);
 		}
 		unset($_data['id']);
@@ -834,7 +840,7 @@ class Client extends DB{
 						}						
 					}
 					else { 
-						// $("#newClientModal").modal('hide'); 
+						$("#newClientModal").modal('hide'); 
 						console.log(data); 
 					}	
 					$(".container table").load(window.location.href+" table",function(){

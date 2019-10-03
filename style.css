@@ -772,3 +772,15 @@ a.list-group-item{
   top:10px;
   font-size:12px;
 }
+.fingerprint-search-container {
+  margin:20px; border-radius: 50%;
+  background:#eee;
+  width:150px;
+  height:150px;
+  display: inline-block;
+}
+#fingerprint-search-status {
+  display: block;
+  font-size: 20px;
+  margin-bottom: 10px;
+}

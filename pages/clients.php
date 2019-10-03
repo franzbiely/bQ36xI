@@ -1,5 +1,6 @@
-
-<?php header_nav_bar("user", "Clients") ?>
+<?php 
+global $Fingerprint;
+header_nav_bar("user", "Clients") ?>
   <div class="container">    
     <div class="row">
       <div class="col-md-3">
@@ -11,13 +12,7 @@
         <div class="page-header">
           <h1 id="overview" style="width: 100%; padding-top: 10px; margin-top: 20px;">Clients Records
             <?php $client->pagination() ?>  
-             <a id="searchClientFingerPrint" type="button"  class="btn btn-success"
-              <?php if($_SESSION['type']!='superadmin') {
-                 if (enablea_and_disable_ele($_SESSION['type'], "add", $_SESSION['client_section']) == false) { echo "hide"; }
-               }else{  echo "hide"; }
-               ?>
-              style="margin-left: 10px; float: right;"data-toggle="modal" href="#"
-            ><i class ="glyphicon glyphicon-search"></i> Search By FingerPrint </a>
+             <?php $Fingerprint->search_starter(); ?>
             <a id="addClient" type="button" class="btn btn-default
               <?php if($_SESSION['type']!='superadmin') {
                   if (enablea_and_disable_ele($_SESSION['type'], "add", $_SESSION['client_section']) == false) { echo "hide"; }
@@ -25,15 +20,7 @@
                ?>" 
               style="float: right;"data-toggle="modal" href="#newClientModal"
             >Add New Client </a> 
-            <div  id = "image_div" class="row hide">
-              <div class="searching-left">
-                  <input name="finger_search" id="finger_search" type="text" id="right_side_finger" value="" readonly style = " display: none; border: 0px; font-size: 12px"/>
-                  <img class="" id = "image1" alt="" width="80px" height="87px" style = "margin-left: 8px; float: center; border: 0.3px solid grey; border-radius: 50%;"/>
-              </div>
-              <div class="searching-right">
-                <input class="" name="ess" type="text" id="ess" value="Register Your Finger Here >>" readonly />
-              </div>
-					  </div>
+            <?php $Fingerprint->search_preview() ?>
             <?php $client->modal(); ?>             
           </h1> 
         </div>
@@ -102,13 +89,16 @@
       var client_id;
 
       $("#searchClientFingerPrint").click(function(){
-
+        
         if(hidden == true){
           $("#image_div").fadeIn('slow');
           $("#image_div").removeClass('hide');
           $("#image_div").addClass('show');
           hidden = false;
         }else if(hidden == false){
+          if(ws2) {
+            delete ws2;
+          }
           $("#image_div").fadeIn('slow');
           $("#image_div").removeClass('show');
           $("#image_div").addClass('hide');
@@ -116,54 +106,54 @@
         }
         if ("WebSocket" in window) {
 					console.log("ready");
-					connect("ws://127.0.0.1:21187/fps");
+					search_connect("ws://127.0.0.1:21187/fps");
 				} else {
-					$('#ess').val('Browser does not support!');
+					$('#fingerprint-search-status').html('Browser does not support!');
 				};
 				function ws_send(str) {
 					try {
 						ws.send(str);
 					} catch (err) {
-						$('#ess').val('error');
+						$('#fingerprint-search-status').html('error');
 					}
 				}
-        function connect(host) {
-  				  $('#ess').val("Connecting to " + host + " ...");
+        function search_connect(host) {
+          $('#fingerprint-search-status').html("Connecting to " + host + " ...");
     				try {
-    					ws = new WebSocket(host); // create the web socket
+    					ws2 = new WebSocket(host); // create the web socket
               console.log('Websocket created')
     				} catch (err) {
-    					$('#ess').val('error');
+    					$('#fingerprint-search-status').html('error');
     				}
-  				ws.onopen = function () {
-  					$('#ess').val('Connected OK!');
+  				ws2.onopen = function () {
+  					$('#fingerprint-search-status').html('Connected OK!');
   					EnrollTemplate1();
   				};
-  				ws.onmessage = function (evt) {
+  				ws2.onmessage = function (evt) {
   					var obj = eval("("+evt.data+")");
-  					var status = document.getElementById("ess");
+  					var status = document.getElementById("fingerprint-search-status");
   					switch (obj.workmsg) {
   						case 1:
-  							status.value = "Please Open Device";
+              $('#fingerprint-search-status').html("Please Open Device");
   							break;
   						case 2:
-  							status.value = "Place Right Index Finger";
+              $('#fingerprint-search-status').html("Place Right Thumb");
   							break;
   						case 3:
-  							status.value = "Lift Finger";
+              $('#fingerprint-search-status').html("Lift Finger");
   							break;
   						case 5:
   							if (obj.retmsg == 1) {
                   results = [];
-  								status.value = "Searching Client...!";
+  								$('#fingerprint-search-status').html("Searching Client...!");
   								if (obj.data2 != "null") {
   									attempt = obj.data2;
   									MatchTemplate();
   								} else {
-  									status.value = "Get Template Fail";
+  									$('#fingerprint-search-status').html("Get Template Fail");
   								}
   							}else {
-  								status.value = "Get Template Fail";
+  								$('#fingerprint-search-status').html("Get Template Fail");
   							}
   							break;
   						case 7:
@@ -175,12 +165,13 @@
   							}
   							break;
   						case 8:
-  							status.value = "Time Out";
+                $('#fingerprint-search-status').html("Time Out");
                 var img = document.getElementById("image1");
                 img.src = "";
-                setInterval(function (){
-                    EnrollTemplate1();
-                  },2000);
+                $("#image_div").fadeIn('slow');
+                $("#image_div").removeClass('show');
+                $("#image_div").addClass('hide');
+                hidden = true;
   							break;
   						case 9:
   							if(obj.retmsg >= 100){
@@ -193,8 +184,9 @@
   							break;
   						}
   					};
-  					ws.onclose = function () {
-  						document.getElementById("ess").value = "Closed!";
+  					ws2.onclose = function () {
+  						$('#fingerprint-search-status').html("Closed!");
+              delete(ws2)
   					};
   				};
 			  });
@@ -202,8 +194,9 @@
         console.log('EnrollTemplate1');
 				try {
           var cmd = "{\"cmd\":\"capture\",\"data1\":\"\",\"data2\":\"\"}";
-					ws.send(cmd);
-          document.getElementById("ess").value = "Place Right Index Finger";
+					ws2.send(cmd);
+          console.log('im in')
+          $('#fingerprint-search-status').html("Place Right Thumb");
 				} catch (err) {
           console.log('Something is wrong', err);
         }
@@ -229,11 +222,11 @@
               }
               try {
                 var cmd = "{\"cmd\":\"setdata\",\"data1\":\"" + attempt + "\",\"data2\":\""  + "\"}";
-                ws.send(cmd);
+                ws2.send(cmd);
                 var cmd = "{\"cmd\":\"setdata\",\"data1\":\"" + "\",\"data2\":\"" + concat + "\"}";
-                ws.send(cmd);
+                ws2.send(cmd);
                 var cmd = "{\"cmd\":\"match\",\"data1\":\"\",\"data2\":\"\"}";
-                  ws.send(cmd);
+                  ws2.send(cmd);
                   console.log('Result', window.result);
                 } catch (err) {}	
             });
@@ -254,7 +247,7 @@
             window.location.href = "?page=records&cid=" +content[results.indexOf(100)].client_id+ "&p=view";
             clearInterval(timer);
           }else{
-            alert("The system does not recognize the fingerprint. You may need to TRY AGAIN or register your fingerprint.");
+            alert("Finger scan not recorded");
             clearInterval(timer);
             EnrollTemplate1();
           }           

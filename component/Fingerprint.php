@@ -2,9 +2,11 @@
 // error_reporting(1);
 class Fingerprint extends DB {
     public $number_of_specimen;
+    public $number_of_batch;
 	public function __construct() {
         parent::__construct();
         $this->number_of_specimen = 5;
+        $this->number_of_batch = 1; // keep this as 1 always, if this will be changed, you must change the fetch to fetchAll below in getbatch(), and other else. please trace.
     }
     public function search_starter() {
         ?>
@@ -23,7 +25,7 @@ class Fingerprint extends DB {
         
             <div class="form-group fingerprint-preview-container">
                 <input name="finger_search" id="finger_search" type="text" id="right_side_finger" value="" readonly style = " display: none; border: 0px; font-size: 12px"/>
-                <img class="fingerprint-search-container" id="image1" alt="" width="150" height="150" />
+                <img class="fingerprint-search-container" id="fingerprint-search-preview" alt="" width="150" height="150" />
                 <span id="fingerprint-search-status"></span>
             </div>
             
@@ -37,7 +39,7 @@ class Fingerprint extends DB {
     }
     public function register_fields() {
         for($x=1;$x<=$this->number_of_specimen;$x++) {
-            ?><input type="hidden" name="fingerprint_<?php echo $x ?>" id="fingerprint_<?php echo $x ?>" /><?php
+            ?><input type="hidden" class="fingerprint_fields" name="fingerprint_<?php echo $x ?>" id="fingerprint_<?php echo $x ?>" /><?php
         }
     }
     public function register_preview() {
@@ -82,129 +84,173 @@ class Fingerprint extends DB {
             let finger_value = 0;
             let dummy_finger_value = 0;
             let number_of_specimen = <?php echo $this->number_of_specimen ?>;
-            
-            $(document).ready(function(){
+            let number_of_batch = <?php echo $this->number_of_batch ?>;
+            let ws;
+            let checked_cid = 0;
+            // Search purpose 
+            var hidden = true;
+            var attempt = null;
+            $(document).ready(function () {
                 function ws_send(str) {
-					try {
-						ws.send(str);
-					} catch (err) {
-						console.log('Error');
-					}
+                    try {
+                        ws.send(str);
+                    } catch (err) {
+                        console.log('Error');
+                    }
                 }
-                function connect(host) {
-					$('#fingerprint-status').html("Connecting to " + host + " ...");
-					try {
-						ws = new WebSocket(host); // create the web socket
-						$('#fingerprint-status').html('Websocket created')
-					} catch (err) {
-						$('#fingerprint-status').html('Error on connect');
-					}
-					ws.onopen = function () {
-					    $('#fingerprint-status').html('Connected OK!');
-						EnrollTemplate();
-					};
-					ws.onmessage = function (evt) {
-                        var obj = eval("("+evt.data+")");
-                        console.log('finger_value', finger_value)
-						switch (obj.workmsg) {
-							case 1:
-								alert("Please Open Device");
-								break;
-							case 2:
-								if (finger_value < number_of_specimen){
-                                    if(passed) {
+                function onOpen() {
+                    $('#fingerprint-status').html('Connected OK!');
+                }
+                function onMessage(evt, type='') {
+                    var obj = eval("(" + evt.data + ")");
+                    const statusDOM = (type === "register") ? $('#fingerprint-status') : $('#fingerprint-search-status');
+                    switch (obj.workmsg) {
+                        case 1:
+                            statusDOM.html("Please Open Device");
+                            break;
+                        case 2:
+                            if (type === "register") {
+                                if (finger_value < number_of_specimen) {
+                                    if (passed) {
                                         passed = false;
-                                        $('.fingerprint-preview').css({opacity: (finger_value/number_of_specimen)})
-                                        $('.fingerprint-percentage').html(Math.floor((finger_value/number_of_specimen)*100) + '%')
+                                        $('.fingerprint-preview').css({ opacity: (finger_value / number_of_specimen) })
+                                        $('.fingerprint-percentage').html(Math.floor((finger_value / number_of_specimen) * 100) + '%')
                                     }
                                     else {
-                                        dummy_finger_value = dummy_finger_value+0.2;
-                                        $('.fingerprint-preview').css({opacity: (finger_value/number_of_specimen + 0.1)})
-                                        $('.fingerprint-percentage').html(Math.floor((dummy_finger_value/number_of_specimen)*100) + '%')
-                                    
-                                    }
-                                    
-                                    $('#fingerprint-status').html('Place Right Thumb')
-                                }
-								document.getElementById("fingerprint_start").disabled = true;
-								break;
-							case 3:
-                                $('#fingerprint-status').html("Lift Finger");
-								break;
-                            case 4:
-                                console.log('No changes on case 4')
-                                break;
-                            case 5:
-                                if (obj.retmsg == 1) {
-                                    $('#fingerprint-status').html("Get Template OK");
-                                } else {
-                                    $('#fingerprint-status').html("Get Template Fail");
-                                }
-                                break;
-							case 6:
-								if (obj.retmsg == 1) {
-                                    if (obj.data1 != "null") {
-                                        finger_value++;
-                                        dummy_finger_value = finger_value;
-                                        $("#fingerprint_"+finger_value).val( obj.data1 );
-                                        $('.fingerprint-preview').css({opacity: (finger_value/number_of_specimen)})
-                                        $('.fingerprint-percentage').html(Math.floor((finger_value/number_of_specimen)*100) + '%')
-                                            
-                                        if(finger_value < number_of_specimen) {
-                                            passed=true;
-                                            EnrollTemplate();
-                                            break;
-                                        }
-                                        else {
-                                            if(document.getElementById("btn_add_client")) {
-                                                document.getElementById("btn_add_client").disabled = false;
-                                            }
-                                            
-                                            document.getElementById("fingerprint_start").disabled = true;
-                                            $('#fingerprint-status').html("Fingerprint Ready"); 
-                                            ws.onclose();
-                                            finger_value=0; 
-                                        }
-									} else {
-                                        // $('#fingerprint-status').html("Please Press Again");    
-									}
-								} else {
-									$('#fingerprint-status').html("Enroll Template Fail");
-									EnrollTemplate();
-								}
-								break;
-							case 7:
-                                console.log('Preview')
-								if (obj.image == "null") {
-									alert("Please try again.")
-								} else {
-                                    if(!passed) {
-                                        dummy_finger_value = dummy_finger_value+0.2;
-                                        $('.fingerprint-preview').css({opacity: (finger_value/number_of_specimen + 0.1)})
-                                        $('.fingerprint-percentage').html(Math.floor((dummy_finger_value/number_of_specimen) *100) + '%')
-                                    }
-								}
-								break;
-							case 8:
-                                $('#fingerprint-status').html("Time Out");
-								document.getElementById("fingerprint_start").disabled = false;
-								break;
-							case 9:
+                                        dummy_finger_value = dummy_finger_value + 0.2;
+                                        $('.fingerprint-preview').css({ opacity: (finger_value / number_of_specimen + 0.1) })
+                                        $('.fingerprint-percentage').html(Math.floor((finger_value / number_of_specimen) * 100) + 1 + '%')
 
-								if(obj.retmsg >= 100){
-									window.result = 1; 
-								}
-									results.push(obj.retmsg); 
-									count_occur++;            
-								break;
-							}
-						};
-						ws.onclose = function () {
-							$('#fingerprint-status').html("Ready");
-						};
+                                    }
+                                }
+                                document.getElementById("fingerprint_start").disabled = true;
+                            }
+                            else {
+                                setTimeout(function() {
+                                    GetTemplate();
+                                }, 3000)
+                            }
+                            statusDOM.html('Place Right Index Finger')
+                            // if idle for 3 seconds
+                            
+                            break;
+                        case 3:
+                            $('.fingerprint-preview').css({ opacity: (finger_value / number_of_specimen) })
+                            $('.fingerprint-percentage').html(Math.floor((finger_value / number_of_specimen) * 100) + 1 + '%')
+                            statusDOM.html("Lift Finger");
+                            break;
+                        case 4:
+                            console.log('No changes on case 4')
+                            break;
+                        case 5:
+                            if (obj.retmsg == 1) {
+                                results = [];
+                                $('#fingerprint-search-status').html("Searching Client...!");
+                                if (obj.data2 != "null") {
+                                    attempt = obj.data2;
+                                    MatchTemplate();
+                                } else {
+                                    $('#fingerprint-search-status').html("Get Template Fail");
+                                }
+                            } else {
+                                statusDOM.html("Get Template Fail");
+                            }
+                            break;
+                        case 6:
+                            if (obj.retmsg == 1) {
+                                if (obj.data1 != "null") {
+                                    finger_value++;
+                                    dummy_finger_value = finger_value;
+                                    $("#fingerprint_" + finger_value).val(obj.data1);
+                                    $('.fingerprint-preview').css({ opacity: (finger_value / number_of_specimen) })
+                                    $('.fingerprint-percentage').html(Math.floor((finger_value / number_of_specimen) * 100) + '%')
+                                    if (finger_value < number_of_specimen) {
+                                        passed = true;
+                                        EnrollTemplate();
+                                        break;
+                                    }
+                                    else {
+                                        if (document.getElementById("btn_add_client")) {
+                                            document.getElementById("btn_add_client").disabled = false;
+                                        }
+
+                                        document.getElementById("fingerprint_start").disabled = true;
+                                        $('#fingerprint-status').html("Fingerprint Ready");
+                                        ws.onclose();
+                                        finger_value = 0;
+                                    }
+                                } else {
+                                    // $('#fingerprint-status').html("Please Press Again");    
+                                }
+                            } else {
+                                $('#fingerprint-status').html("Enroll Template Fail");
+                                EnrollTemplate();
+                            }
+                            break;
+                        case 7:
+                            if (obj.image == "null") {
+                                statusDOM.html("Please try again.")
+                                GetTemplate();
+                            } else {
+                                if (type === "register" && !passed) {
+                                    dummy_finger_value = dummy_finger_value + 0.2;
+                                    $('.fingerprint-preview').css({ opacity: (finger_value / number_of_specimen + 0.1) })
+                                    $('.fingerprint-percentage').html(Math.floor((finger_value / number_of_specimen) * 100) + 1 + '%')
+                                }
+                                else {
+                                    var img = document.getElementById("fingerprint-search-preview");
+  									img.src = "data:image/png;base64,"+obj.image;
+                                }
+                            }
+                            break;
+                        case 8:
+                            statusDOM.html("Time Out");
+                            document.getElementById("fingerprint_start").disabled = false;
+                            break;
+                        case 9:
+                            
+                            console.log('Result', obj.retmsg)
+                            if (obj.retmsg >= 100) {
+                                window.recordfound = true;
+                                setTimeout(function() {
+                                    // window.open(
+                                    //     "?page=records&cid=" +checked_cid+ "&p=view",
+                                    //     '_blank' // <- This is what makes it open in a new window.
+                                    //     );
+                                    window.location.href = "?page=records&cid=" +checked_cid+ "&p=view";
+                                }, 1000)
+                                
+                            }
+                            else {
+                                // GetTemplate();
+                            }
+                            break;
+                    }
                 };
-                function EnrollTemplate(){
-                    $('#fingerprint-status').html('Place Right Thumb')
+                function onClose() {
+                    $('#fingerprint-status').html("Ready");
+                }
+                function connect(host) {
+                    $('#fingerprint-status').html("Connecting to " + host + " ...");
+                    try {
+                        ws = new WebSocket(host); // create the web socket
+                        $('#fingerprint-status').html('Websocket created')
+                    } catch (err) {
+                        $('#fingerprint-status').html('Error on connect');
+                    }
+                    ws.onopen = function () {
+                        onOpen();
+                        EnrollTemplate();
+                    }
+                    ws.onmessage = function(evt) {
+                        onMessage(evt, 'register');
+                    }
+                    ws.onclose = function() {
+                        onClose();
+                    }
+                };
+                function EnrollTemplate() {
+                    $('#fingerprint-status').html('Place Right Index Finger')
                     try {
                         var cmd = "{\"cmd\":\"enrol\",\"data1\":\"\",\"data2\":\"\"}";
                         ws.send(cmd);
@@ -214,16 +260,72 @@ class Fingerprint extends DB {
                     }
                 }
                 function GetTemplate() {
-                    $('#fingerprint-status').html('Place Right Thumb')
+                    $('#fingerprint-search-status').html('Place Right Index Finger')
                     try {
                         var cmd = "{\"cmd\":\"capture\",\"data1\":\"\",\"data2\":\"\"}";
                         ws.send(cmd);
                     } catch (err) {
-                        $('#fingerprint-status').html('Something is wrong')
+                        $('#fingerprint-search-status').html('Something is wrong')
                     }
                 }
-                
-                $("#fingerprint_start").on('click',function() {
+                function MatchTemplate() {
+                    // fetch one by one in records until found
+                    $.ajax({
+                        url: 'ajax.php?c=Fingerprint&f=getBatchLength',
+                        // url: 'index.php?c=Fingerprint&f=getbatch&p=2&i=4',
+                        type: 'get',
+                        dataType: 'json',
+                        success: function (batchLength) {
+                            let hasData = false;
+                            for (let x = 0; x < batchLength; x++) {
+                                if(window.recordfound) {
+                                    console.log('breaking')
+                                    break;
+                                }
+                                $.ajax({
+                                    url: 'ajax.php?c=Fingerprint&f=getbatch&p=' + x + '&i=' + number_of_batch,
+                                    type: 'get',
+                                    dataType: 'json',
+                                    success: function (ret) {
+                                        
+                                        console.log('MatchTemplate ', checked_cid)
+                                        try {
+                                            var cmd = "{\"cmd\":\"setdata\",\"data1\":\"" + attempt + "\",\"data2\":\"" + "\"}";
+                                            ws.send(cmd);
+                                            var cmd = "{\"cmd\":\"setdata\",\"data1\":\"" + "\",\"data2\":\"" + ret['finger_data'] + "\"}";
+                                            ws.send(cmd);
+                                            var cmd = "{\"cmd\":\"match\",\"data1\":\"\",\"data2\":\"\"}";
+                                            
+                                            ws.send(cmd);
+                                            if(!window.recordfound) {
+                                                checked_cid = ret.client_id;
+                                                window.recordfound=undefined;
+                                                if(x===(batchLength-1)) {
+                                                    $('#fingerprint-search-status').html('Finger scan not recorded')
+                                                    setTimeout(function() {
+                                                        GetTemplate();
+                                                    }, 2000)
+                                                }
+                                                else {
+                                                    $('#fingerprint-search-status').html('Searched ' + (number_of_batch * (x + 1)) + ' items');
+                                                }
+                                            }
+                                        } catch (err) {
+                                            console.log('Err',err)
+                                        }
+                                        
+                                    }
+                                });
+                                
+                                
+                            }
+                            
+
+                        }
+                    });
+                }
+
+                $("#fingerprint_start").on('click', function () {
                     if ("WebSocket" in window) {
                         console.log("WebSocket Ready");
                         connect("ws://127.0.0.1:21187/fps");
@@ -232,33 +334,68 @@ class Fingerprint extends DB {
                     };
                 })
 
-                // var hidden = true;
-                // var attempt = null;
                 // window.result = 0;
                 // var result_id = null;
-                // var results = [];
-                // $("#searchClientFingerPrint").click(function(){
-                //     if(hidden == true){
-                //         $("#image_div").fadeIn('slow');
-                //         $("#image_div").removeClass('hide');
-                //         $("#image_div").addClass('show');
-                //         hidden = false;
-                //     }else if(hidden == false){
-                //         $("#image_div").fadeIn('slow');
-                //         $("#image_div").removeClass('show');
-                //         $("#image_div").addClass('hide');
-                //         hidden = true;
-                //     }
-                //     if ("WebSocket" in window) {
-                //         console.log("WebSocket Ready");
-                //         search_connect("ws://127.0.0.1:21187/fps");
-                //     } else {
-                //         console.log('Browser does not support!');
-                //     };
-                // });
+                $("#searchClientFingerPrint").click(function () {
+                    if (hidden == true) {
+                        $("#image_div").fadeIn('slow');
+                        $("#image_div").removeClass('hide');
+                        $("#image_div").addClass('show');
+                        hidden = false;
+                        if ("WebSocket" in window) {
+                            console.log("WebSocket Ready");
+                            search_connect("ws://127.0.0.1:21187/fps");
+                        } else {
+                            console.log('Browser does not support!');
+                        };
+                    } else if (hidden == false) {
+                        if (ws) {
+                            ws.close();
+                            $('.fingerprint-search-container').removeAttr('src')
+                        }
+                        $("#image_div").fadeIn('slow');
+                        $("#image_div").removeClass('show');
+                        $("#image_div").addClass('hide');
+                        hidden = true;
+                    }
+                });
+                function search_connect(host) {
+                    $('#fingerprint-search-status').html("Connecting to " + host + " ...");
+                    try {
+                        ws = new WebSocket(host); // create the web socket
+                        console.log('Websocket created')
+                    } catch (err) {
+                        $('#fingerprint-search-status').html('Error');
+                    }
+                    ws.onopen = function () {
+                        onOpen();
+                        GetTemplate();
+                    }
+                    ws.onmessage = function(evt) {
+                        // console.log('onmessage')
+                        onMessage(evt);
+                    }
+                    ws.onclose = function() {
+                        onClose();
+                    }
+                };
             });
         </script>
         <?php
+    }
+    function getbatch() {
+        $query = "SELECT * FROM tbl_fingerprint ORDER BY ID ASC LIMIT ".$_GET['p'].",".$_GET['i'];
+        $stmt = $this->query($query,['']);
+        $array = $stmt->fetch(PDO::FETCH_ASSOC);
+        echo  json_encode($array);
+    }
+    function getBatchLength() {
+        $query = "SELECT COUNT(*) as ret FROM tbl_fingerprint";
+        $stmt = $this->query($query,['']);
+        $array = $stmt->fetch(PDO::FETCH_ASSOC);
+        $ret = $array['ret'] / $this->number_of_batch;
+        echo $ret;
+        exit();
     }
 }
 

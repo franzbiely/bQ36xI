@@ -25,10 +25,11 @@ include("models/cls_type.php");
 include("models/cls_records.php");
 include("models/cls_permission_shema.php");
 include("models/cls_relationship.php");
+include('./component/Fingerprint.php');
 
 
 // DECLARING THE OBJECTS
-global $users, $office, $client, $clinic, $province, $district, $llg, $type, $record, $reports, $main, $permission, $relationship;
+global $users, $office, $client, $clinic, $province, $district, $llg, $type, $record, $reports, $main, $permission, $relationship, $Fingerprint;
 
 $user = new User(); 
 $office = new Office();
@@ -43,6 +44,7 @@ $reports = new Reports();
 $main = new Client();
 $permission = new Permission();
 $relationship = new Relationship();
+$Fingerprint = new Fingerprint();
 $current_page = isset($_GET['page']) ? $_GET['page'] : FRONT_PAGE;
 
 include("functions.php");
@@ -70,9 +72,12 @@ Class Ajax extends DB {
 if(isset($_GET['func'])) {
 	$func = $_GET['func'];
 	$ajax = new Ajax();
+
 	if($func == 'count_anc_visit') {
 		$ajax->count_anc_visit($_GET['client_id']);
 	}
+
+
 }
 if(isset($_GET['capture'])) {
 		$ajax = new Ajax();

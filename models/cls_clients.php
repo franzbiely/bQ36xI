@@ -830,19 +830,30 @@ class Client extends DB{
 						console.log(data);
 					}
 					else if($.trim(data)=="success"){
+						
 						$("#newClientModal").modal('hide');
 						console.log(data);						
 						if($(_this).find("input[name='func']").val()=="add"){
 							show_alert_info("New Record Successfully Added!",$);
+
+							
 						}
 						else{
 							show_alert_info("Record Modified Successfully!",$);
-						}						
+						}	
+						setTimeout(function() {
+							window.location.href="?page=clients"					
+						}, 1000)
+						
 					}
 					else { 
 						$("#newClientModal").modal('hide'); 
 						console.log(data); 
 					}	
+					$(".fingerprint_fields").val('')
+					$('.fingerprint-preview').css('opacity', 0)
+					$('.fingerprint-percentage, #fingerprint-status').html('')
+					document.getElementById("fingerprint_start").disabled = false;
 					$(".container table").load(window.location.href+" table",function(){
 						close_loader($);
 					});
@@ -892,7 +903,10 @@ class Client extends DB{
 			// do something…
 			$("#image11, #image2, #image3").removeAttr("src style");
 			$("#image_id").prop('disabled',false);
-			$("#client_type").next().html("");
+			$(".fingerprint_fields").val('')
+			$('.fingerprint-preview').css('opacity', 0)
+            $('.fingerprint-percentage, #fingerprint-status').html('')
+            $("#client_type").next().html("");
 		});
 		
 		function modal_close($){
@@ -968,12 +982,12 @@ class Client extends DB{
 			$(_this).data('original-title','Edit Records').on('click', "a.edit",function(){		
 				$('.edit_or_add').html('Edit');
 				_this = $(this).parent().parent().parent();
-				$("table tr").removeClass('focus');
+				$("table tr").removeClass('focus');   
 				_this.addClass('focus');
 				_this = $(this).parent().parent().parent();
 				
 				resetForm();
-				$("#newClientModal").each(function(){
+				$("#newClientModal").each(function(){ 
 					$("#client_id").remove();
 					
 					$(this).find('form').prepend('<input type="hidden" id="client_id" name="id" value="'+ $(_this).find('.id').data('id') +'" />');

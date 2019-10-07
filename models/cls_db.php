@@ -168,6 +168,7 @@ class DB{
 			$q.=$where;
 		}	
 		// =============================[ end ]=============
+		
 		$stmt = $con->prepare($q);
         $this->setValue($stmt, $data);
 

@@ -63,7 +63,6 @@ $permission = new Permission();
 $relationship = new Relationship();
 $Malnutrition_Blade_Popup = new Malnutrition_Blade_Popup();
 $Fingerprint = new Fingerprint();
-
 $Malnutrition = new Malnutrition();
 
 $current_page = isset($_GET['page']) ? $_GET['page'] : FRONT_PAGE;

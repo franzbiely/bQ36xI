@@ -835,14 +835,12 @@ class Client extends DB{
 						console.log(data);						
 						if($(_this).find("input[name='func']").val()=="add"){
 							show_alert_info("New Record Successfully Added!",$);
-
-							
 						}
 						else{
 							show_alert_info("Record Modified Successfully!",$);
 						}	
 						setTimeout(function() {
-							window.location.href="?page=clients"					
+							window.location.href="?page=clients"
 						}, 1000)
 						
 					}

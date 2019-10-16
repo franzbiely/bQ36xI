@@ -176,7 +176,7 @@ class Malnutrition_Blade_Popup extends DB{
                 <div class="row">
                     <?php 
                     $this->render_selectfield( ['title'=> 'Reason', 'slug'=>'reason', 'options' => [
-                        'New Enrollment', 'Defaulter', 'Non respondent', 'Relapse'
+                        'New Enrollment', 'Defaulter', 'Non respondent', 'Relapse', 'Review'
                     ]] );
                     
                     $this->render_selectfield( ['title'=> 'HIV Status', 'slug'=>'hiv_status', 'options' => [

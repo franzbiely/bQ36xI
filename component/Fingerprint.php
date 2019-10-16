@@ -229,6 +229,7 @@ class Fingerprint extends DB {
                             break;
                         case 9:
                             if (obj.retmsg >= 60) {
+                                console.log('Record Found')
                                 window.recordfound = true;
                                 recordFound(statusDOM)
                             }
@@ -242,9 +243,9 @@ class Fingerprint extends DB {
             };
             function recordFound(statusDOM) {
                 statusDOM.html("Record Found");
-                // setTimeout(function() {
-                //     window.location.href = "?page=records&cid=" +checked_cid+ "&p=view";
-                // }, 1000)
+                setTimeout(function() {
+                    window.location.href = "?page=records&cid=" +checked_cid+ "&p=view";
+                }, 1000)
             }
             function EnrollTemplate() {
                 $('#fingerprint-status').html('Place Right Index Finger')
@@ -306,7 +307,7 @@ class Fingerprint extends DB {
                                                     $('#fingerprint-search-status').html('Finger scan not recorded')
                                                 }
                                                 else {
-                                                    $('#fingerprint-search-status').html('Searched ' + (number_of_batch * (x + 1)) + ' items');
+                                                    $('#fingerprint-search-status').html('Searched ' + (number_of_batch * (x + 1)/5) + ' items');
                                                 }
                                             }
                                         } catch (err) {

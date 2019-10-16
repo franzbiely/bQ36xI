@@ -233,6 +233,10 @@ class Fingerprint extends DB {
                                 window.recordfound = true;
                                 recordFound(statusDOM)
                             }
+                            else {
+                                console.log(obj.retmsg)
+                                statusDOM.html("Please try again.")
+                            }
                             break;
                     }
                 }

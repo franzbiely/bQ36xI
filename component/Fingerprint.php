@@ -86,6 +86,7 @@ class Fingerprint extends DB {
             let number_of_specimen = <?php echo $this->number_of_specimen ?>;
             let number_of_batch = <?php echo $this->number_of_batch ?>;
             let ws;
+            let x = 0;
             let checked_cid = 0;
             // Search purpose 
             var hidden = true;
@@ -167,13 +168,14 @@ class Fingerprint extends DB {
                             if (obj.retmsg == 1) {
                                 results = [];
                                 $('#fingerprint-search-status').html("Searching Client...!");
+                                
                                 if(obj.data1 != 'null') {
-
+                                    attempt = obj.data1;
                                 }
                                 if (obj.data2 != "null") {
                                     attempt = obj.data2;
-                                    MatchTemplate();
                                 }
+                                MatchTemplate(x);
                             } else {
                                 statusDOM.html("Get Template Fail");
                             }
@@ -208,9 +210,8 @@ class Fingerprint extends DB {
                             }
                             break;
                         case 7:
-                            if (obj.image == "null") {
-                                statusDOM.html("Please try again.")
-                            } else {
+                        console.log('ON 7', obj.image)
+                            if (obj.image != "null") {
                                 dummy_finger_value = dummy_finger_value + 0.2;
                                 $('.fingerprint-preview').css({ opacity: (finger_value / number_of_specimen + 0.1) })
                                 $('.fingerprint-percentage').html(Math.floor((finger_value / number_of_specimen) * 100) + 1 + '%')
@@ -228,14 +229,14 @@ class Fingerprint extends DB {
                             }, 1500)
                             break;
                         case 9:
+                            console.log('I am here', obj.retmsg)
                             if (obj.retmsg >= 60) {
-                                console.log('Record Found')
+                                console.log('Record Found. Redirecting... please wait..')
                                 window.recordfound = true;
                                 recordFound(statusDOM)
                             }
                             else {
                                 console.log(obj.retmsg)
-                                statusDOM.html("Please try again.")
                             }
                             break;
                     }
@@ -246,7 +247,8 @@ class Fingerprint extends DB {
                 }
             };
             function recordFound(statusDOM) {
-                statusDOM.html("Record Found");
+                statusDOM.html("Record Found. Redirecting... please wait..");
+                window.recordFound = false;
                 setTimeout(function() {
                     window.location.href = "?page=records&cid=" +checked_cid+ "&p=view";
                 }, 1000)
@@ -278,50 +280,88 @@ class Fingerprint extends DB {
                 }
                 
             }
-            function MatchTemplate() {
+            function MatchTemplate(x) {
                 console.log('MatchTemplate')
                 $.ajax({
-                    url: 'ajax.php?c=Fingerprint&f=getBatchLength',
+                    url: 'ajax.php?c=Fingerprint&f=getbatch&p=' + x + '&i=' + number_of_batch,
+                    // url: 'ajax.php?c=Fingerprint&f=getBatchLength',
                     type: 'get',
                     dataType: 'json',
-                    success: function (batchLength) {
-                        let hasData = false;
-                        for (let x = 0; x < batchLength; x++) {
-                            if(window.recordfound) {
-                                recordFound($('#fingerprint-status, #fingerprint-search-status'))
-                                break;
-                            }
-                            $.ajax({
-                                url: 'ajax.php?c=Fingerprint&f=getbatch&p=' + x + '&i=' + number_of_batch,
-                                type: 'get',
-                                dataType: 'json',
-                                success: function (ret) {
-                                    if(!window.recordfound) {
-                                        try {
-                                            var cmd = "{\"cmd\":\"setdata\",\"data1\":\"" + attempt + "\",\"data2\":\"" +  "\"}";
-                                            ws.send(cmd);
-                                            var cmd = "{\"cmd\":\"setdata\",\"data1\":\"" + "\",\"data2\":\"" + ret['finger_data'] + "\"}";
-                                            ws.send(cmd);
-                                            var cmd = "{\"cmd\":\"match\",\"data1\":\"\",\"data2\":\"\"}";
-                                            
-                                            ws.send(cmd);
-                                            checked_cid = ret.client_id;
-                                            if(!window.recordfound) {
-                                                if(x===(batchLength-1)) {
-                                                    $('#fingerprint-search-status').html('Finger scan not recorded')
-                                                }
-                                                else {
-                                                    $('#fingerprint-search-status').html('Searched ' + (number_of_batch * (x + 1)/5) + ' items');
-                                                }
-                                            }
-                                        } catch (err) {
-                                            console.log('Err',err)
-                                        }
-                                    }
+                    success: function(ret) {
+                        console.log('success')
+                        for(let y=0; y<ret.length; y++) {
+                            console.log('in loop', y)
+                            if(!window.recordfound) {
+                                console.log('in if')
+                                try {
+                                    var cmd = "{\"cmd\":\"setdata\",\"data1\":\"" + attempt + "\",\"data2\":\"" +  "\"}";
+                                    ws.send(cmd);
+                                    var cmd = "{\"cmd\":\"setdata\",\"data1\":\"" + "\",\"data2\":\"" + ret[y]['finger_data'] + "\"}";
+                                    ws.send(cmd);
+                                    var cmd = "{\"cmd\":\"match\",\"data1\":\"\",\"data2\":\"\"}";
+                                    
+                                    ws.send(cmd);
+                                    checked_cid = ret[y].client_id;
+                                    
+                                } catch (err) {
+                                    console.log('Err',err)
                                 }
-                            });
+                            }
                         }
+                        console.log('window record found', window.recordfound)
+                        if(!window.recordfound) {
+                            if(ret.length > 0){
+                                x+=5
+                                MatchTemplate(x);
+                            }
+                        }
+                        // last iteration
+                        if(ret.length === 0){
+                            if(!window.recordfound) {
+                                $('#fingerprint-search-status').html('Finger scan not recorded')
+                            }
+                        }
+                        
+                        console.log(ret)
                     }
+                    // success: function (batchLength) {
+                    //     let hasData = false;
+                    //     for (let x = 0; x < batchLength; x++) {
+                    //         if(window.recordfound) {
+                    //             recordFound($('#fingerprint-status, #fingerprint-search-status'))
+                    //             break;
+                    //         }
+                    //         $.ajax({
+                    //             url: 'ajax.php?c=Fingerprint&f=getbatch&p=' + x + '&i=' + number_of_batch,
+                    //             type: 'get',
+                    //             dataType: 'json',
+                    //             success: function (ret) {
+                    //                 if(!window.recordfound) {
+                    //                     try {
+                    //                         var cmd = "{\"cmd\":\"setdata\",\"data1\":\"" + attempt + "\",\"data2\":\"" +  "\"}";
+                    //                         ws.send(cmd);
+                    //                         var cmd = "{\"cmd\":\"setdata\",\"data1\":\"" + "\",\"data2\":\"" + ret['finger_data'] + "\"}";
+                    //                         ws.send(cmd);
+                    //                         var cmd = "{\"cmd\":\"match\",\"data1\":\"\",\"data2\":\"\"}";
+                                            
+                    //                         ws.send(cmd);
+                    //                         checked_cid = ret.client_id;
+                    //                         if(!window.recordfound) {
+                    //                             if(x===(batchLength-1)) {
+                    //                                 $('#fingerprint-search-status').html('Finger scan not recorded')
+                    //                             }
+                    //                             else {
+                    //                                 $('#fingerprint-search-status').html('Searched ' + (number_of_batch * (x + 1)/5) + ' items');
+                    //                             }
+                    //                         }
+                    //                     } catch (err) {
+                    //                         console.log('Err',err)
+                    //                     }
+                    //                 }
+                    //             }
+                    //         });
+                    //     }
+                    // }
                 });
             }
             
@@ -331,7 +371,7 @@ class Fingerprint extends DB {
     function getbatch() {
         $query = "SELECT * FROM tbl_fingerprint ORDER BY ID ASC LIMIT ".$_GET['p'].",".$_GET['i'];
         $stmt = $this->query($query,['']);
-        $array = $stmt->fetch(PDO::FETCH_ASSOC);
+        $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo  json_encode($array);
     }
     function getBatchLength() {

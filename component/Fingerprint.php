@@ -299,10 +299,12 @@ class Fingerprint extends DB {
                                     var cmd = "{\"cmd\":\"setdata\",\"data1\":\"" + "\",\"data2\":\"" + ret[y]['finger_data'] + "\"}";
                                     ws.send(cmd);
                                     var cmd = "{\"cmd\":\"match\",\"data1\":\"\",\"data2\":\"\"}";
-                                    
-                                    ws.send(cmd);
                                     checked_cid = ret[y].client_id;
+                                    ws.send(cmd);
                                     
+                                    if(window.recordfound) {
+                                        recordFound(statusDOM)
+                                    }
                                 } catch (err) {
                                     console.log('Err',err)
                                 }

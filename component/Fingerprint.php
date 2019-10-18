@@ -233,7 +233,9 @@ class Fingerprint extends DB {
                             if (obj.retmsg >= 60) {
                                 console.log('Record Found. Redirecting... please wait..')
                                 window.recordfound = true;
+                                console.log('case 9 after window.recordfound=true')
                                 recordFound(statusDOM)
+                                console.log('case 9 after recordFound')
                             }
                             else {
                                 console.log(obj.retmsg)
@@ -301,7 +303,7 @@ class Fingerprint extends DB {
                                     var cmd = "{\"cmd\":\"match\",\"data1\":\"\",\"data2\":\"\"}";
                                     checked_cid = ret[y].client_id;
                                     ws.send(cmd);
-                                    
+                                    console.log('above if(window.recordfound) {')
                                     if(window.recordfound) {
                                         recordFound(statusDOM)
                                     }

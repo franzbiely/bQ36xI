@@ -133,9 +133,11 @@ class Fingerprint extends DB {
                     $('#fingerprint-status, #fingerprint-search-status').html('Connected OK!');
                 }
                 ws.onmessage = function(evt) {
+                    if(window.recordfound) return;
                     var obj = eval("(" + evt.data + ")");
                     const statusDOM = $('#fingerprint-status, #fingerprint-search-status');
                     console.log(obj.workmsg)
+                    
                     switch (obj.workmsg) {
                         case 1:
                             statusDOM.html("Please Open Device");
@@ -236,6 +238,7 @@ class Fingerprint extends DB {
                                 console.log('case 9 after window.recordfound=true')
                                 recordFound(statusDOM)
                                 console.log('case 9 after recordFound')
+                                break;
                             }
                             else {
                                 console.log(obj.retmsg)

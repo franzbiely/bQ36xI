@@ -296,7 +296,10 @@ class Fingerprint extends DB {
                     success: function(ret) {
                         console.log('success')
                         for(let y=0; y<ret.length; y++) {
+                            
                             console.log('in loop', y)
+                            checked_cid = ret[y].client_id;
+                            console.log('Checked_cid set =',checked_cid)
                             if(!window.recordfound) {
                                 console.log('in if')
                                 try {
@@ -305,7 +308,8 @@ class Fingerprint extends DB {
                                     var cmd = "{\"cmd\":\"setdata\",\"data1\":\"" + "\",\"data2\":\"" + ret[y]['finger_data'] + "\"}";
                                     ws.send(cmd);
                                     var cmd = "{\"cmd\":\"match\",\"data1\":\"\",\"data2\":\"\"}";
-                                    checked_cid = ret[y].client_id;
+                                    
+                                    
                                     ws.send(cmd);
                                     console.log('above if(window.recordfound) {')
                                     if(window.recordfound) {

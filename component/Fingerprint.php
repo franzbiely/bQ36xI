@@ -296,7 +296,7 @@ class Fingerprint extends DB {
                     success: function(ret) {
                         console.log('success')
                         for(let y=0; y<ret.length; y++) {
-                            
+                            console.log('ret', ret)
                             console.log('in loop', y)
                             checked_cid = ret[y].client_id;
                             console.log('Checked_cid set =',checked_cid)

@@ -298,6 +298,8 @@ class Fingerprint extends DB {
                         for(let y=0; y<ret.length; y++) {
                             console.log('ret', ret)
                             console.log('in loop', y)
+                            console.log('Ret Y : ',ret[y]);
+                            console.log('Ret Y.client_id : ',ret[y].client_id);
                             checked_cid = ret[y].client_id;
                             console.log('Checked_cid set =',checked_cid)
                             if(!window.recordfound) {

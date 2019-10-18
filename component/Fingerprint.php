@@ -236,6 +236,7 @@ class Fingerprint extends DB {
                                 console.log('Record Found. Redirecting... please wait..')
                                 window.recordfound = true;
                                 console.log('case 9 after window.recordfound=true')
+                                console.log('checked_CID = ', checked_cid)
                                 recordFound(statusDOM)
                                 console.log('case 9 after recordFound')
                                 break;

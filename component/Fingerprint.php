@@ -287,9 +287,8 @@ class Fingerprint extends DB {
                     dataType: 'json',
                     success: function(ret) {
                         for(let y=0; y<ret.length; y++) {
-                            checked_cid = ret[y].client_id;
-                            
                             if(!window.recordfound) {
+                                checked_cid = ret[y].client_id;
                                 console.log('Checking ', checked_cid)
                                 try {
                                     var cmd = "{\"cmd\":\"setdata\",\"data1\":\"" + attempt + "\",\"data2\":\"" +  "\"}";

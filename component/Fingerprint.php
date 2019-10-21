@@ -227,7 +227,7 @@ class Fingerprint extends DB {
                             }, 1500)
                             break;
                         case 9:
-                            if (obj.retmsg >= 60) {
+                            if (obj.retmsg >= 85) {
                                 console.log('Passed ', obj.retmsg)
                                 console.log('CID ', checked_cid)
                                 window.recordfound = true;

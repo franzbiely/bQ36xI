@@ -248,9 +248,9 @@ class Fingerprint extends DB {
             function recordFound(statusDOM) {
                 statusDOM.html("Record Found. Redirecting to "+checked_cid+"... please wait..");
                 window.recordFound = false;
-                // setTimeout(function() {
-                    // window.location.href = "?page=records&cid=" +checked_cid+ "&p=view";
-                // }, 1000)
+                setTimeout(function() {
+                    window.location.href = "?page=records&cid=" +checked_cid+ "&p=view";
+                }, 1000)
             }
             function EnrollTemplate() {
                 $('#fingerprint-status').html('Place Right Index Finger')

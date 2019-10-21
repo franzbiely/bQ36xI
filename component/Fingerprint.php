@@ -136,8 +136,6 @@ class Fingerprint extends DB {
                     if(window.recordfound) return;
                     var obj = eval("(" + evt.data + ")");
                     const statusDOM = $('#fingerprint-status, #fingerprint-search-status');
-                    console.log(obj.workmsg)
-                    
                     switch (obj.workmsg) {
                         case 1:
                             statusDOM.html("Please Open Device");
@@ -212,7 +210,6 @@ class Fingerprint extends DB {
                             }
                             break;
                         case 7:
-                        console.log('ON 7', obj.image)
                             if (obj.image != "null") {
                                 dummy_finger_value = dummy_finger_value + 0.2;
                                 $('.fingerprint-preview').css({ opacity: (finger_value / number_of_specimen + 0.1) })
@@ -222,7 +219,6 @@ class Fingerprint extends DB {
                             }
                             break;
                         case 8:
-                            console.log('timeout')
                             statusDOM.html("Time Out");
                             $('.fingerprint-search-container').removeAttr('src')
                             document.getElementById("fingerprint_start").disabled = false;
@@ -231,18 +227,15 @@ class Fingerprint extends DB {
                             }, 1500)
                             break;
                         case 9:
-                            console.log('I am here', obj.retmsg)
                             if (obj.retmsg >= 60) {
-                                console.log('Record Found. Redirecting... please wait..')
+                                console.log('Passed ', obj.retmsg)
+                                console.log('CID ', checked_cid)
                                 window.recordfound = true;
-                                console.log('case 9 after window.recordfound=true')
-                                console.log('checked_CID = ', checked_cid)
                                 recordFound(statusDOM)
-                                console.log('case 9 after recordFound')
                                 break;
                             }
                             else {
-                                console.log(obj.retmsg)
+                                // console.log(obj.retmsg)
                             }
                             break;
                     }
@@ -253,11 +246,11 @@ class Fingerprint extends DB {
                 }
             };
             function recordFound(statusDOM) {
-                statusDOM.html("Record Found. Redirecting... please wait..");
+                statusDOM.html("Record Found. Redirecting to "+checked_cid+"... please wait..");
                 window.recordFound = false;
-                setTimeout(function() {
-                    window.location.href = "?page=records&cid=" +checked_cid+ "&p=view";
-                }, 1000)
+                // setTimeout(function() {
+                    // window.location.href = "?page=records&cid=" +checked_cid+ "&p=view";
+                // }, 1000)
             }
             function EnrollTemplate() {
                 $('#fingerprint-status').html('Place Right Index Finger')
@@ -274,7 +267,6 @@ class Fingerprint extends DB {
                 try {
                     var cmd = "{\"cmd\":\"capture\",\"data1\":\"\",\"data2\":\"\"}";
                     ws.send(cmd);
-                    console.log('GetTemplate')
                 } catch (err) {
                     console.log('error', err)
                     $('#fingerprint-search-status').html('Something is wrong')
@@ -287,42 +279,33 @@ class Fingerprint extends DB {
                 
             }
             function MatchTemplate(x) {
-                console.log('MatchTemplate')
                 $.ajax({
                     url: 'ajax.php?c=Fingerprint&f=getbatch&p=' + x + '&i=' + number_of_batch,
                     // url: 'ajax.php?c=Fingerprint&f=getBatchLength',
                     type: 'get',
                     dataType: 'json',
                     success: function(ret) {
-                        console.log('success')
                         for(let y=0; y<ret.length; y++) {
-                            console.log('ret', ret)
-                            console.log('in loop', y)
-                            console.log('Ret Y : ',ret[y]);
-                            console.log('Ret Y.client_id : ',ret[y].client_id);
                             checked_cid = ret[y].client_id;
-                            console.log('Checked_cid set =',checked_cid)
+                            
                             if(!window.recordfound) {
-                                console.log('in if')
+                                console.log('Checking ', checked_cid)
                                 try {
                                     var cmd = "{\"cmd\":\"setdata\",\"data1\":\"" + attempt + "\",\"data2\":\"" +  "\"}";
                                     ws.send(cmd);
                                     var cmd = "{\"cmd\":\"setdata\",\"data1\":\"" + "\",\"data2\":\"" + ret[y]['finger_data'] + "\"}";
                                     ws.send(cmd);
                                     var cmd = "{\"cmd\":\"match\",\"data1\":\"\",\"data2\":\"\"}";
-                                    
-                                    
                                     ws.send(cmd);
-                                    console.log('above if(window.recordfound) {')
-                                    if(window.recordfound) {
-                                        recordFound(statusDOM)
-                                    }
                                 } catch (err) {
                                     console.log('Err',err)
                                 }
+                                if(window.recordfound) {
+                                    recordFound(statusDOM)
+                                    break;
+                                }
                             }
                         }
-                        console.log('window record found', window.recordfound)
                         if(!window.recordfound) {
                             if(ret.length > 0){
                                 x+=5
@@ -335,8 +318,6 @@ class Fingerprint extends DB {
                                 $('#fingerprint-search-status').html('Finger scan not recorded')
                             }
                         }
-                        
-                        console.log(ret)
                     }
                     // success: function (batchLength) {
                     //     let hasData = false;

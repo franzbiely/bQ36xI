@@ -246,7 +246,8 @@ class Fingerprint extends DB {
                 }
             };
             function recordFound(statusDOM) {
-                statusDOM.html("Record Found. Redirecting to "+checked_cid+"... please wait..");
+                console.log("Record Found. Redirecting to "+checked_cid+"... please wait..");
+                statusDOM.html("Record Found. Redirecting... please wait..");
                 window.recordFound = false;
                 setTimeout(function() {
                     window.location.href = "?page=records&cid=" +checked_cid+ "&p=view";

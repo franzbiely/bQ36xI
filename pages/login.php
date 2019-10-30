@@ -29,7 +29,7 @@ font-size: 18px;"><strong>Maintenance Mode </strong> We are currently on mainten
 				<div class="innerMain">
 					<div class="mainLeft">
 						<div class="leftPane">
-							<h1>eCIS <br /><span>Electronic Client Record System</span></h1>
+							<h1>eCIS <br /><span>Electronic Client Information System</span></h1>
 							<p>Your Health. Our Primary Concern</p>
 							<!-- <p>Enim dictumst est? Egestas in nec! Mattis amet, sociis porttitor. 
 								Et adipiscing scelerisque porta, mus sociis dictumst. 

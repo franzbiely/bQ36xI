@@ -193,17 +193,21 @@ header{
   width: 100%;
 }
 
-.mainLeft .leftPane h2{
-  line-height: 2.5em;
+.mainLeft .leftPane h1{
   display: block;
-  font-size: 3.0em;
+  font-size: 120px;
   font-family: inherit;
   font-weight: bold;
   color: #fff;
+  margin-bottom: 80px;
+}
+.mainLeft .leftPane h1 span {
+  font-size:40px;
+  display: block;
 }
 
 .mainLeft .leftPane p{
-  font-size: 1.5em;
+  font-size: 2em;
   font-family: inherit;
   text-align: justify; 
   color: #fff;
@@ -697,4 +701,9 @@ a.list-group-item{
       font-size: 12px;
     font-style: italic;
     padding: 5px;
+}
+.navbar-inverse .navbar-brand {
+  font-weight: bold;
+  font-size: 30px;
+  text-shadow: 1px 2px 1px #000;
 }

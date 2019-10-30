@@ -283,7 +283,7 @@ function header_nav_bar($icon, $page, $parent_page=""){
                         $_SESSION['type'] == 'enquiry') : ?>
             href="<?php echo SITE_URL ?>/?page=clients"
           <?php endif ?>
-           title="Susu Mamas | Dashboard">Susu Mamas</a>
+           title="eCIS | Dashboard">eCIS</a>
 	      </div>
 	      <div class="collapse navbar-collapse">
 	        <ul class="nav navbar-nav">

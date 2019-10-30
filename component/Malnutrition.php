@@ -137,7 +137,7 @@ class Malnutrition extends DB{
 			if(count($datas) < 1) : ?>
 				<div class="content" style="background:#ffffff;border:1px solid #d5d5d5; box-shadow: 1px 2px 2px #d3d3d3;width:700px; margin:10px auto 20px;">
 				     <div class="header" style="background:#1abc9c; color: #fff; padding:7px 15px; font-size:22px;">
-				        Susu mamas | Malnutrition
+					 eCIS | Malnutrition
 				     </div>
 				     <div class="body" style="padding:10px 15px;">
 				     	<table border="0" cellpadding="10" cellspacing="0" width="100%" style="font-size:11; font-family:monospace;border-left:1px solid #aaa;">
@@ -163,7 +163,7 @@ class Malnutrition extends DB{
 				foreach($datas as $data) : ?>	
 				  <div class="content" style="background:#ffffff;border:1px solid #d5d5d5; box-shadow: 1px 2px 2px #d3d3d3;width:700px; margin:10px auto 20px;">
 				     <div class="header" style="background:#1abc9c; color: #fff; padding:7px 15px; font-size:22px;">
-				        Susu mamas | Malnutrition
+					 eCIS | Malnutrition
 				     </div>
 				     <div class="body" style="padding:10px 15px;">
 				     	

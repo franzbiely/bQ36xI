@@ -4,7 +4,7 @@
               <?php echo $_SESSION['username'];?> <small>(<?php echo $_SESSION['type'] ?>)</small>
             </br>
             <?php if ($_SESSION['type'] != 'superadmin' && $_SESSION['type'] != 'superreporting'): ?>
-              <?php echo $_SESSION['area_name']; ?> Health Facility
+              <h5><?php echo $_SESSION['area_name']; ?> Health Facility</h5>
             <?php endif ?>
            </a></h4>   
             <a type="button" class="btn btn-primary" style="width: 100%;" href="<?php echo SITE_URL ?>/?c=user&f=logout">Log Out</a>

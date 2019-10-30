@@ -31,10 +31,10 @@ else {
 	<meta charset="UTF-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-	<title>Susu Mamas | Family and Youth Health Services</title>
-	<meta name="description" content="Susu Mamas | Family Health Care Services" />
-	<meta name="keywords" content="susu mamas, login, form, healthcare services, community" />
-	<meta name="author" content="ThemeTribe" />
+	<title>eCIS | Susu Mamas</title>
+	<meta name="description" content="eCIS | Susu Mamas" />
+	<meta name="keywords" content="eCIS, login, form, healthcare services, community" />
+	<meta name="author" content="Kuakawa Solutions" />
 
 	<link rel="shortcut icon" href="<?php echo SITE_URL ?>/images/tab_logo.png"> 
 	<script src="<?php echo SITE_URL ?>/library/jquery-ui-1.10.3/jquery-1.9.1.js" type="text/javascript"></script>

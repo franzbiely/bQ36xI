@@ -20,7 +20,7 @@
                     </a> 
                      <a class="list-group-item" href="?page=offices">
                         <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-globe" style="margin-right: 10px;"></span>Health Facility</h4>
-                        <p class="list-group-item-text">This section allows you to add a new Susu Mamas Health Facility.</p>
+                        <p class="list-group-item-text">This section allows you to add a new eCIS Health Facility.</p>
                       </a>
                     <?php else: ?>
                       <a class="list-group-item <?php if (enablea_and_disable_ele($_SESSION['type'], "view_current_hc", $_SESSION['client_section']) == false) { echo "hide"; }?>" 
@@ -63,7 +63,7 @@
                       </a>
                       <a class="list-group-item" href="?page=offices">
                         <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-globe" style="margin-right: 10px;"></span>Health Facility</h4>
-                        <p class="list-group-item-text">This section allows you to add a new Susu Mamas Health Facility.</p>
+                        <p class="list-group-item-text">This section allows you to add a new eCIS Health Facility.</p>
                       </a>
                      <!--  <a class="list-group-item" href="?page=settings">
                         <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-cog" style="margin-right: 10px;"></span>Settings</h4>

@@ -15,7 +15,7 @@ font-size: 18px;"><strong>Maintenance Mode </strong> We are currently on mainten
 						<img src="images/ssm_original.png" width="70" height="70" draggable="false" style="pointer-events: none;">	
 					</div>
 					<span class="headName">
-						<h2>Susu Mamas</h2><br/>
+						<h2>eCIS | Susu Mamas</h2><br/>
 						<h4>
 							<i>Family and Youth Health Services</i>
 						</h4>
@@ -29,7 +29,8 @@ font-size: 18px;"><strong>Maintenance Mode </strong> We are currently on mainten
 				<div class="innerMain">
 					<div class="mainLeft">
 						<div class="leftPane">
-							<h2>Your Health. Our Primary Concern</h2>
+							<h1>eCIS <br /><span>Electronic Client Record System</span></h1>
+							<p>Your Health. Our Primary Concern</p>
 							<!-- <p>Enim dictumst est? Egestas in nec! Mattis amet, sociis porttitor. 
 								Et adipiscing scelerisque porta, mus sociis dictumst. 
 								Augue, ut et aenean penatibus, augue nunc rhoncus aenean pulvinar. 

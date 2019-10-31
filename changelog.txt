@@ -8,6 +8,7 @@
 v3.37 | 31st of Oct 2019
   - Rename Client DB to eCIS
   - Removed non working links in the footer
+  - Set autologout to 30 minutes
 
 v3.36 | 7th of Sep 2019
   - Refactored ANC Reporting code and CRON settings.

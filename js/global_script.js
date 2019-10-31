@@ -1,7 +1,7 @@
 $(document).ready(function (){
 	show_loading_in_pagination();
 	show_loading_in_search();
-	// autologout($);
+	autologout($);
 
 });
 
@@ -94,7 +94,6 @@ function timestampToDateTimeLocal (timestamp) {
 
 function autologout($) {
 	console.log('callme');
-	// timer for 3 minutes idle
     var idleTime = 0;
     var submitted = false;
 
@@ -107,7 +106,7 @@ function autologout($) {
     });
     function timerIncrement() {
 	    idleTime = idleTime + 1;
-	    if (idleTime > 10) { // 11 minutes
+	    if (idleTime > 30) { // 30 minutes
 	        alert('You have been idle for longer than 10 minutes on the client database. \nPlease login again.');
 	        window.location.href = '/?c=user&f=logout';
 	    }

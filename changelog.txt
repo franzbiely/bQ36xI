@@ -5,6 +5,11 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.38 | 4th of Dec 2019
+  - Swap Reason & RUTF
+  - Position RUTF at bottom of list.
+  - change wording of "Discharged" to "Cured" for outcomes
+
 v3.37 | 31st of Oct 2019
   - Rename Client DB to eCIS
   - Removed non working links in the footer

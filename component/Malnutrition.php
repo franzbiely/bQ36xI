@@ -146,7 +146,7 @@ class Malnutrition extends DB{
 				        			<th style="<?php echo $th_style ?>" width="80">Date</th>
 				        			<th style="<?php echo $th_style ?>" width="180">Patient</th>
 				        			<th style="<?php echo $th_style ?>" width="100">Enrollment Status</th>
-				        			<th style="<?php echo $th_style ?>">No of RUTF Given</th>
+				        			<th style="<?php echo $th_style ?>">Reason of Visit</th>
 				        			<th style="<?php echo $th_style ?>" width="80">Review Date</th>
 				        			<th style="<?php echo $th_style ?>">Outcome of Consultation</th>
 				        		</tr>
@@ -174,7 +174,7 @@ class Malnutrition extends DB{
 				        			<th style="<?php echo $th_style ?>" width="80">Date</th>
 				        			<th style="<?php echo $th_style ?>" width="180">Patient</th>
 				        			<th style="<?php echo $th_style ?>" width="100">Enrollment Status</th>
-				        			<th style="<?php echo $th_style ?>">No of RUTF Given</th>
+				        			<th style="<?php echo $th_style ?>">Reason of Visit</th>
 				        			<th style="<?php echo $th_style ?>" width="80">Review Date</th>
 				        			<th style="<?php echo $th_style ?>">Outcome of Consultation</th>
 				        		</tr>
@@ -193,7 +193,7 @@ class Malnutrition extends DB{
 					        				<strong>Gender</strong> : <?php echo $_data['gender']; ?><br />
 					        				<hr />
 					        				
-											<strong>Reason</strong> : <?php echo $_data['reason']; ?><br />
+											<strong>No of RUTF Given</strong> : <?php echo $_data['rutf']; ?><br />
 					        				<strong>HIV Status</strong> : <?php echo $_data['hiv_status']; ?><br />
 					        				<strong>TB Diagnosed</strong> : <?php echo $_data['tb_diagnosed']; ?><br />
 											<strong>Muac</strong> : <?php echo $_data['muac']; ?><br />
@@ -212,7 +212,7 @@ class Malnutrition extends DB{
 					        				?><br />
 					        				<!-- <strong>Visit #</strong>{under construction} -->
 					        			</td>
-					        			<td style="<?php echo $td_style ?>"><?php echo $_data['rutf'] ?></td>
+					        			<td style="<?php echo $td_style ?>"><?php echo $_data['reason'] ?></td>
 					        			<td style="<?php echo $td_style ?>"><?php echo $_data['review_date_future'] ?></td>
 					        			<td style="<?php echo $td_style ?>"><?php echo $_data['outcome_review'] ?></td>
 					        		</tr>

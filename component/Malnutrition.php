@@ -192,13 +192,12 @@ class Malnutrition extends DB{
 											<strong>Age</strong> : <?php echo $_data['age_year'] . ' year(s) ' . $_data['age_months'] . ' month(s)'; ?><br />
 					        				<strong>Gender</strong> : <?php echo $_data['gender']; ?><br />
 					        				<hr />
-					        				
-											<strong>No of RUTF Given</strong> : <?php echo $_data['rutf']; ?><br />
 					        				<strong>HIV Status</strong> : <?php echo $_data['hiv_status']; ?><br />
 					        				<strong>TB Diagnosed</strong> : <?php echo $_data['tb_diagnosed']; ?><br />
 											<strong>Muac</strong> : <?php echo $_data['muac']; ?><br />
 					        				<strong>Oedema</strong> : <?php echo $_data['oedema']; ?><br />
 					        				<strong>WFH</strong> : <?php echo $_data['wfh']; ?><br />											
+											<strong>No of RUTF Given</strong> : <?php echo $_data['rutf']; ?><br />
 					        			</td>
 					        			<td style="<?php echo $td_style ?>">
 					        				
@@ -247,13 +246,16 @@ class Malnutrition extends DB{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 	public function mail_mal() {
+		
 		$data = $this->fetchNotificationSettingsForMalnutrition();
+		
 		$schedule = array_values(array_filter($data, function($_d) {
 			return ($_d['label']==='malnutrition_schedule');
 		}))[0]['value'];
 		$every = array_values(array_filter($data, function($_d) {
 			return ($_d['label']==='malnutrition_weekly');
 		}))[0]['value'];
+		
 		$datas = $this->compileDataForReports();
 		switch($schedule) {
 			case "daily": 

@@ -245,7 +245,7 @@ class Malnutrition_Blade_Popup extends DB{
                     <label>Outcome of Consultation</label><span class="required_field">*</span>
                     <select class="form-control required_when_able" id="outcome_review" name="outcome_review">
                         <option value="">Select Outcome of Consultation</option>
-                        <option value="Discharged">Discharged</option>
+                        <option value="Cured">Cured</option>
                         <option value="Death">Death</option>
                         <option value="Defaulter">Defaulter</option>
                         <option value="Non Respondent">Non Respondent</option>

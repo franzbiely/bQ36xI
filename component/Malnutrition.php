@@ -2,6 +2,11 @@
 // error_reporting(1);
 require 'library/plugins/vendor/autoload.php';
 class Malnutrition extends DB{
+	
+	// Notes : To rename Discharged to Cured in db record. We just need to trigger this query : 
+	// UPDATE tbl_records SET outcome_review='Cured' WHERE outcome_review = 'Discharged' 
+
+
 	public function __construct() {
 		parent::__construct();
 	}

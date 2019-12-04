@@ -2,6 +2,11 @@
 error_reporting(1);
 require 'library/plugins/vendor/autoload.php';
 class Malnutrition extends DB{
+	
+	// Notes : To rename Discharged to Cured in db record. We just need to trigger this query : 
+	// UPDATE tbl_records SET outcome_review='Cured' WHERE outcome_review = 'Discharged' 
+
+
 	public function __construct() {
 		parent::__construct();
 	}
@@ -146,7 +151,7 @@ class Malnutrition extends DB{
 				        			<th style="<?php echo $th_style ?>" width="80">Date</th>
 				        			<th style="<?php echo $th_style ?>" width="180">Patient</th>
 				        			<th style="<?php echo $th_style ?>" width="100">Enrollment Status</th>
-				        			<th style="<?php echo $th_style ?>">No of RUTF Given</th>
+				        			<th style="<?php echo $th_style ?>">Reason of Visit</th>
 				        			<th style="<?php echo $th_style ?>" width="80">Review Date</th>
 				        			<th style="<?php echo $th_style ?>">Outcome of Consultation</th>
 				        		</tr>
@@ -174,7 +179,7 @@ class Malnutrition extends DB{
 				        			<th style="<?php echo $th_style ?>" width="80">Date</th>
 				        			<th style="<?php echo $th_style ?>" width="180">Patient</th>
 				        			<th style="<?php echo $th_style ?>" width="100">Enrollment Status</th>
-				        			<th style="<?php echo $th_style ?>">No of RUTF Given</th>
+				        			<th style="<?php echo $th_style ?>">Reason of Visit</th>
 				        			<th style="<?php echo $th_style ?>" width="80">Review Date</th>
 				        			<th style="<?php echo $th_style ?>">Outcome of Consultation</th>
 				        		</tr>
@@ -192,13 +197,12 @@ class Malnutrition extends DB{
 											<strong>Age</strong> : <?php echo $_data['age_year'] . ' year(s) ' . $_data['age_months'] . ' month(s)'; ?><br />
 					        				<strong>Gender</strong> : <?php echo $_data['gender']; ?><br />
 					        				<hr />
-					        				
-											<strong>Reason</strong> : <?php echo $_data['reason']; ?><br />
 					        				<strong>HIV Status</strong> : <?php echo $_data['hiv_status']; ?><br />
 					        				<strong>TB Diagnosed</strong> : <?php echo $_data['tb_diagnosed']; ?><br />
 											<strong>Muac</strong> : <?php echo $_data['muac']; ?><br />
 					        				<strong>Oedema</strong> : <?php echo $_data['oedema']; ?><br />
 					        				<strong>WFH</strong> : <?php echo $_data['wfh']; ?><br />											
+											<strong>No of RUTF Given</strong> : <?php echo $_data['rutf']; ?><br />
 					        			</td>
 					        			<td style="<?php echo $td_style ?>">
 					        				
@@ -212,7 +216,7 @@ class Malnutrition extends DB{
 					        				?><br />
 					        				<!-- <strong>Visit #</strong>{under construction} -->
 					        			</td>
-					        			<td style="<?php echo $td_style ?>"><?php echo $_data['rutf'] ?></td>
+					        			<td style="<?php echo $td_style ?>"><?php echo $_data['reason'] ?></td>
 					        			<td style="<?php echo $td_style ?>"><?php echo $_data['review_date_future'] ?></td>
 					        			<td style="<?php echo $td_style ?>"><?php echo $_data['outcome_review'] ?></td>
 					        		</tr>
@@ -247,13 +251,16 @@ class Malnutrition extends DB{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 	public function mail_mal() {
+		
 		$data = $this->fetchNotificationSettingsForMalnutrition();
+		
 		$schedule = array_values(array_filter($data, function($_d) {
 			return ($_d['label']==='malnutrition_schedule');
 		}))[0]['value'];
 		$every = array_values(array_filter($data, function($_d) {
 			return ($_d['label']==='malnutrition_weekly');
 		}))[0]['value'];
+		
 		$datas = $this->compileDataForReports();
 		switch($schedule) {
 			case "daily": 

@@ -136,8 +136,16 @@ class Malnutrition extends DB{
 			
 		}
 		ob_start(); ?>
-
+		<div style="font-size:12px; font-family:Arial;width:700px; margin:10px auto 20px;">
+			<p><strong>Note:</strong> The data within this report contains client consultation records for Malnutrition visit types which includes :</p>
+			<ul>
+				<li>On-going consultation treatment for client with malnutrition records</li>
+				<li>Settled consultation treatment within the current month (<?php echo date('F, Y'); ?>)</li>
+			</ul> 
+			<p>This does not include records that are treated in the past months.</p>
+		</div>
 		<p style="background:#f5f5f2;font-family:Arial;">
+			
 			<?php 
 			if(count($datas) < 1) : ?>
 				<div class="content" style="background:#ffffff;border:1px solid #d5d5d5; box-shadow: 1px 2px 2px #d3d3d3;width:700px; margin:10px auto 20px;">

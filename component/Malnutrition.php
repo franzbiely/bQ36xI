@@ -17,7 +17,7 @@ class Malnutrition extends DB{
 	   $mail->Host = 'mail.smtp2go.com';
 	   $mail->SMTPAuth = true; 
 	   $mail->Username = 'admin@susumamas.org.pg';         
-	   $mail->Password = 'pF2$OsVQozz4';
+	   $mail->Password = 'Y2poLde6Uk%^X@D&K1';
 	   $mail->SMTPSecure = 'tls'; 
 	   $mail->Port = 2525;
 

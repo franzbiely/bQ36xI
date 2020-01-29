@@ -45,9 +45,9 @@ class Records extends DB{
     return $has_MALNUTRITION;
   }
 	function add(){
-    global $Malnutrition_Blade_Popup;
-
-		$_data = $_POST;
+    global $Malnutrition_Blade_Popup, $Immunisation_Blade_Popup;
+    $_data = $_POST;
+    // var_dump($_data);
     unset($_data['class']);
     unset($_data['func']);
     $arr2 = array("client_id"=>$_GET['cid'],"record_type"=>$_data['type'], "office_id"=>$_SESSION['office_id']);   
@@ -60,6 +60,9 @@ class Records extends DB{
       // if malnutrition, then store malnut data to tbl_client_malnutrition
       if(!isset($_data['is_final_consultation'])) {
         $_data['is_final_consultation']='No';
+      }
+      if(isset($_data['immunisation_type']) && $_data['immunisation_type'] !== '') {
+        $_data['client_immunisation_id'] = $Immunisation_Blade_Popup->save_immunisation($_data);  
       }
       if( $_data['hiv_status']!=='' || $_data['is_final_consultation']==='Yes') {
 
@@ -85,7 +88,7 @@ class Records extends DB{
       unset($_data['wfh']);
       unset($_data['series']);
       unset($_data['is_final_consultation']);
-
+      unset($_data['immunisation_type']);
     }
     unset($_data['type']);
 
@@ -332,7 +335,7 @@ class Records extends DB{
   } 
 
 	function consultation_modal($client_info){
-		global $type, $clinic, $client, $catchment, $Malnutrition_Blade_Popup;
+		global $type, $clinic, $client, $catchment, $Malnutrition_Blade_Popup, $Immunisation_Blade_Popup;
 		ob_start();
 		?>
 
@@ -547,6 +550,7 @@ class Records extends DB{
 
 
             <?php $Malnutrition_Blade_Popup->render() ?>
+            <?php $Immunisation_Blade_Popup->render() ?>
             <div class="row">
               <div class="col-md-4">
                 <input style="margin-top: 20px;" type="submit" class="btn btn-success btn-default" >
@@ -828,6 +832,21 @@ class Records extends DB{
 
           $('.required_when_able').not(':focusable').prop('required', false);
           $('.required_when_able:focusable').prop('required', true);
+          // if(this.checked) {
+          //   $('#malnutgroup').find('.required_when_able').prop('required', true)
+          // }  
+          // else {
+          //   $('#malnutgroup').find('.required_when_able').prop('required', false)
+          // }
+      })
+
+      $(document).on('change', '#immunisation', function() {
+          $('#immunisationgroup').toggle(this.checked);
+          console.log('immunisation toggle');
+          // $('.required_when_able').not(':focusable').prop('required', false);
+          // $('.required_when_able:focusable').prop('required', true);
+
+          
           // if(this.checked) {
           //   $('#malnutgroup').find('.required_when_able').prop('required', true)
           // }  

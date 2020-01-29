@@ -39,20 +39,21 @@ class Malnutrition extends DB{
 	      echo 'Message has been sent';
 	   }
 	}
+	
 	private function fetchReportData() {
 		$stmt = $this->query("
 			SELECT a.record_number, CONCAT(a.lname, ', ', a.fname) as fullname, 
-					a.client_type as gender,
-					FLOOR(MOD(DATEDIFF(NOW(), a.date_birth)/365.25 * 12, 12)) as age_months, 
-					FLOOR(DATEDIFF(NOW(), a.date_birth)/365.25) as age_year,
-				   b.date, b.rutf, b.review_date_future, b.ref_hospital, b.outcome_review,
-				   c.series, c.tb_diagnosed, c.hiv_status, c.muac, c.oedema, c.wfh,
-				   c.reason,
-				   d.area_name as province
+				a.client_type as gender,
+				FLOOR(MOD(DATEDIFF(NOW(), a.date_birth)/365.25 * 12, 12)) as age_months, 
+				FLOOR(DATEDIFF(NOW(), a.date_birth)/365.25) as age_year,
+				b.date, b.rutf, b.review_date_future, b.ref_hospital, b.outcome_review,
+				c.series, c.tb_diagnosed, c.hiv_status, c.muac, c.oedema, c.wfh,
+				c.reason,
+				d.area_name as province
             FROM tbl_client a,
-            	 tbl_records b,
-            	 tbl_client_malnutrition c,
-            	 tbl_area d, tbl_clinic e
+				tbl_records b,
+				tbl_client_malnutrition c,
+				tbl_area d, tbl_clinic e
             WHERE b.client_id = a.ID
             AND b.client_malnutrition_id = c.id
             AND d.entry_type='province'
@@ -285,11 +286,9 @@ class Malnutrition extends DB{
 			break;
 		}
 		$body_all_prov = $this->renderEmailBody($datas); //body for all provinces
-		
 		// Loop through provinces and send mail
 		array_push($datas, array('province'=>'All Provinces'));
 		foreach($datas as $key=>$prov) {
-			
 			$emails = $this->getEmailsByProvince( str_replace(' ','_',trim($prov['province'])) );
 			if(isset($emails[0]['value']) && $emails[0]['value']) {
 				$emails = str_replace(' ', '', $emails[0]['value']);
@@ -345,7 +344,10 @@ class Malnutrition extends DB{
 
 	/* ============================= Superadmin Settings > Notification Malnutrition =============*/
 	public function fetchNotificationSettingsForMalnutrition() {
-		return $this->select('*', array(), false, 'tbl_notifications');
+		$stmt = $this->query("
+			SELECT * FROM tbl_notifications WHERE label NOT LIKE '%im%'
+			", array());
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 	public function storeNotificationSettingsForMalnutrition() {
 		unset($_POST['class']);

@@ -5,6 +5,11 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+
+v3.39 | 30th of Jan 2020
+  - Immunisation Feature
+		* Developer Note: To setup, run the new-immunization-alters.sql into the db and then add the Immunisation Visit Type from the superadmin Visit Type Data management.
+
 v3.38 | 4th of Dec 2019
   - Swap Reason & RUTF
   - Position RUTF at bottom of list.

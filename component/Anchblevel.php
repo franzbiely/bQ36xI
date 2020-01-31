@@ -159,7 +159,7 @@ class Anchblevel extends DB{
 		   $data = $reports->get_hb_level_from_today();
 		   $body = $this->body($data);
 		} else if($json['schedule'] == 'monthly') {
-		   if(date('d', strtotime('now')) != "01") {
+		   if(date('m-t-Y') != date('m-d-Y', strtotime('now'))) {
 			  exit;
 		   }
 		   $start_date = date('Y-m-01', strtotime('-1 months'));

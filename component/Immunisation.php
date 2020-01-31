@@ -97,7 +97,7 @@ class Immunisation extends DB
 				}
 				break;
 			case "monthly": 
-				if(date('d', strtotime('now')) != "01") {
+				if(date('m-t-Y') != date('m-d-Y', strtotime('now'))) {
 					exit;
 				}		
 				break;
@@ -386,10 +386,11 @@ class Immunisation extends DB
 				$_note = date('F d, Y', strtotime('-6 days')). ' - '.date('F d, Y', strtotime('now'));
 			break;
 			case "monthly": 
-				$_schedule = cal_days_in_month(CAL_GREGORIAN, date('n', strtotime('-1 days')), date('Y', strtotime('-1 days')));
-				$_note = date('F', strtotime('-'.$_schedule.' days')).' '.date('d', strtotime('-'.$_schedule.' days')).', '.date('Y', strtotime('-'.$_schedule.' days')).' - '.date('F', strtotime('-1 days')).' '.date('d', strtotime('-1 days')).', '.date('Y', strtotime('-1 days'));
+				$_schedule = cal_days_in_month(CAL_GREGORIAN, date('n', strtotime('now')), date('Y', strtotime('now')));
+				$_note = date('F 01, Y'). ' - '.date('F d, Y', strtotime('now'));
 			break;
 		}
+		
 		array_push($_arr, $_schedule, $_note, $im_schedule);
 		return $_arr;
 	}

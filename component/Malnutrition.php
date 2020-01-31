@@ -305,7 +305,7 @@ class Malnutrition extends DB{
 				}
 			break;
 			case "monthly": 
-				if(date('d', strtotime('now')) != "01") {
+				if(date('m-t-Y') != date('m-d-Y', strtotime('now'))) {
 					exit;
 				}		
 			break;

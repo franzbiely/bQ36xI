@@ -42,7 +42,18 @@ class Immunisation extends DB
         }
      }
      private function fetchReportData() {
-		$_schedule = $this->fetchSendSchedule()[0];
+		$_days = $this->fetchSendSchedule()[0];
+		$_schedule = $this->fetchSendSchedule()[2];
+
+		
+		$where = ($_schedule === 'monthly') ? 
+			"AND ( DATEDIFF(NOW(),b.date) <= {$_days} && DATEDIFF(NOW(),b.date) > 0 )": 
+			"AND ( DATEDIFF(NOW(),b.date) <= {$_days} && DATEDIFF(NOW(),b.date) >= 0 )";
+		
+		if($_schedule === 'daily') {
+			$where = "AND ( DATEDIFF(NOW(),b.date) < {$_days} && DATEDIFF(NOW(),b.date) >= 0 )";
+		}
+
 		$stmt = $this->query("
         SELECT a.record_number, CONCAT(a.lname, ', ', a.fname) as fullname, 
             a.client_type as gender,
@@ -58,9 +69,10 @@ class Immunisation extends DB
             AND b.client_immunisation_id = im.id
             AND d.entry_type='province'
 			AND b.clinic_id=e.ID AND e.province=d.ID
-			AND ( DATEDIFF(NOW(),b.date) <= '".$_schedule."' && DATEDIFF(NOW(),b.date) > 0 )	
+			{$where}
         ORDER BY b.date ASC
 		", array());
+		
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     public function mail_mal() {
@@ -169,8 +181,16 @@ class Immunisation extends DB
 		return $output;
 	}
 	public function fetchReportSummary($prov){
-		$_schedule = $this->fetchSendSchedule()[0];
-        $stmt = $this->query('
+		$_days = $this->fetchSendSchedule()[0];
+		$_schedule = $this->fetchSendSchedule()[2];
+
+		$where = ($_schedule === 'monthly') ? 
+			"AND ( DATEDIFF(NOW(),r.date) <= {$_days} && DATEDIFF(NOW(),r.date) > 0 )": 
+			"AND ( DATEDIFF(NOW(),r.date) <= {$_days} && DATEDIFF(NOW(),r.date) >= 0 )";
+		if($_schedule === 'daily') {
+			$where = "AND ( DATEDIFF(NOW(),r.date) < {$_days} && DATEDIFF(NOW(),r.date) >= 0 )";
+		}
+		$stmt = $this->query('
 		SELECT (SELECT  COUNT(r.client_id)
 			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
 			WHERE r.client_immunisation_id = im.id 
@@ -179,7 +199,7 @@ class Immunisation extends DB
 			AND b.province = a.id
 			AND a.area_name = "'.$prov.'"
 			AND a.entry_type= "province"
-			AND ( DATEDIFF(NOW(),r.date) <= "'.$_schedule.'" && DATEDIFF(NOW(),r.date) > 0 )	
+			'.$where.'
 			AND im.type = "1st dose of Pentavalent"
 			AND ( FLOOR(MOD(DATEDIFF(NOW(), c.date_birth)/365.25 * 12, 12)) + ( FLOOR(DATEDIFF(NOW(), c.date_birth)/365.25) * 12) < 12 )
 			) as first_dose_pentavalent_under_1yr,
@@ -192,7 +212,7 @@ class Immunisation extends DB
 			AND a.area_name = "'.$prov.'"
 			AND a.entry_type= "province"
 			AND im.type = "3rd dose of Pentavalent"
-			AND ( DATEDIFF(NOW(),r.date) <= "'.$_schedule.'" && DATEDIFF(NOW(),r.date) > 0 )
+			'.$where.'
 			AND ( FLOOR(MOD(DATEDIFF(NOW(), c.date_birth)/365.25 * 12, 12)) + ( FLOOR(DATEDIFF(NOW(), c.date_birth)/365.25) * 12) < 12 )
 			) as third_dose_pentavalent_under_1yr,
 		(SELECT  COUNT(r.client_id)
@@ -204,7 +224,7 @@ class Immunisation extends DB
 			AND a.area_name = "'.$prov.'"
 			AND a.entry_type= "province"
 			AND im.type = "3rd dose of Pentavalent"
-			AND ( DATEDIFF(NOW(),r.date) <= "'.$_schedule.'" && DATEDIFF(NOW(),r.date) > 0 )
+			'.$where.'
 			AND ( FLOOR(MOD(DATEDIFF(NOW(), c.date_birth)/365.25 * 12, 12)) + ( FLOOR(DATEDIFF(NOW(), c.date_birth)/365.25) * 12) >= 12 )
 			) as third_dose_pentavalent_over_1yr,
 		(SELECT  COUNT(r.client_id)
@@ -216,7 +236,7 @@ class Immunisation extends DB
 			AND a.area_name = "'.$prov.'"
 			AND a.entry_type= "province"
 			AND im.type = "3rd dose of bOPV (sabin)"
-			AND ( DATEDIFF(NOW(),r.date) <= "'.$_schedule.'" && DATEDIFF(NOW(),r.date) > 0 )
+			'.$where.'
 			AND ( FLOOR(MOD(DATEDIFF(NOW(), c.date_birth)/365.25 * 12, 12)) + ( FLOOR(DATEDIFF(NOW(), c.date_birth)/365.25) * 12) < 12 )
 			) as third_dose_bOPV_under_1yr,
 		(SELECT  COUNT(r.client_id)
@@ -228,7 +248,7 @@ class Immunisation extends DB
 			AND a.area_name = "'.$prov.'"
 			AND a.entry_type= "province"
 			AND im.type = "IPV"
-			AND ( DATEDIFF(NOW(),r.date) <= "'.$_schedule.'" && DATEDIFF(NOW(),r.date) > 0 )
+			'.$where.'
 			AND ( FLOOR(MOD(DATEDIFF(NOW(), c.date_birth)/365.25 * 12, 12)) + ( FLOOR(DATEDIFF(NOW(), c.date_birth)/365.25) * 12) < 12 )
 			) as ipv,
 		(SELECT  COUNT(r.client_id)
@@ -240,7 +260,7 @@ class Immunisation extends DB
 			AND a.area_name = "'.$prov.'"
 			AND a.entry_type= "province"
 			AND im.type = "Measles Rubella (MR)"
-			AND ( DATEDIFF(NOW(),r.date) <= "'.$_schedule.'" && DATEDIFF(NOW(),r.date) > 0 )
+			'.$where.'
 			AND ( FLOOR(MOD(DATEDIFF(NOW(), c.date_birth)/365.25 * 12, 12)) + ( FLOOR(DATEDIFF(NOW(), c.date_birth)/365.25) * 12) BETWEEN 6 AND 8 )
 			) as rubella_6_8,
 		(SELECT  COUNT(r.client_id)
@@ -252,7 +272,7 @@ class Immunisation extends DB
 			AND a.area_name = "'.$prov.'"
 			AND a.entry_type= "province"
 			AND im.type = "Measles Rubella (MR)"
-			AND ( DATEDIFF(NOW(),r.date) <= "'.$_schedule.'" && DATEDIFF(NOW(),r.date) > 0 )
+			'.$where.'
 			AND ( FLOOR(MOD(DATEDIFF(NOW(), c.date_birth)/365.25 * 12, 12)) + ( FLOOR(DATEDIFF(NOW(), c.date_birth)/365.25) * 12) BETWEEN 9 AND 17 )
 			) as rubella_9_17,
 		(SELECT  COUNT(r.client_id)
@@ -264,7 +284,7 @@ class Immunisation extends DB
 			AND a.area_name = "'.$prov.'"
 			AND a.entry_type= "province"
 			AND im.type = "Measles Rubella (MR)"
-			AND ( DATEDIFF(NOW(),r.date) <= "'.$_schedule.'" && DATEDIFF(NOW(),r.date) > 0 )
+			'.$where.'
 			AND ( FLOOR(MOD(DATEDIFF(NOW(), c.date_birth)/365.25 * 12, 12)) + ( FLOOR(DATEDIFF(NOW(), c.date_birth)/365.25) * 12) BETWEEN 17 AND 23 )
 			) as rubella_18_23,
 		(SELECT  COUNT(r.client_id)
@@ -276,7 +296,7 @@ class Immunisation extends DB
 			AND a.area_name = "'.$prov.'"
 			AND a.entry_type= "province"
 			AND im.type = "Measles Rubella (MR)"
-			AND ( DATEDIFF(NOW(),r.date) <= "'.$_schedule.'" && DATEDIFF(NOW(),r.date) > 0 )
+			'.$where.'
 			AND ( FLOOR(MOD(DATEDIFF(NOW(), c.date_birth)/365.25 * 12, 12)) + ( FLOOR(DATEDIFF(NOW(), c.date_birth)/365.25) * 12) > 24 )
 			) as rubella_24,
 		(SELECT  COUNT(r.client_id)
@@ -288,7 +308,7 @@ class Immunisation extends DB
 			AND a.area_name = "'.$prov.'"
 			AND a.entry_type= "province"
 			AND im.type = "3rd dose of PCV3"
-			AND ( DATEDIFF(NOW(),r.date) <= "'.$_schedule.'" && DATEDIFF(NOW(),r.date) > 0 )
+			'.$where.'
 			AND ( FLOOR(MOD(DATEDIFF(NOW(), c.date_birth)/365.25 * 12, 12)) + ( FLOOR(DATEDIFF(NOW(), c.date_birth)/365.25) * 12) > 12 )
 			) as PCV3,
 		(SELECT  COUNT(r.client_id)
@@ -300,7 +320,7 @@ class Immunisation extends DB
 			AND a.area_name = "'.$prov.'"
 			AND a.entry_type= "province"
 			AND im.type = "BCG"
-			AND ( DATEDIFF(NOW(),r.date) <= "'.$_schedule.'" && DATEDIFF(NOW(),r.date) > 0 )
+			'.$where.'
 			AND ( FLOOR(MOD(DATEDIFF(NOW(), c.date_birth)/365.25 * 12, 12)) + ( FLOOR(DATEDIFF(NOW(), c.date_birth)/365.25) * 12) < 12 )
 			) as BCG,
 		(SELECT  COUNT(r.client_id)
@@ -312,7 +332,7 @@ class Immunisation extends DB
 			AND a.area_name = "'.$prov.'"
 			AND a.entry_type= "province"
 			AND im.type = "HepB"
-			AND ( DATEDIFF(NOW(),r.date) <= "'.$_schedule.'" && DATEDIFF(NOW(),r.date) > 0 )
+			'.$where.'
 			AND ( DATEDIFF(NOW(), c.date_birth) <= 1  )
 			) as hepB_one_day_old,
 		(SELECT  COUNT(r.client_id)
@@ -324,7 +344,7 @@ class Immunisation extends DB
 			AND a.area_name = "'.$prov.'"
 			AND a.entry_type= "province"
 			AND im.type = "HepB"
-			AND ( DATEDIFF(NOW(),r.date) <= "'.$_schedule.'" && DATEDIFF(NOW(),r.date) > 0 )
+			'.$where.'
 			AND ( DATEDIFF(NOW(), c.date_birth) > 1  )
 			) as hepB_over_one_day_old,
 		(SELECT  COUNT(r.client_id)
@@ -335,7 +355,7 @@ class Immunisation extends DB
 			AND b.province = a.id
 			AND a.area_name = "'.$prov.'"
 			AND a.entry_type= "province"
-			AND ( DATEDIFF(NOW(),r.date) <= "'.$_schedule.'" && DATEDIFF(NOW(),r.date) > 0 )
+			'.$where.'
 			AND im.type = "2nd Dose+ of Tetanus Toxoid"
 			) as tetanus
 		', array());
@@ -356,22 +376,18 @@ class Immunisation extends DB
 		switch($im_schedule) {
 			case "daily": 
 					$_schedule = 1;
-					$_note = date('F', strtotime('-1 days')).' '.date('d', strtotime('-1 days')).', '.date('Y', strtotime('-1 days'));
+					$_note = date('F', strtotime('now')).' '.date('d', strtotime('now')).', '.date('Y', strtotime('now'));
 				break;
 			case "weekly": 
-				if(strtolower(date('l', strtotime('now'))) == $im_every) {
-					$_schedule = 7;
-					$_note = date('F', strtotime('-7 days')).' '.date('d', strtotime('-7 days')).', '.date('Y', strtotime('-7 days')).' - '.date('F', strtotime('now')).' '.date('d', strtotime('now')).', '.date('Y', strtotime('now'));
-				}
+				$_schedule = 6;
+				$_note = date('F d, Y', strtotime('-6 days')). ' - '.date('F d, Y', strtotime('now'));
 			break;
 			case "monthly": 
-				if(date('d', strtotime('now')) == "01") {
-					$_schedule = cal_days_in_month(CAL_GREGORIAN, date('n', strtotime('-1 days')), date('Y', strtotime('-1 days')));
-					$_note = date('F', strtotime('-'.$_schedule.' days')).' '.date('d', strtotime('-'.$_schedule.' days')).', '.date('Y', strtotime('-'.$_schedule.' days')).' - '.date('F', strtotime('-1 days')).' '.date('d', strtotime('-1 days')).', '.date('Y', strtotime('-1 days'));
-				}		
+				$_schedule = cal_days_in_month(CAL_GREGORIAN, date('n', strtotime('-1 days')), date('Y', strtotime('-1 days')));
+				$_note = date('F', strtotime('-'.$_schedule.' days')).' '.date('d', strtotime('-'.$_schedule.' days')).', '.date('Y', strtotime('-'.$_schedule.' days')).' - '.date('F', strtotime('-1 days')).' '.date('d', strtotime('-1 days')).', '.date('Y', strtotime('-1 days'));
 			break;
 		}
-		array_push($_arr, $_schedule, $_note);
+		array_push($_arr, $_schedule, $_note, $im_schedule);
 		return $_arr;
 	}
     private function renderEmailBody($datas=null) {
@@ -431,9 +447,7 @@ class Immunisation extends DB
 				        		<tr>
 				        			<th style="<?php echo $th_style ?>" width="80">Date</th>
 				        			<th style="<?php echo $th_style ?>" width="180">Patient</th>
-				        			<th style="<?php echo $th_style ?>" width="150">Immunisation Details</th>
-				        			<th style="<?php echo $th_style ?>" width="80">Review Date</th>
-				        			<th style="<?php echo $th_style ?>">Outcome of Consultation</th>
+				        			<th style="<?php echo $th_style ?>" width="150">Immunisation Details</th>>
 				        		</tr>
 				        	</thead>
 				        	<tbody>
@@ -489,8 +503,6 @@ class Immunisation extends DB
 				        			<th style="<?php echo $th_style ?>" width="80">Date</th>
 				        			<th style="<?php echo $th_style ?>" width="180">Patient</th>
 				        			<th style="<?php echo $th_style ?>" width="150">Immunisation Details</th>
-				        			<th style="<?php echo $th_style ?>" width="80">Review Date</th>
-				        			<th style="<?php echo $th_style ?>">Outcome of Consultation</th>
 				        		</tr>
 				        	</thead>
 				        	<tbody>
@@ -511,8 +523,6 @@ class Immunisation extends DB
 					        			<td style="<?php echo $td_style ?>">
                                             <?php  echo $_data['type'] ?>
 					        			</td>
-					        			<td style="<?php echo $td_style ?>"><?php echo $_data['review_date_future'] ?></td>
-					        			<td style="<?php echo $td_style ?>"><?php echo $_data['outcome_review'] ?></td>
 					        		</tr>
 				        		<?php 
 				        		endforeach; 

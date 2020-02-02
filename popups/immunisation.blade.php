@@ -12,10 +12,10 @@ class Immunisation_Blade_Popup extends DB
         $this->series = 1;
         $this->visit_no = 1;
     }
-    public function save_immunisation($data)
+    public function save_immunisation($data, $im_type)
     {
         $_data['client_id'] = $data['client_id'];
-        $_data['type'] = $data['immunisation_type'];
+        $_data['type'] = $im_type;
         return $this->save($_data, array(), $this->table_im, 'lastInsertId');
     }
     public function render()
@@ -31,7 +31,7 @@ class Immunisation_Blade_Popup extends DB
         <div class="immunisationinitinfo <?php echo (!$this->isNew) ? 'noneditable' : 'editable'; ?>">
             <div class="row">
                 <?php
-                $this->render_selectfield(['title'=> 'Immunisation Type', 'slug'=>'immunisation_type', 'options' => [
+                $this->render_checkfield(['title'=> 'Immunisation Type', 'slug'=>'immunisation_type', 'options' => [
                     '1st dose of Pentavalent', '3rd dose of Pentavalent', '3rd dose of bOPV (sabin)', 'IPV', 'Measles Rubella (MR)',
                     '3rd dose of PCV3','BCG','HepB','2nd Dose+ of Tetanus Toxoid'
                 ]]); ?>
@@ -40,19 +40,18 @@ class Immunisation_Blade_Popup extends DB
     </div>
     <?php
     }
-    private function render_selectfield($arg = array()) { // title, slug, options
+    private function render_checkfield($arg = array()) { // title, slug, options
         ?>
-        <div class="col-xs-12 col-sm-6">
+        <div class="col-xs-12 col-sm-12">
             <div class="form-group">
                 <label><?php echo $arg['title'] ?></label><span class="required_field">*</span>
-                <input class="form-control fornoneditable" type="text" placeholder="<?php echo $this->data[ $arg['slug'] ] ?>" readonly/>
-                <select class="form-control foreditable required_when_able" id="<?php echo $arg['slug'] ?>" name="<?php echo $arg['slug'] ?>">
-                    <option value="">Select <?php echo $arg['title'] ?></option>
-                    <?php 
-                    foreach($arg['options'] as $key=>$val) {
-                        ?><option value="<?php echo $val ?>"><?php echo $val ?></option><?php
-                    }
-                    ?>
+                <br />
+                <?php foreach($arg['options'] as $key=>$val) { ?>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="<?php echo $arg['slug'] ?>[]" id="<?php echo $arg['slug'] ?>" value="<?php echo $val ?>" multiple="">  
+                        <?php echo $val ?>
+                    </label>
+                <?php } ?>
                 </select>
             </div>
         </div>

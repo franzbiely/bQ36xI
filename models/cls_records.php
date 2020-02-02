@@ -47,6 +47,9 @@ class Records extends DB{
 	function add(){
     global $Malnutrition_Blade_Popup, $Immunisation_Blade_Popup;
     $_data = $_POST;
+    $multi_client_immunisation_id = array();
+
+    
     // var_dump($_data);
     unset($_data['class']);
     unset($_data['func']);
@@ -61,8 +64,10 @@ class Records extends DB{
       if(!isset($_data['is_final_consultation'])) {
         $_data['is_final_consultation']='No';
       }
-      if(isset($_data['immunisation_type']) && $_data['immunisation_type'] !== '') {
-        $_data['client_immunisation_id'] = $Immunisation_Blade_Popup->save_immunisation($_data);  
+      if(isset($_data['immunisation_type']) && count($_data['immunisation_type']) > 0) {
+        foreach($_data['immunisation_type'] as $key=>$val) {
+          $multi_client_immunisation_id[] = $Immunisation_Blade_Popup->save_immunisation($_data, $val);  
+        }
       }
       if( $_data['hiv_status']!=='' || $_data['is_final_consultation']==='Yes') {
 
@@ -92,14 +97,23 @@ class Records extends DB{
     }
     unset($_data['type']);
 
-    $data = $this->save($_data);
+    if(isset($multi_client_immunisation_id) && count($multi_client_immunisation_id) > 0) {
+      foreach($multi_client_immunisation_id as $key=>$val) {
+        $_data['client_immunisation_id'] = $val;
+        $data = $this->save($_data);
+      }
+    }
+    else {
+      $data = $this->save($_data);
+    }
+    
 	    
 		if($data==false){ 
-	      echo "error"; //exit();
-	    }else{
-	       echo "success"; //exit();
-	    }
-      exit();
+	    echo "error";
+    }else{
+        echo "success"; //exit();
+    }
+    exit();
 	}
 	function edit(){
 		$_data = $_POST;

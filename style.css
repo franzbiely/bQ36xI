@@ -707,3 +707,6 @@ a.list-group-item{
   font-size: 30px;
   text-shadow: 1px 2px 1px #000;
 }
+.checkbox-inline {
+  width: 48%;
+}

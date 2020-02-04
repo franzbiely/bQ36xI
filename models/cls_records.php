@@ -6,11 +6,21 @@ class Records extends DB{
 		$this->table = "tbl_records";
 	}
 
-    function display_visit_reasons($reasons){
+    function display_visit_reasons($reasons, $client_immunisation_id = null){
+      
       //json_decode( stripslashes( $post_data ) );
      $temp = json_decode($reasons, true);
+     
      if ($temp != false) {
         $temp = implode(", ",  $temp); 
+
+        if(strpos($temp,'Immunisation') !== false) {
+          $Immunisation = new Immunisation();
+          $immun_details = $Immunisation->getTypeById($client_immunisation_id);
+          $temp = substr_replace($temp, " (".$immun_details.")", strpos($temp,'Immunisation')+strlen('Immunisation'), 0);
+          unset($Immunisation_Blade_Popup);
+        }
+
         if($temp==",") return "";
          else return $temp;
      }else{
@@ -226,7 +236,7 @@ class Records extends DB{
     exit();
   }
 	function get_consultation_records(){
-    $query = "SELECT a.ID, a.hb_level, a.feeding_type, a.date, b.clinic_name, a.visit_reasons 
+    $query = "SELECT a.ID, a.hb_level, a.feeding_type, a.date, b.clinic_name, a.visit_reasons, a.client_immunisation_id
               FROM tbl_records as a JOIN tbl_clinic as b ON b.ID = a.clinic_id
               WHERE a.client_id = :client_id AND record_type = :record_type ORDER BY a.date ASC";
     $bind_array['client_id'] = $_GET['cid'];

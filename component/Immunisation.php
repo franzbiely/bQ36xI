@@ -11,7 +11,10 @@ class Immunisation extends DB
     public function __construct()
     {
         parent::__construct();
-    }
+	}
+	public function getTypeById($id) {
+		return $this->select('type', array('ID'=>$id), true, 'tbl_client_immunisation')['type'];
+	}
     private function send_mail($from, $to, $replyTo, $subject, $htmlBody, $plainBody) {
         $mail = new PHPMailer;
  

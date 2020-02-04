@@ -58,7 +58,8 @@ class Malnutrition extends DB{
             AND b.client_malnutrition_id = c.id
             AND d.entry_type='province'
 			AND b.clinic_id=e.ID AND e.province=d.ID
-            AND ((b.review_date_future >= b.date AND c.isPrevious=0) OR MONTH(b.date) = MONTH({$date}))
+			AND ((b.review_date_future >= b.date AND c.isPrevious=0) OR MONTH(b.date) = MONTH({$date}))
+			AND b.date <= '{$date}'
             ORDER BY b.date ASC
 			", array());
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

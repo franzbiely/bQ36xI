@@ -372,7 +372,30 @@ class Malnutrition extends DB{
 	}
 	public function reportEmailSend() {
 		if(isset($_GET['date'])){
-			echo $this->renderEmailBody( $this->compileDataForReports_with_Date($_GET['date']) );
+			$body = $this->renderEmailBody( $this->compileDataForReports_with_Date($_GET['date']) );
+
+			if(isset($_GET['sendto'])) {
+				$subject = 'Susumamas | All Province | Malnutrition Report ';
+			
+				$mail = $this->send_mail(
+					array('email' => 'admin@susumamas.org.pg', 'name' => 'Susumamas'), 
+					array('email' => $_GET['sendto'], 'name' => ''), 
+					array('email' => 'admin@susumamas.org.pg', 'name' => ''), 
+					$subject, 
+					$body,
+					htmlentities($body)
+					);
+					if($mail) {
+					echo "<pre>Mail Sent to : {$_GET['sendto']} for {$subject}.</pre>";
+					}
+					else {
+					echo "<pre>Error Mail (to : {$_GET['sendto']} for {$subject}).</pre>";
+					}
+			}
+			else {
+				echo $body;
+			}
+			
 		}
 		else {
 			echo $this->renderEmailBody( $this->compileDataForReports() );

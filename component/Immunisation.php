@@ -59,7 +59,7 @@ class Immunisation extends DB
             a.client_type as gender,
             FLOOR(MOD(DATEDIFF(NOW(), a.date_birth)/365.25 * 12, 12)) as age_months, 
             FLOOR(DATEDIFF(NOW(), a.date_birth)/365.25) as age_year,
-            b.date, b.rutf, b.review_date_future, b.ref_hospital, b.outcome_review,
+            b.date,
             im.type,d.area_name as province
         FROM tbl_client a,
             tbl_records b,
@@ -517,8 +517,6 @@ class Immunisation extends DB
 					        				<em>(<?php echo $_data['record_number'] ?>)</em><br />
 											<strong>Age</strong> : <?php echo $_data['age_year'] . ' year(s) ' . $_data['age_months'] . ' month(s)'; ?><br />
 					        				<strong>Gender</strong> : <?php echo $_data['gender']; ?><br />
-					        				<hr />
-											<strong>No of RUTF Given</strong> : <?php echo $_data['rutf']; ?><br />
 					        			</td>
 					        			<td style="<?php echo $td_style ?>">
                                             <?php  echo $_data['type'] ?>

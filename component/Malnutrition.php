@@ -39,6 +39,30 @@ class Malnutrition extends DB{
 	      echo 'Message has been sent';
 	   }
 	}
+	
+	private function fetchReportData_with_Date($date) {
+		$stmt = $this->query("
+			SELECT a.record_number, CONCAT(a.lname, ', ', a.fname) as fullname, 
+					a.client_type as gender,
+					FLOOR(MOD(DATEDIFF(NOW(), a.date_birth)/365.25 * 12, 12)) as age_months, 
+					FLOOR(DATEDIFF(NOW(), a.date_birth)/365.25) as age_year,
+				   b.date, b.rutf, b.review_date_future, b.ref_hospital, b.outcome_review,
+				   c.series, c.tb_diagnosed, c.hiv_status, c.muac, c.oedema, c.wfh,
+				   c.reason,
+				   d.area_name as province
+            FROM tbl_client a,
+            	 tbl_records b,
+            	 tbl_client_malnutrition c,
+            	 tbl_area d, tbl_clinic e
+            WHERE b.client_id = a.ID
+            AND b.client_malnutrition_id = c.id
+            AND d.entry_type='province'
+			AND b.clinic_id=e.ID AND e.province=d.ID
+            AND ((b.review_date_future >= b.date AND c.isPrevious=0) OR MONTH(b.date) = MONTH({$date}))
+            ORDER BY b.date ASC
+			", array());
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
 	private function fetchReportData() {
 		$stmt = $this->query("
 			SELECT a.record_number, CONCAT(a.lname, ', ', a.fname) as fullname, 
@@ -260,6 +284,8 @@ class Malnutrition extends DB{
 	}
 	public function mail_mal() {
 		
+		echo date('d', strtotime('now')); exit();
+
 		$data = $this->fetchNotificationSettingsForMalnutrition();
 		
 		$schedule = array_values(array_filter($data, function($_d) {
@@ -338,8 +364,20 @@ class Malnutrition extends DB{
 		// GROUP BY PROVINCE Name
 		return $this->formatArraybyProvince($datas);
 	}
+	private function compileDataForReports_with_Date($date) {
+		$unenrolled = $this->fetchNotEnrolledWithMalnutReason();
+		$datas = $this->fetchReportData_with_Date($date);
+		$datas = array_merge($unenrolled, $datas);
+		return $this->formatArraybyProvince($datas);
+	}
 	public function reportEmailSend() {
-		echo $this->renderEmailBody( $this->compileDataForReports() );
+		if(isset($_GET['date'])){
+			echo $this->renderEmailBody( $this->compileDataForReports_with_Date($_GET['date']) );
+		}
+		else {
+			echo $this->renderEmailBody( $this->compileDataForReports() );
+		}
+		
 		exit();
 	}
 

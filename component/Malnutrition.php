@@ -159,12 +159,13 @@ class Malnutrition extends DB{
 			}
 			
 		}
+		$current_date = $_GET['date'] ? date('F, Y', strtotime($_GET['date'])) : date('F, Y');
 		ob_start(); ?>
 		<div style="font-size:12px; font-family:Arial;width:700px; margin:10px auto 20px;">
 			<p><strong>Note:</strong> The data within this report contains client consultation records for Malnutrition visit types which includes :</p>
 			<ul>
 				<li>On-going consultation treatment for client with malnutrition records</li>
-				<li>Settled consultation treatment within the current month (<?php echo date('F, Y'); ?>)</li>
+				<li>Settled consultation treatment within the current month (<?php echo $current_date; ?>)</li>
 			</ul> 
 			<p>This does not include records that are treated in the past months.</p>
 		</div>
@@ -283,8 +284,6 @@ class Malnutrition extends DB{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 	public function mail_mal() {
-		
-		echo date('d', strtotime('now')); exit();
 
 		$data = $this->fetchNotificationSettingsForMalnutrition();
 		

@@ -5,8 +5,8 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
-
 v3.39 | 30th of Jan 2020
+  - Changed monthly e-mail sending schedule into last day of the month
   - Immunisation Feature
 		* Developer Note: To setup, run the new-immunization-alters.sql into the db and then add the Immunisation Visit Type from the superadmin Visit Type Data management.
 

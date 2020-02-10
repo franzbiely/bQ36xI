@@ -289,6 +289,7 @@ class Malnutrition_Blade_Popup extends DB{
                             $(button).html('Edit Malnutrition Info');
                             
                             const data = {
+                                reason : $('#reason').val(),
                                 tb_diagnosed : $('#tb_diagnosed').val(),
                                 hiv_status : $('#hiv_status').val(),
                                 muac : $('#muac').val(),
@@ -300,6 +301,7 @@ class Malnutrition_Blade_Popup extends DB{
                             }   
 
                             $.post(window.location.href,data, function(ret){
+                                $('#reason').prev().val( data.reason ).attr('placeholder', data.reason);
                                 $('#tb_diagnosed').prev().val( data.tb_diagnosed ).attr('placeholder', data.tb_diagnosed);
                                 $('#hiv_status').prev().val( data.hiv_status ).attr('placeholder', data.hiv_status);
                                 $('#muac').prev().val( data.muac ).attr('placeholder', data.muac);
@@ -311,6 +313,7 @@ class Malnutrition_Blade_Popup extends DB{
                         }
                         else {
                             $(this).removeClass('noneditable');
+                            $('#reason').val( $('#reason').prev().attr('placeholder') );
                             $('#tb_diagnosed').val( $('#tb_diagnosed').prev().attr('placeholder') );
                             $('#hiv_status').val( $('#hiv_status').prev().attr('placeholder') );
                             $('#muac').val( $('#muac').prev().attr('placeholder') );

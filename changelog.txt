@@ -5,6 +5,10 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.39 | 10th of Feb 2020
+  - Fixed child client detection by age.
+  - Changed Anchblevel & Malnutrition email monthly schedule into last day of the month
+
 v3.38 | 4th of Dec 2019
   - Swap Reason & RUTF
   - Position RUTF at bottom of list.

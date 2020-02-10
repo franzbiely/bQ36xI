@@ -213,17 +213,15 @@ if($_GET['p'] != "update") {
                   
                 endif;
 
-
-
                 if($_GET['p']=="view") : ?>
                   <?php if(!$related) : ?>
                     <div class="relationship-container">
                       <p>This client doesn't have any related clients within this system.</p>
                       <?php
-                        // if($client_info['client_type']=='Child'){                          
-                        //     echo "
+                        if ($record->get_age($date_birth) <= 15) { ?>
+                         <p style='color:red; font-weight:bold;'>Record is a child. Please set a mother relationship.</p>
+                      <?php }
                       ?>
-                      <p style='color:red; font-weight:bold;'>Record is a child. Please set a mother relationship.</p>
                     </div>
                   <?php endif; ?>
                 <?php else: ?>                  

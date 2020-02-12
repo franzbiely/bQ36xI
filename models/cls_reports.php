@@ -763,9 +763,12 @@ class Reports extends DB{
             $dob = new DateTime($val['date_birth']);
             $visit_date = new DateTime($val['date']);
             $interval = $dob->diff($visit_date)->y;
-            //echo $val['date'].' - '.$val['date_birth'].' = '.$interval;
-            //echo "<br/>";
-
+            $month_age = date_diff($dob,  $visit_date)->format('%m');
+            // echo $val['date'].' - '.$val['date_birth'].' = '.$interval;
+            // echo "<br/>";
+            if ($interval <= 4 ) {
+              $array[$key]['age_months']=(int)$month_age; 
+            } 
             $array[$key]['age']=$interval; 
           }
           else 
@@ -1319,11 +1322,24 @@ class Reports extends DB{
     }
     return $ctr;
   }
-
+  function count_age_between_months($data, $start, $end){
+    $ctr=0;
+    foreach($data as $key=>$val){
+      if($val['age'] < 5){
+        $age_months = (($val['age'] * 12 ) + $val['age_months']);
+        if($age_months>=$start && $age_months<=$end) {
+          $ctr++;
+        }
+      } 
+    }
+    return $ctr;
+  }
   function count_age_under_1_year_old($data){
     $ctr=0;
     foreach($data as $key=>$val){
-      if($val['age']==0) $ctr++;
+      if($val['age']==0 && $val['age_months'] < 6){
+          $ctr++;
+      } 
     }
     return $ctr;
   }

@@ -186,11 +186,11 @@
             <?php if($c_type === "Male" || $c_type === "") : ?>
             <!-- AGE GROPUINGS FOR MALE -->
             <tr><td></td>
-              <td>< 12 months of Age</td><td><?php echo $reports->count_age_under_1_year_old($data2_by_gender['Male']) ?></td>
+              <td>< 6 months of Age</td><td><?php echo $reports->count_age_under_1_year_old($data2_by_gender['Male']) ?></td>
             </tr>  
             <tr>
-              <td></td><td>1 - 4 years of Age</td>
-              <td><?php echo $reports->count_age_between($data2_by_gender['Male'], 1, 4) ?></td>
+              <td></td><td>6 - 59 months of Age</td>
+              <td><?php echo $reports->count_age_between_months($data2_by_gender['Male'], 6, 59) ?></td>
             </tr>  
             <tr>
               <td></td><td>5 - 14 years of Age</td>
@@ -232,11 +232,11 @@
 
               <!-- AGE GROPUINGS FOR FEMALE -->
               <tr><td></td>
-                <td>< 12 months of Age</td><td><?php echo $reports->count_age_under_1_year_old($data2_by_gender['Female']) ?></td>
+                <td>< 6 months of Age</td><td><?php echo $reports->count_age_under_1_year_old($data2_by_gender['Female']) ?></td>
               </tr>  
               <tr>
-                <td></td><td>1 - 4 years of Age</td>
-                <td><?php echo $reports->count_age_between($data2_by_gender['Female'], 1, 4) ?></td>
+                <td></td><td>6 - 59 months of Age</td>
+                <td><?php echo $reports->count_age_between_months($data2_by_gender['Female'], 6, 59) ?></td>
               </tr>  
               <tr>
                 <td></td><td>5 - 14 years of Age</td>
@@ -278,11 +278,11 @@
             
               <!-- AGE GROPUINGS FOR UNKOWWN -->
               <tr><td></td>
-                <td>< 12 months of Age</td><td><?php echo $reports->count_age_under_1_year_old($data2_by_gender['Unknown']) ?></td>
+                <td>< 6 months of Age</td><td><?php echo $reports->count_age_under_1_year_old($data2_by_gender['Unknown']) ?></td>
               </tr>  
               <tr>
-                <td></td><td>1 - 4 years of Age</td>
-                <td><?php echo $reports->count_age_between($data2_by_gender['Unknown'], 1, 4) ?></td>
+                <td></td><td>6 - 59 months of Age</td>
+                <td><?php echo $reports->count_age_between_months($data2_by_gender['Unknown'], 6, 59) ?></td>
               </tr>  
               <tr>
                 <td></td><td>5 - 14 years of Age</td>

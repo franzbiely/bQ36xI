@@ -5,6 +5,9 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.40 | 13th of Feb 2020 
+  - Changed report details from: ( <12mons to <6mons) & (1-4 year to 6 - 59mons).
+
 v3.39 | 10th of Feb 2020
   - Fixed malnutrition popup [reason dropdown] for not showing selected data when saving changes.
   - Fixed child client detection by age.

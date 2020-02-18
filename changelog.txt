@@ -5,6 +5,12 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.41 | 18th of Feb 2020 
+  - Modify form order of the Malnutrition Reason | Includes modifying DB structure,
+  - altered tbl_record by adding 'reason' VARCHAR(50)
+  - also run this script to migrate reason datas from tbl_client_malnutrition to tbl_record : 
+  UPDATE tbl_records a INNER JOIN tbl_client_malnutrition b ON a.client_malnutrition_id=b.id SET a.reason = b.reason;
+
 v3.40 | 13th of Feb 2020 
   - Changed report details from: ( <12mons to <6mons) & (1-4 year to 6 - 59mons).
 

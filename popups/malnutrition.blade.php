@@ -19,7 +19,6 @@ class Malnutrition_Blade_Popup extends DB{
         $_data['oedema'] = $data['oedema'];
         $_data['wfh'] = $data['wfh'];
         $_data['client_id'] = $data['client_id'];
-        $_data['reason'] = $data['reason'];
         return $this->save($_data, array(), $this->table, 'lastInsertId');
     }
     public function remove($id) {
@@ -31,8 +30,7 @@ class Malnutrition_Blade_Popup extends DB{
             'hiv_status' => $_POST['hiv_status'],
             'muac' => $_POST['muac'],
             'wfh' => $_POST['wfh'],
-            'oedema' => $_POST['oedema'],
-            'reason' => $_POST['reason']
+            'oedema' => $_POST['oedema']
         );
         $this->save($data, array('id' => $_POST['id']));
         exit();
@@ -113,19 +111,18 @@ class Malnutrition_Blade_Popup extends DB{
             <div class="malnutinitinfo noneditable">
                 <div class="row">
                     <?php
-                    $this->render_readonlyfield(['title'=>'Reason', 'slug'=>'reason']);
                     $this->render_readonlyfield(['title'=>'HIV Status', 'slug'=>'hiv_status']);
-                    ?>
-                </div>
-                <div class="row">
-                    <?php
                     $this->render_readonlyfield(['title'=>'TB Diagnosed', 'slug'=>'tb_diagnosed']);
-                    $this->render_readonlyfield(['title'=>'MUAC < 11.5cm', 'slug'=>'muac']);
                     ?>
                 </div>
                 <div class="row">
                     <?php
+                    $this->render_readonlyfield(['title'=>'MUAC < 11.5cm', 'slug'=>'muac']);
                     $this->render_readonlyfield(['title'=>'Oedema', 'slug'=>'oedema']);
+                    ?>
+                </div>
+                <div class="row">
+                    <?php
                     $this->render_readonlyfield(['title'=>'WFH = or < -3 SD', 'slug'=>'wfh']);
                     ?>
                 </div>
@@ -133,7 +130,12 @@ class Malnutrition_Blade_Popup extends DB{
             <hr />
             <div class="row">
                 <?php
+                    $this->render_readonlyfield(['title'=>'Reason', 'slug'=>'reason']);
                     $this->render_readonlyfield(['title'=>'No. of RUTF given', 'slug'=>'rutf']);
+                ?>
+            </div>
+            <div class="row">
+                <?php
                     $this->render_readonlyfield(['title'=>'Referral to Hospital', 'slug'=>'ref_hospital']);
                 ?>
             </div>
@@ -174,31 +176,27 @@ class Malnutrition_Blade_Popup extends DB{
             </div>
             <div class="malnutinitinfo <?php echo (!$this->isNew) ? 'noneditable' : 'editable'; ?>">
                 <div class="row">
-                    <?php 
-                    $this->render_selectfield( ['title'=> 'Reason', 'slug'=>'reason', 'options' => [
-                        'New Enrollment', 'Defaulter', 'Non respondent', 'Relapse', 'Review'
-                    ]] );
-                    
+                    <?php
                     $this->render_selectfield( ['title'=> 'HIV Status', 'slug'=>'hiv_status', 'options' => [
                         'Positive', 'Negative', 'Unknown'
                     ]] );
-                    ?>
-                </div>
-                <div class="row">
-                    <?php
                     $this->render_selectfield( ['title'=> 'TB Diagnosed', 'slug'=>'tb_diagnosed', 'options' => [
                         'Yes', 'No', 'Unknown'
                     ]] );
+                    ?>
+                </div>
+                <div class="row">
+                    <?php
                     $this->render_selectfield( ['title'=> 'MUAC < 11.5cm', 'slug'=>'muac', 'options' => [
                         'Yes', 'No'
+                    ]] );
+                    $this->render_selectfield( ['title'=> 'Oedema', 'slug'=>'oedema', 'options' => [
+                        '0', '+', '++', '+++'
                     ]] );
                     ?>
                 </div>
                 <div class="row">
                     <?php
-                    $this->render_selectfield( ['title'=> 'Oedema', 'slug'=>'oedema', 'options' => [
-                        '0', '+', '++', '+++'
-                    ]] );
                     $this->render_selectfield( ['title'=> 'WFH = or < -3 SD', 'slug'=>'wfh', 'options' => [
                         'Yes', 'No'
                     ]] );
@@ -207,6 +205,19 @@ class Malnutrition_Blade_Popup extends DB{
             </div>
             <hr />
             <div class="row">
+                <div class="col-xs-12 col-sm-6">
+                    <div class="form-group">
+                        <label>Reason </label><span class="required_field">*</span>
+                        <select class="form-control required_when_able" id="reason" name="reason">
+                            <option value="">Select Reason</option>
+                            <option value="New Enrollment">New Enrollment</option>
+                            <option value="Defaulter">Defaulter</option>
+                            <option value="Non respondent">Non respondent</option>
+                            <option value="Relapse">Relapse</option>
+                            <option value="Review">Review</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="col-xs-12 col-sm-6">
                     <div class="form-group">
                     <label>No. of RUTF given </label><span class="required_field">*</span>
@@ -289,7 +300,6 @@ class Malnutrition_Blade_Popup extends DB{
                             $(button).html('Edit Malnutrition Info');
                             
                             const data = {
-                                reason : $('#reason').val(),
                                 tb_diagnosed : $('#tb_diagnosed').val(),
                                 hiv_status : $('#hiv_status').val(),
                                 muac : $('#muac').val(),
@@ -301,7 +311,6 @@ class Malnutrition_Blade_Popup extends DB{
                             }   
 
                             $.post(window.location.href,data, function(ret){
-                                $('#reason').prev().val( data.reason ).attr('placeholder', data.reason);
                                 $('#tb_diagnosed').prev().val( data.tb_diagnosed ).attr('placeholder', data.tb_diagnosed);
                                 $('#hiv_status').prev().val( data.hiv_status ).attr('placeholder', data.hiv_status);
                                 $('#muac').prev().val( data.muac ).attr('placeholder', data.muac);
@@ -313,7 +322,6 @@ class Malnutrition_Blade_Popup extends DB{
                         }
                         else {
                             $(this).removeClass('noneditable');
-                            $('#reason').val( $('#reason').prev().attr('placeholder') );
                             $('#tb_diagnosed').val( $('#tb_diagnosed').prev().attr('placeholder') );
                             $('#hiv_status').val( $('#hiv_status').prev().attr('placeholder') );
                             $('#muac').val( $('#muac').prev().attr('placeholder') );

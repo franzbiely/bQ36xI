@@ -48,7 +48,7 @@ class Malnutrition extends DB{
 					FLOOR(DATEDIFF(NOW(), a.date_birth)/365.25) as age_year,
 				   b.date, b.rutf, b.review_date_future, b.ref_hospital, b.outcome_review,
 				   c.series, c.tb_diagnosed, c.hiv_status, c.muac, c.oedema, c.wfh,
-				   c.reason,
+				   b.reason,
 				   d.area_name as province
             FROM tbl_client a,
             	 tbl_records b,
@@ -72,7 +72,7 @@ class Malnutrition extends DB{
 					FLOOR(DATEDIFF(NOW(), a.date_birth)/365.25) as age_year,
 				   b.date, b.rutf, b.review_date_future, b.ref_hospital, b.outcome_review,
 				   c.series, c.tb_diagnosed, c.hiv_status, c.muac, c.oedema, c.wfh,
-				   c.reason,
+				   b.reason,
 				   d.area_name as province
             FROM tbl_client a,
             	 tbl_records b,

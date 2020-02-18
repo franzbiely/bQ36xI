@@ -79,7 +79,6 @@ class Records extends DB{
       unset($_data['hiv_status']);
       unset($_data['tb_diagnosed']);
       unset($_data['muac']);
-      unset($_data['reason']);
       unset($_data['uac']);
       unset($_data['oedema']);
       unset($_data['wfh']);
@@ -193,7 +192,7 @@ class Records extends DB{
   }
   function get_consultation_malnutrition_records() {
     $query = "SELECT b.date, b.rutf, b.review_date_future, b.ref_hospital, b.outcome_review,
-                     c.series, c.tb_diagnosed, c.hiv_status, c.muac, c.oedema, c.wfh, c.reason
+                     c.series, c.tb_diagnosed, c.hiv_status, c.muac, c.oedema, c.wfh, b.reason
               FROM tbl_records b,
                    tbl_client_malnutrition c
               WHERE b.client_malnutrition_id=c.id 

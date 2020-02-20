@@ -15,6 +15,7 @@ class Immunisation_Blade_Popup extends DB
     public function save_immunisation($data, $im_type)
     {
         $_data['client_id'] = $data['client_id'];
+        $_data['record_id'] = $data['record_id'];
         $_data['type'] = $im_type;
         return $this->save($_data, array(), $this->table_im, 'lastInsertId');
     }

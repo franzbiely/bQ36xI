@@ -306,7 +306,7 @@ if($_GET['p'] != "update") {
                     echo "<em class='yellowme'>Deprecated</em>";
                   }
                   else {
-                    echo $record->display_visit_reasons($data['visit_reasons'], $data['client_immunisation_id']);
+                    echo $record->display_visit_reasons($data);
                   }
                 ?></td>
                 <?php if($client_info['client_type']=="Child" && 

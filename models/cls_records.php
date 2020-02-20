@@ -6,30 +6,35 @@ class Records extends DB{
 		$this->table = "tbl_records";
 	}
 
-    function display_visit_reasons($reasons, $client_immunisation_id = null){
-      
-      //json_decode( stripslashes( $post_data ) );
-     $temp = json_decode($reasons, true);
-     
-     if ($temp != false) {
-        $temp = implode(", ",  $temp); 
-
-        if(strpos($temp,'Immunisation') !== false) {
-          $Immunisation = new Immunisation();
-          $immun_details = $Immunisation->getTypeById($client_immunisation_id);
-          $temp = substr_replace($temp, " (".$immun_details.")", strpos($temp,'Immunisation')+strlen('Immunisation'), 0);
-          unset($Immunisation_Blade_Popup);
-        }
-
-        if($temp==",") return "";
-         else return $temp;
-     }else{
-      if($reasons != 'null')
+  function display_visit_reasons($data) {
+    $reasons = $data['visit_reasons'];
+    $temp = json_decode($reasons, true);
+    if(strlen($data['immunisation_types']) > 0) {
+      $_immunisation_type = $data['immunisation_types'];
+      $immunisation_type = explode(',',$_immunisation_type);
+      foreach($immunisation_type as $key=>$val) {
+        $immunisation_type[ $key ] = "Immunisation(".$val.")";
+      }
+      $immunisation_key = array_search('Immunisation', $temp);
+      $temp[ $immunisation_key ] = implode(', ', $immunisation_type);
+    }
+    if ($temp != false) {
+      $temp = implode(", ",  $temp); 
+      if($temp==",") {
+        return "";
+      }
+      else {
+        return $temp;
+      }
+    }
+    else {
+      if($reasons != 'null') {
         return $reasons;
-      else
+      }
+      else {
         return '';
-     }
-   
+      }
+    }
   }
   function has_ANC_visits($datas) {
     $has_ANC = false;
@@ -54,13 +59,10 @@ class Records extends DB{
 
     return $has_MALNUTRITION;
   }
-	function add(){
+	function add() {
     global $Malnutrition_Blade_Popup, $Immunisation_Blade_Popup;
     $_data = $_POST;
-    $multi_client_immunisation_id = array();
-
     
-    // var_dump($_data);
     unset($_data['class']);
     unset($_data['func']);
     $arr2 = array("client_id"=>$_GET['cid'],"record_type"=>$_data['type'], "office_id"=>$_SESSION['office_id']);   
@@ -75,9 +77,7 @@ class Records extends DB{
         $_data['is_final_consultation']='No';
       }
       if(isset($_data['immunisation_type']) && count($_data['immunisation_type']) > 0) {
-        foreach($_data['immunisation_type'] as $key=>$val) {
-          $multi_client_immunisation_id[] = $Immunisation_Blade_Popup->save_immunisation($_data, $val);  
-        }
+        $immunisation_type = $_data['immunisation_type'];
       }
       if( $_data['hiv_status']!=='' || $_data['is_final_consultation']==='Yes') {
 
@@ -106,23 +106,28 @@ class Records extends DB{
       unset($_data['immunisation_type']);
     }
     unset($_data['type']);
-
-    if(isset($multi_client_immunisation_id) && count($multi_client_immunisation_id) > 0) {
-      foreach($multi_client_immunisation_id as $key=>$val) {
-        $_data['client_immunisation_id'] = $val;
-        $data = $this->save($_data);
+    
+      $lastInsertId = $this->save($_data,array(), "tbl_records","lastInsertId");
+      if($immunisation_type && count($immunisation_type) > 0) {
+        $_data['record_id'] = $lastInsertId;
+        foreach($immunisation_type as $immunisation_type) {
+          $status = $Immunisation_Blade_Popup->save_immunisation($_data, $immunisation_type);  
+          if(!$status) {
+            echo "error";
+          }
+        }
+        echo "success";
       }
-    }
-    else {
-      $data = $this->save($_data);
-    }
+      else {
+        if($lastInsertId==false){ 
+          echo "error";
+        }else{
+            echo "success"; 
+        }
+      }
     
 	    
-		if($data==false){ 
-	    echo "error";
-    }else{
-        echo "success"; //exit();
-    }
+		
     exit();
 	}
 	function edit(){
@@ -236,8 +241,12 @@ class Records extends DB{
     exit();
   }
 	function get_consultation_records(){
-    $query = "SELECT a.ID, a.hb_level, a.feeding_type, a.date, b.clinic_name, a.visit_reasons, a.client_immunisation_id
-              FROM tbl_records as a JOIN tbl_clinic as b ON b.ID = a.clinic_id
+    $query = "SELECT a.ID, a.hb_level, a.feeding_type, a.date, b.clinic_name, a.visit_reasons, (
+                SELECT GROUP_CONCAT(type) FROM tbl_client_immunisation as c WHERE c.record_id = a.ID
+              ) as immunisation_types
+              FROM tbl_records as a
+              JOIN tbl_clinic as b 
+              ON b.ID = a.clinic_id
               WHERE a.client_id = :client_id AND record_type = :record_type ORDER BY a.date ASC";
     $bind_array['client_id'] = $_GET['cid'];
     $bind_array['record_type'] = "consultation";

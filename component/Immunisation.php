@@ -58,18 +58,19 @@ class Immunisation extends DB
 		}
 
 		$stmt = $this->query("
-        SELECT a.record_number, CONCAT(a.lname, ', ', a.fname) as fullname, 
+        SELECT DISTINCT a.record_number, CONCAT(a.lname, ', ', a.fname) as fullname, 
             a.client_type as gender,
             FLOOR(MOD(DATEDIFF(NOW(), a.date_birth)/365.25 * 12, 12)) as age_months, 
-            FLOOR(DATEDIFF(NOW(), a.date_birth)/365.25) as age_year,
-            b.date,
-            im.type,d.area_name as province
+			FLOOR(DATEDIFF(NOW(), a.date_birth)/365.25) as age_year,
+			b.date,
+			(SELECT GROUP_CONCAT(type SEPARATOR ', ') FROM tbl_client_immunisation as im WHERE b.ID = im.record_id) type,
+			d.area_name as province
         FROM tbl_client a,
             tbl_records b,
             tbl_client_immunisation im,
             tbl_area d, tbl_clinic e
         WHERE b.client_id = a.ID
-            AND b.client_immunisation_id = im.id
+            AND b.ID = im.record_id
             AND d.entry_type='province'
 			AND b.clinic_id=e.ID AND e.province=d.ID
 			{$where}
@@ -194,9 +195,9 @@ class Immunisation extends DB
 			$where = "AND ( DATEDIFF(NOW(),r.date) < {$_days} && DATEDIFF(NOW(),r.date) >= 0 )";
 		}
 		$stmt = $this->query('
-		SELECT (SELECT  COUNT(r.client_id)
+		SELECT (SELECT  COUNT(im.ID)
 			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.client_immunisation_id = im.id 
+			WHERE r.ID = im.record_id 
 			AND r.client_id = c.id
 			AND r.clinic_id = b.ID
 			AND b.province = a.id
@@ -208,7 +209,7 @@ class Immunisation extends DB
 			) as first_dose_pentavalent_under_1yr,
 		(SELECT  COUNT(r.client_id)
 			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.client_immunisation_id = im.id 
+			WHERE r.ID = im.record_id
 			AND r.client_id = c.id
 			AND r.clinic_id = b.ID
 			AND b.province = a.id
@@ -220,7 +221,7 @@ class Immunisation extends DB
 			) as third_dose_pentavalent_under_1yr,
 		(SELECT  COUNT(r.client_id)
 			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.client_immunisation_id = im.id 
+			WHERE r.ID = im.record_id
 			AND r.client_id = c.id
 			AND r.clinic_id = b.ID
 			AND b.province = a.id
@@ -232,7 +233,7 @@ class Immunisation extends DB
 			) as third_dose_pentavalent_over_1yr,
 		(SELECT  COUNT(r.client_id)
 			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.client_immunisation_id = im.id 
+			WHERE r.ID = im.record_id
 			AND r.client_id = c.id
 			AND r.clinic_id = b.ID
 			AND b.province = a.id
@@ -244,7 +245,7 @@ class Immunisation extends DB
 			) as third_dose_bOPV_under_1yr,
 		(SELECT  COUNT(r.client_id)
 			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.client_immunisation_id = im.id 
+			WHERE r.ID = im.record_id
 			AND r.client_id = c.id
 			AND r.clinic_id = b.ID
 			AND b.province = a.id
@@ -253,22 +254,10 @@ class Immunisation extends DB
 			AND im.type = "IPV"
 			'.$where.'
 			AND ( FLOOR(MOD(DATEDIFF(NOW(), c.date_birth)/365.25 * 12, 12)) + ( FLOOR(DATEDIFF(NOW(), c.date_birth)/365.25) * 12) < 12 )
-			) as ipv,
+			) as ipv,		
 		(SELECT  COUNT(r.client_id)
 			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.client_immunisation_id = im.id 
-			AND r.client_id = c.id
-			AND r.clinic_id = b.ID
-			AND b.province = a.id
-			AND a.area_name = "'.$prov.'"
-			AND a.entry_type= "province"
-			AND im.type = "Measles Rubella (MR)"
-			'.$where.'
-			AND ( FLOOR(MOD(DATEDIFF(NOW(), c.date_birth)/365.25 * 12, 12)) + ( FLOOR(DATEDIFF(NOW(), c.date_birth)/365.25) * 12) BETWEEN 6 AND 8 )
-			) as rubella_6_8,
-		(SELECT  COUNT(r.client_id)
-			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.client_immunisation_id = im.id 
+			WHERE r.ID = im.record_id
 			AND r.client_id = c.id
 			AND r.clinic_id = b.ID
 			AND b.province = a.id
@@ -280,7 +269,7 @@ class Immunisation extends DB
 			) as rubella_9_17,
 		(SELECT  COUNT(r.client_id)
 			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.client_immunisation_id = im.id 
+			WHERE r.ID = im.record_id
 			AND r.client_id = c.id
 			AND r.clinic_id = b.ID
 			AND b.province = a.id
@@ -292,7 +281,7 @@ class Immunisation extends DB
 			) as rubella_18_23,
 		(SELECT  COUNT(r.client_id)
 			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.client_immunisation_id = im.id 
+			WHERE r.ID = im.record_id
 			AND r.client_id = c.id
 			AND r.clinic_id = b.ID
 			AND b.province = a.id
@@ -304,7 +293,7 @@ class Immunisation extends DB
 			) as rubella_24,
 		(SELECT  COUNT(r.client_id)
 			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.client_immunisation_id = im.id 
+			WHERE r.ID = im.record_id
 			AND r.client_id = c.id
 			AND r.clinic_id = b.ID
 			AND b.province = a.id
@@ -316,7 +305,7 @@ class Immunisation extends DB
 			) as PCV3,
 		(SELECT  COUNT(r.client_id)
 			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.client_immunisation_id = im.id 
+			WHERE r.ID = im.record_id
 			AND r.client_id = c.id
 			AND r.clinic_id = b.ID
 			AND b.province = a.id
@@ -328,7 +317,7 @@ class Immunisation extends DB
 			) as BCG,
 		(SELECT  COUNT(r.client_id)
 			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.client_immunisation_id = im.id 
+			WHERE r.ID = im.record_id
 			AND r.client_id = c.id
 			AND r.clinic_id = b.ID
 			AND b.province = a.id
@@ -340,7 +329,7 @@ class Immunisation extends DB
 			) as hepB_one_day_old,
 		(SELECT  COUNT(r.client_id)
 			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.client_immunisation_id = im.id 
+			WHERE r.ID = im.record_id
 			AND r.client_id = c.id
 			AND r.clinic_id = b.ID
 			AND b.province = a.id
@@ -352,7 +341,7 @@ class Immunisation extends DB
 			) as hepB_over_one_day_old,
 		(SELECT  COUNT(r.client_id)
 			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.client_immunisation_id = im.id 
+			WHERE r.ID = im.record_id
 			AND r.client_id = c.id
 			AND r.clinic_id = b.ID
 			AND b.province = a.id
@@ -401,7 +390,6 @@ class Immunisation extends DB
 			"Number of Children over 1yr receiving 3rd dose of Pentavalent",
 			"Number of Children under 1yr receiving 3rd dose of bOPV (sabin)",
 			"Number of Children under 1yr receiving IPV",
-			"Measles Rubella (MR) 6 to 8 months",
 			"Measles Rubella (MR) 9 to 17 months",
 			"Measles Rubella (MR) 18 to 23 months",
 			"Measles Rubella (MR) > 24 months",

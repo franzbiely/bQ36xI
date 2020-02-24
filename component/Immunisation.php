@@ -187,169 +187,143 @@ class Immunisation extends DB
 	public function fetchReportSummary($prov){
 		$_days = $this->fetchSendSchedule()[0];
 		$_schedule = $this->fetchSendSchedule()[2];
-
-		$where = ($_schedule === 'monthly') ? 
+		$where = 'a.area_name = "'.$prov.'"
+			AND r.client_id = c.id
+			AND r.clinic_id = b.ID
+			AND b.province = a.id
+			AND a.entry_type= "province"
+			AND r.ID = im.record_id ';
+		$select = 'tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c';
+		$where .= ($_schedule === 'monthly') ? 
 			"AND ( DATEDIFF(NOW(),r.date) <= {$_days} && DATEDIFF(NOW(),r.date) > 0 )": 
 			"AND ( DATEDIFF(NOW(),r.date) <= {$_days} && DATEDIFF(NOW(),r.date) >= 0 )";
 		if($_schedule === 'daily') {
-			$where = "AND ( DATEDIFF(NOW(),r.date) < {$_days} && DATEDIFF(NOW(),r.date) >= 0 )";
+			$where .= "AND ( DATEDIFF(NOW(),r.date) < {$_days} && DATEDIFF(NOW(),r.date) >= 0 )";
 		}
+		
+		$where_month = '( FLOOR(MOD(DATEDIFF(r.date, c.date_birth)/365.25 * 12, 12)) + ( FLOOR(DATEDIFF(r.date, c.date_birth)/365.25) * 12)';
+		
 		$stmt = $this->query('
-		SELECT (SELECT  COUNT(im.ID)
-			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.ID = im.record_id 
-			AND r.client_id = c.id
-			AND r.clinic_id = b.ID
-			AND b.province = a.id
-			AND a.area_name = "'.$prov.'"
-			AND a.entry_type= "province"
-			'.$where.'
-			AND im.type = "1st dose of Pentavalent"
-			AND ( FLOOR(MOD(DATEDIFF(NOW(), c.date_birth)/365.25 * 12, 12)) + ( FLOOR(DATEDIFF(NOW(), c.date_birth)/365.25) * 12) < 12 )
-			) as first_dose_pentavalent_under_1yr,
-		(SELECT  COUNT(r.client_id)
-			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.ID = im.record_id
-			AND r.client_id = c.id
-			AND r.clinic_id = b.ID
-			AND b.province = a.id
-			AND a.area_name = "'.$prov.'"
-			AND a.entry_type= "province"
-			AND im.type = "3rd dose of Pentavalent"
-			'.$where.'
-			AND ( FLOOR(MOD(DATEDIFF(NOW(), c.date_birth)/365.25 * 12, 12)) + ( FLOOR(DATEDIFF(NOW(), c.date_birth)/365.25) * 12) < 12 )
-			) as third_dose_pentavalent_under_1yr,
-		(SELECT  COUNT(r.client_id)
-			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.ID = im.record_id
-			AND r.client_id = c.id
-			AND r.clinic_id = b.ID
-			AND b.province = a.id
-			AND a.area_name = "'.$prov.'"
-			AND a.entry_type= "province"
-			AND im.type = "3rd dose of Pentavalent"
-			'.$where.'
-			AND ( FLOOR(MOD(DATEDIFF(NOW(), c.date_birth)/365.25 * 12, 12)) + ( FLOOR(DATEDIFF(NOW(), c.date_birth)/365.25) * 12) >= 12 )
-			) as third_dose_pentavalent_over_1yr,
-		(SELECT  COUNT(r.client_id)
-			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.ID = im.record_id
-			AND r.client_id = c.id
-			AND r.clinic_id = b.ID
-			AND b.province = a.id
-			AND a.area_name = "'.$prov.'"
-			AND a.entry_type= "province"
-			AND im.type = "3rd dose of bOPV (sabin)"
-			'.$where.'
-			AND ( FLOOR(MOD(DATEDIFF(NOW(), c.date_birth)/365.25 * 12, 12)) + ( FLOOR(DATEDIFF(NOW(), c.date_birth)/365.25) * 12) < 12 )
-			) as third_dose_bOPV_under_1yr,
-		(SELECT  COUNT(r.client_id)
-			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.ID = im.record_id
-			AND r.client_id = c.id
-			AND r.clinic_id = b.ID
-			AND b.province = a.id
-			AND a.area_name = "'.$prov.'"
-			AND a.entry_type= "province"
-			AND im.type = "IPV"
-			'.$where.'
-			AND ( FLOOR(MOD(DATEDIFF(NOW(), c.date_birth)/365.25 * 12, 12)) + ( FLOOR(DATEDIFF(NOW(), c.date_birth)/365.25) * 12) < 12 )
-			) as ipv,		
-		(SELECT  COUNT(r.client_id)
-			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.ID = im.record_id
-			AND r.client_id = c.id
-			AND r.clinic_id = b.ID
-			AND b.province = a.id
-			AND a.area_name = "'.$prov.'"
-			AND a.entry_type= "province"
-			AND im.type = "Measles Rubella (MR)"
-			'.$where.'
-			AND ( FLOOR(MOD(DATEDIFF(NOW(), c.date_birth)/365.25 * 12, 12)) + ( FLOOR(DATEDIFF(NOW(), c.date_birth)/365.25) * 12) BETWEEN 9 AND 17 )
-			) as rubella_9_17,
-		(SELECT  COUNT(r.client_id)
-			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.ID = im.record_id
-			AND r.client_id = c.id
-			AND r.clinic_id = b.ID
-			AND b.province = a.id
-			AND a.area_name = "'.$prov.'"
-			AND a.entry_type= "province"
-			AND im.type = "Measles Rubella (MR)"
-			'.$where.'
-			AND ( FLOOR(MOD(DATEDIFF(NOW(), c.date_birth)/365.25 * 12, 12)) + ( FLOOR(DATEDIFF(NOW(), c.date_birth)/365.25) * 12) BETWEEN 17 AND 23 )
-			) as rubella_18_23,
-		(SELECT  COUNT(r.client_id)
-			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.ID = im.record_id
-			AND r.client_id = c.id
-			AND r.clinic_id = b.ID
-			AND b.province = a.id
-			AND a.area_name = "'.$prov.'"
-			AND a.entry_type= "province"
-			AND im.type = "Measles Rubella (MR)"
-			'.$where.'
-			AND ( FLOOR(MOD(DATEDIFF(NOW(), c.date_birth)/365.25 * 12, 12)) + ( FLOOR(DATEDIFF(NOW(), c.date_birth)/365.25) * 12) > 24 )
-			) as rubella_24,
-		(SELECT  COUNT(r.client_id)
-			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.ID = im.record_id
-			AND r.client_id = c.id
-			AND r.clinic_id = b.ID
-			AND b.province = a.id
-			AND a.area_name = "'.$prov.'"
-			AND a.entry_type= "province"
-			AND im.type = "3rd dose of PCV3"
-			'.$where.'
-			AND ( FLOOR(MOD(DATEDIFF(NOW(), c.date_birth)/365.25 * 12, 12)) + ( FLOOR(DATEDIFF(NOW(), c.date_birth)/365.25) * 12) > 12 )
-			) as PCV3,
-		(SELECT  COUNT(r.client_id)
-			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.ID = im.record_id
-			AND r.client_id = c.id
-			AND r.clinic_id = b.ID
-			AND b.province = a.id
-			AND a.area_name = "'.$prov.'"
-			AND a.entry_type= "province"
-			AND im.type = "BCG"
-			'.$where.'
-			AND ( FLOOR(MOD(DATEDIFF(NOW(), c.date_birth)/365.25 * 12, 12)) + ( FLOOR(DATEDIFF(NOW(), c.date_birth)/365.25) * 12) < 12 )
-			) as BCG,
-		(SELECT  COUNT(r.client_id)
-			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.ID = im.record_id
-			AND r.client_id = c.id
-			AND r.clinic_id = b.ID
-			AND b.province = a.id
-			AND a.area_name = "'.$prov.'"
-			AND a.entry_type= "province"
-			AND im.type = "HepB"
-			'.$where.'
-			AND ( DATEDIFF(NOW(), c.date_birth) <= 1  )
-			) as hepB_one_day_old,
-		(SELECT  COUNT(r.client_id)
-			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.ID = im.record_id
-			AND r.client_id = c.id
-			AND r.clinic_id = b.ID
-			AND b.province = a.id
-			AND a.area_name = "'.$prov.'"
-			AND a.entry_type= "province"
-			AND im.type = "HepB"
-			'.$where.'
-			AND ( DATEDIFF(NOW(), c.date_birth) > 1  )
-			) as hepB_over_one_day_old,
-		(SELECT  COUNT(r.client_id)
-			FROM tbl_records r, tbl_clinic b, tbl_area a,tbl_client_immunisation im,tbl_client c
-			WHERE r.ID = im.record_id
-			AND r.client_id = c.id
-			AND r.clinic_id = b.ID
-			AND b.province = a.id
-			AND a.area_name = "'.$prov.'"
-			AND a.entry_type= "province"
-			'.$where.'
-			AND im.type = "2nd Dose+ of Tetanus Toxoid"
-			) as tetanus
+		SELECT 
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "BCG (Birth)"
+				AND DATEDIFF(r.date, c.date_birth) <= 1
+			) as bcg_within_24_hours,
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "BCG (Birth)"
+				AND DATEDIFF(r.date, c.date_birth) < 7
+			) as bcg_less_than_a_week,
+			(SELECT  COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "BCG (Birth)"
+				AND DATEDIFF(r.date, c.date_birth) >= 7
+			) as bcg_greater_than_a_week,
+
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "Hep B (Birth)"
+				AND DATEDIFF(r.date, c.date_birth) <= 1
+			) as hepb_within_24_hours,
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "Hep B (Birth)"
+				AND DATEDIFF(r.date, c.date_birth) > 1
+			) as greater_than_24_hours,
+			
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "DTP, Hib, Hep B (Penta) 1st Dose"
+				AND '.$where_month.' < 12 )
+			) as dtp_first_dose,
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "DTP, Hib, Hep B (Penta) 2nd Dose"
+				AND '.$where_month.' < 12 )
+			) as dtp_second_dose,
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "DTP, Hib, Hep B (Penta) 3rd Dose"
+				AND '.$where_month.' < 12 )
+			) as dtp_third_dose,
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "DTP, Hib, Hep B (Penta)"
+				AND '.$where_month.' >= 12 )
+			) as dtp_over_a_year,
+
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "PCV 1st Dose"
+				AND '.$where_month.' < 12 )
+			) as pcv_first_dose,
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "PCV 2nd Dose"
+				AND '.$where_month.' < 12 )
+			) as pcv_second_dose,
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "PCV 3rd Dose"
+				AND '.$where_month.' < 12 )
+			) as pcv_third_dose,
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "PCV"
+				AND '.$where_month.' >= 12 )
+			) as pcv_over_a_year,
+
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "Sabin 1st Dose"
+				AND '.$where_month.' < 12 )
+			) as sabin_first_dose,
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "Sabin 2nd Dose"
+				AND '.$where_month.' < 12 )
+			) as sabin_second_dose,
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "Sabin 3rd Dose"
+				AND '.$where_month.' < 12 )
+			) as sabin_third_dose,
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "Sabin"
+				AND '.$where_month.' >= 12 )
+			) as sabin_over_a_year,
+
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "IPV"
+				AND '.$where_month.' BETWEEN 3 AND 11 )
+			) as ipv,
+
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "Measles Rubella (MR)"
+				AND '.$where_month.' BETWEEN 6 AND 8 )
+			) as mr_6_8_months,
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "Measles Rubella (MR)"
+				AND '.$where_month.' BETWEEN 9 AND 17 )
+			) as mr_9_17_months,
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "Measles Rubella (MR)"
+				AND '.$where_month.' BETWEEN 18 AND 23 )
+			) as mr_18_23_months,
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "Measles Rubella (MR)"
+				AND '.$where_month.' >= 12 )
+			) as mr_above_a_year,
+
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "Vitamin A"
+				AND '.$where_month.' BETWEEN 6 AND 11 )
+			) as vita_6_11_months,
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "Vitamin A"
+				AND '.$where_month.' BETWEEN 12 AND 59 )
+			) as vita_12_59_months,
+
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "Albendazole"
+				AND '.$where_month.' BETWEEN 12 AND 59 )
+			) as alb_12_59_months,
+
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "Tetanus Toxoid 1st Dose"
+			) as tetanus_1_dose,
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "Tetanus Toxoid 2nd Dose"
+			) as tetanus_2_dose,
+
+			(SELECT COUNT(im.ID) FROM '.$select.' WHERE '.$where.'
+				AND im.type = "Pregnant Women Booster"
+			) as prenant_booster
 		', array());
 		$datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $datas[0];
@@ -385,19 +359,34 @@ class Immunisation extends DB
 	}
     private function renderEmailBody($datas=null) {
 		$immunisation_details = [
-			"Number of Children under 1yr receiving 1st dose of Pentavalent",
-			"Number of Children under 1yr receiving 3rd dose of Pentavalent",
-			"Number of Children over 1yr receiving 3rd dose of Pentavalent",
-			"Number of Children under 1yr receiving 3rd dose of bOPV (sabin)",
-			"Number of Children under 1yr receiving IPV",
-			"Measles Rubella (MR) 9 to 17 months",
-			"Measles Rubella (MR) 18 to 23 months",
-			"Measles Rubella (MR) > 24 months",
-			"Number of Children over 1yr receiving 3rd dose of PCV3",
-			"Number of Children under 1yr receiving BCG",
-			"Number of Children receiving HepB within 24hrs of birth",
-			"Number of Children receiving HepB( > 24 hrs after birth)",
-			"Number of pregnant women receiving 2nd dose+ of Tetanus Toxoid"
+			"BCG (Birth) within 24hrs birth",
+			"BCG (Birth) < 1 week",
+			"BCG (Birth) >= 1 week",
+			"Hep B (Birth) within 24hrs birth",
+			"Hep B (Birth) > 24 hrs",
+			"DTP, Hib, Hep B (Penta) 1st dose < 1 yr",
+			"DTP, Hib, Hep B (Penta) 2nd dose < 1 yr",
+			"DTP, Hib, Hep B (Penta) 3rd dose < 1 yr",
+			"DTP, Hib, Hep B (Penta) >= 1 yr",
+			"PCV 1st dose < 1 yr",
+			"PCV 2nd dose < 1 yr",
+			"PCV 3rd dose < 1 yr",
+			"PCV >= 1 yr",
+			"Sabin 1st dose < 1 yr",
+			"Sabin 2nd dose < 1 yr",
+			"Sabin 3rd dose < 1 yr",
+			"Sabin >= 1 yr",
+			"IPV 1 dose only (3-11mths)",
+			"Measles Rubella (MR) 6-8 mths",
+			"Measles Rubella (MR) 9-17 mths",
+			"Measles Rubella (MR) 18-23 mths",
+			"Measles Rubella (MR) >= 24 mths",
+			"Vitamin A 6-11 mths",
+			"Vitamin A 12-59 mths",
+			"Albendazole 12-59 mths",
+			"Tetanus Toxoid 1st dose",
+			"Tetanus Toxoid 2nd dose",
+			"Pregnant Women Booster"
 		];
 		$visit_counter = 0;
 		$th_style='background: #f5f5f2;padding:10px 5px;border-right:1px solid #999;border-top:1px solid #999;border-bottom:3px double #999;';

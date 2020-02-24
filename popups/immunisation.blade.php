@@ -32,9 +32,29 @@ class Immunisation_Blade_Popup extends DB
         <div class="immunisationinitinfo <?php echo (!$this->isNew) ? 'noneditable' : 'editable'; ?>">
             <div class="row">
                 <?php
-                $this->render_checkfield(['title'=> 'Immunisation Type', 'slug'=>'immunisation_type', 'options' => [
-                    '1st dose of Pentavalent', '3rd dose of Pentavalent', '3rd dose of bOPV (sabin)', 'IPV', 'Measles Rubella (MR)',
-                    '3rd dose of PCV3','BCG','HepB','2nd Dose+ of Tetanus Toxoid'
+                $this->render_checkfield(['title'=> 'Immunisation Type', 'slug'=>'immunisation_type', 
+                'options' => [
+                    'BCG (Birth)', 
+                    'Hep B (Birth)', 
+                    'DTP, Hib, Hep B (Penta) 1st Dose',
+                    'DTP, Hib, Hep B (Penta) 2nd Dose',
+                    'DTP, Hib, Hep B (Penta) 3rd Dose',
+                    'DTP, Hib, Hep B (Penta)',
+                    'PCV 1st Dose',
+                    'PCV 2nd Dose',
+                    'PCV 3rd Dose',
+                    'PCV',
+                    'Sabin 1st Dose',
+                    'Sabin 2nd Dose',
+                    'Sabin 3rd Dose',
+                    'Sabin',
+                    'IPV',
+                    'Measles Rubella (MR)',
+                    'Vitamin A',
+                    'Albendazole',
+                    'Tetanus Toxoid 1st Dose',
+                    'Tetanus Toxoid 2nd Dose',
+                    'Pregnant Women Booster'
                 ]]); ?>
             </div>
         </div>

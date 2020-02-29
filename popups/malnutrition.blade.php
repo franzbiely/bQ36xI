@@ -7,6 +7,7 @@ class Malnutrition_Blade_Popup extends DB{
         // check db if there is any occurance\
         parent::__construct(); 
         $this->table = "tbl_client_malnutrition";
+        $this->table_im = "tbl_client_immunisation";
         $this->isNew = true;
         $this->series = 1;
         $this->visit_no = 1;
@@ -20,6 +21,11 @@ class Malnutrition_Blade_Popup extends DB{
         $_data['wfh'] = $data['wfh'];
         $_data['client_id'] = $data['client_id'];
         return $this->save($_data, array(), $this->table, 'lastInsertId');
+    }
+    public function save_immunisation($data) {
+        $_data['client_id'] = $data['client_id'];
+        $_data['type'] = $data['immunisation_type'];
+        return $this->save($_data, array(), $this->table_im, 'lastInsertId');
     }
     public function remove($id) {
         $this->delete($id);
@@ -162,6 +168,7 @@ class Malnutrition_Blade_Popup extends DB{
             <input type="hidden" id="client_malnutrition_id" name="client_malnutrition_id" value="<?php echo $this->data['id'] ?>" />
         <?php endif; ?>
         <input type="hidden" name="series" value="<?php echo $this->series ?>" />
+    
         <div id="malnutgroup" class="consultation-sub-block row" style="display:none">
             <div class="row">
                 <div class="col-xs-12 col-sm-12">

@@ -1,4 +1,5 @@
 <?php
+
 /* show all errors */
 error_reporting(E_ALL);
 ini_set('display_errors', TRUE);
@@ -40,11 +41,13 @@ include("models/cls_permission_shema.php");
 include("models/cls_relationship.php");
 include("models/cls_catchment.php");
 include('./popups/malnutrition.blade.php');
+include('./popups/immunisation.blade.php');
 include('./component/Malnutrition.php');
+include('./component/Immunisation.php');
 include('./component/Anchblevel.php');
 
 // DECLARING THE OBJECTS
-global $users,$catchment, $office, $client, $clinic, $province, $district, $llg, $type, $record, $reports, $main, $permission, $relationship, $Malnutrition_Blade_Popup;
+global $users,$catchment, $office, $client, $clinic, $province, $district, $llg, $type, $record, $reports, $main, $permission, $relationship, $Immunisation_Blade_Popup, $Malnutrition_Blade_Popup;
 
 $user = new User(); 
 $office = new Office();
@@ -61,8 +64,10 @@ $main = new Client();
 $permission = new Permission();
 $relationship = new Relationship();
 $Malnutrition_Blade_Popup = new Malnutrition_Blade_Popup();
+$Immunisation_Blade_Popup = new Immunisation_Blade_Popup();
 
 $Malnutrition = new Malnutrition();
+$Immunisation = new Immunisation();
 
 $current_page = isset($_GET['page']) ? $_GET['page'] : FRONT_PAGE;
 include("functions.php");

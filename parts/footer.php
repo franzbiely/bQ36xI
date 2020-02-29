@@ -2,7 +2,7 @@
 		<div class="row">	
 			<footer>
 				<ul>
-					<li><a href="#" style="pointer-events: none;">eCIS &copy 2019</a> <span id="system_version">V3.41</span></li>			
+					<li><a href="#" style="pointer-events: none;">eCIS &copy 2019</a> <span id="system_version">V3.43</span></li>			
 					<li><a href="/changelog.txt">Changelog</a></li>
 				</ul>
 				<div style="color: purple; float: right; font-size: 11px;">

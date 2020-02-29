@@ -6,20 +6,35 @@ class Records extends DB{
 		$this->table = "tbl_records";
 	}
 
-    function display_visit_reasons($reasons){
-      //json_decode( stripslashes( $post_data ) );
-     $temp = json_decode($reasons, true);
-     if ($temp != false) {
-        $temp = implode(", ",  $temp); 
-        if($temp==",") return "";
-         else return $temp;
-     }else{
-      if($reasons != 'null')
+  function display_visit_reasons($data) {
+    $reasons = $data['visit_reasons'];
+    $temp = json_decode($reasons, true);
+    if(strlen($data['immunisation_types']) > 0) {
+      $_immunisation_type = $data['immunisation_types'];
+      $immunisation_type = explode(',',$_immunisation_type);
+      foreach($immunisation_type as $key=>$val) {
+        $immunisation_type[ $key ] = "Immunisation(".$val.")";
+      }
+      $immunisation_key = array_search('Immunisation', $temp);
+      $temp[ $immunisation_key ] = implode(', ', $immunisation_type);
+    }
+    if ($temp != false) {
+      $temp = implode(", ",  $temp); 
+      if($temp==",") {
+        return "";
+      }
+      else {
+        return $temp;
+      }
+    }
+    else {
+      if($reasons != 'null') {
         return $reasons;
-      else
+      }
+      else {
         return '';
-     }
-   
+      }
+    }
   }
   function has_ANC_visits($datas) {
     $has_ANC = false;
@@ -44,10 +59,10 @@ class Records extends DB{
 
     return $has_MALNUTRITION;
   }
-	function add(){
-    global $Malnutrition_Blade_Popup;
-
-		$_data = $_POST;
+	function add() {
+    global $Malnutrition_Blade_Popup, $Immunisation_Blade_Popup;
+    $_data = $_POST;
+    
     unset($_data['class']);
     unset($_data['func']);
     $arr2 = array("client_id"=>$_GET['cid'],"record_type"=>$_data['type'], "office_id"=>$_SESSION['office_id']);   
@@ -60,6 +75,9 @@ class Records extends DB{
       // if malnutrition, then store malnut data to tbl_client_malnutrition
       if(!isset($_data['is_final_consultation'])) {
         $_data['is_final_consultation']='No';
+      }
+      if(isset($_data['immunisation_type']) && count($_data['immunisation_type']) > 0) {
+        $immunisation_type = $_data['immunisation_type'];
       }
       if( $_data['hiv_status']!=='' || $_data['is_final_consultation']==='Yes') {
 
@@ -84,18 +102,32 @@ class Records extends DB{
       unset($_data['wfh']);
       unset($_data['series']);
       unset($_data['is_final_consultation']);
-
+      unset($_data['immunisation_type']);
     }
     unset($_data['type']);
-
-    $data = $this->save($_data);
+    
+      $lastInsertId = $this->save($_data,array(), "tbl_records","lastInsertId");
+      if($immunisation_type && count($immunisation_type) > 0) {
+        $_data['record_id'] = $lastInsertId;
+        foreach($immunisation_type as $immunisation_type) {
+          $status = $Immunisation_Blade_Popup->save_immunisation($_data, $immunisation_type);  
+          if(!$status) {
+            echo "error";
+          }
+        }
+        echo "success";
+      }
+      else {
+        if($lastInsertId==false){ 
+          echo "error";
+        }else{
+            echo "success"; 
+        }
+      }
+    
 	    
-		if($data==false){ 
-	      echo "error"; //exit();
-	    }else{
-	       echo "success"; //exit();
-	    }
-      exit();
+		
+    exit();
 	}
 	function edit(){
 		$_data = $_POST;
@@ -208,8 +240,12 @@ class Records extends DB{
     exit();
   }
 	function get_consultation_records(){
-    $query = "SELECT a.ID, a.hb_level, a.feeding_type, a.date, b.clinic_name, a.visit_reasons 
-              FROM tbl_records as a JOIN tbl_clinic as b ON b.ID = a.clinic_id
+    $query = "SELECT a.ID, a.hb_level, a.feeding_type, a.date, b.clinic_name, a.visit_reasons, (
+                SELECT GROUP_CONCAT(type) FROM tbl_client_immunisation as c WHERE c.record_id = a.ID
+              ) as immunisation_types
+              FROM tbl_records as a
+              JOIN tbl_clinic as b 
+              ON b.ID = a.clinic_id
               WHERE a.client_id = :client_id AND record_type = :record_type ORDER BY a.date ASC";
     $bind_array['client_id'] = $_GET['cid'];
     $bind_array['record_type'] = "consultation";
@@ -331,7 +367,7 @@ class Records extends DB{
   } 
 
 	function consultation_modal($client_info){
-		global $type, $clinic, $client, $catchment, $Malnutrition_Blade_Popup;
+		global $type, $clinic, $client, $catchment, $Malnutrition_Blade_Popup, $Immunisation_Blade_Popup;
 		ob_start();
 		?>
 
@@ -546,6 +582,7 @@ class Records extends DB{
 
 
             <?php $Malnutrition_Blade_Popup->render() ?>
+            <?php $Immunisation_Blade_Popup->render() ?>
             <div class="row">
               <div class="col-md-4">
                 <input style="margin-top: 20px;" type="submit" class="btn btn-success btn-default" >
@@ -827,6 +864,21 @@ class Records extends DB{
 
           $('.required_when_able').not(':focusable').prop('required', false);
           $('.required_when_able:focusable').prop('required', true);
+          // if(this.checked) {
+          //   $('#malnutgroup').find('.required_when_able').prop('required', true)
+          // }  
+          // else {
+          //   $('#malnutgroup').find('.required_when_able').prop('required', false)
+          // }
+      })
+
+      $(document).on('change', '#immunisation', function() {
+          $('#immunisationgroup').toggle(this.checked);
+          console.log('immunisation toggle');
+          // $('.required_when_able').not(':focusable').prop('required', false);
+          // $('.required_when_able:focusable').prop('required', true);
+
+          
           // if(this.checked) {
           //   $('#malnutgroup').find('.required_when_able').prop('required', true)
           // }  

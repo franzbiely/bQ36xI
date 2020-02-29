@@ -294,7 +294,7 @@ if($_GET['p'] != "update") {
           </thead>
           <tbody>
               <?php 
-              if($datas!=false): foreach($datas as $data ): ?>
+              if($datas!=false): foreach($datas as $data ):  ?>
                <tr>
                 <td class="id record hide" data-id="<?php echo $data['ID']; ?>"><?php echo $data['ID'] ?></td>
                 <td><?php echo $data['date'] ?></td>
@@ -304,7 +304,7 @@ if($_GET['p'] != "update") {
                     echo "<em class='yellowme'>Deprecated</em>";
                   }
                   else {
-                    echo $record->display_visit_reasons($data['visit_reasons']);
+                    echo $record->display_visit_reasons($data);
                   }
                 ?></td>
                 <?php if($client_info['client_type']=="Child" && 

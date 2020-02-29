@@ -5,20 +5,27 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
-v3.41 | 18th of Feb 2020 
+v3.43 | 29th of Feb 2020
+  - Immunisation Feature
+		* Developer Note: To setup, add immunisation table into the db and then add the Immunisation Visit Type from the superadmin Visit Type Data management.
+
+v3.42 | 18th of Feb 2020 
   - Modify form order of the Malnutrition Reason | Includes modifying DB structure,
   - altered tbl_record by adding 'reason' VARCHAR(50)
   - also run this script to migrate reason datas from tbl_client_malnutrition to tbl_record : 
   UPDATE tbl_records a INNER JOIN tbl_client_malnutrition b ON a.client_malnutrition_id=b.id SET a.reason = b.reason;
 
-v3.40 | 13th of Feb 2020 
+v3.41 | 13th of Feb 2020 
   - Changed report details from: ( <12mons to <6mons) & (1-4 year to 6 - 59mons).
 
-v3.39 | 10th of Feb 2020
+v3.40 | 10th of Feb 2020
   - Fixed malnutrition popup [reason dropdown] for not showing selected data when saving changes.
   - Fixed child client detection by age.
   - Changed Anchblevel & Malnutrition email monthly schedule into last day of the month
 
+v3.39 | 30th of Jan 2020
+  - Changed monthly e-mail sending schedule into last day of the month
+  
 v3.38 | 4th of Dec 2019
   - Swap Reason & RUTF
   - Position RUTF at bottom of list.

@@ -10,6 +10,9 @@ class Type extends DB{
 			return array();
 		else{
 			$data['value'] = json_decode($data['value'],true);
+			unset( $data['value'][ array_search('Immunisation other', $data['value']) ] );
+			unset( $data['value'][ array_search('Measles/Rubella 9-17 mths (Immunisation)', $data['value']) ] );
+			unset( $data['value'][ array_search('3rd Dose Pentavalent (Immunisation)', $data['value']) ] );
 			return $data;
 		}
 			

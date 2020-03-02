@@ -4,15 +4,20 @@ class Type extends DB{
 		parent::__construct(); 
 		$this->table = "tbl_type";
 	}
+	function unsetIfFound($str, &$data) {
+		if( array_search($str, $data['value']) ) {
+			unset( $data['value'][ array_search($str, $data['value']) ] );
+		}
+	}
 	function get_all($type){
 		$data = $this->select("value, ID",array("type_name"=>$type),true);
 		if($data==false)
 			return array();
 		else{
 			$data['value'] = json_decode($data['value'],true);
-			unset( $data['value'][ array_search('Immunisation other', $data['value']) ] );
-			unset( $data['value'][ array_search('Measles/Rubella 9-17 mths (Immunisation)', $data['value']) ] );
-			unset( $data['value'][ array_search('3rd Dose Pentavalent (Immunisation)', $data['value']) ] );
+			$this->unsetIfFound('Immunisation other', $data);
+			$this->unsetIfFound('Measles/Rubella 9-17 mths (Immunisation)', $data);
+			$this->unsetIfFound('3rd Dose Pentavalent (Immunisation)', $data);
 			return $data;
 		}
 			

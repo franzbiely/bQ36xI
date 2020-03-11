@@ -147,7 +147,7 @@ class Immunisation extends DB
 		return $this->formatArraybyProvince($datas);
 	}
      public function reportEmailSend() {
-		echo $this->renderEmailBody( $this->compileDataForReports() );
+		echo $this->renderEmailBody( $this->compileDataForReports(), true );
 		exit();
     }
     private function in_array_2d($id, $array) {
@@ -362,7 +362,7 @@ class Immunisation extends DB
 		array_push($_arr, $_schedule, $_note, $im_schedule);
 		return $_arr;
 	}
-    private function renderEmailBody($datas=null) {
+    private function renderEmailBody($datas=null, $isAdHoc=false) {
 		$immunisation_details = [
 			"BCG (Birth) within 24hrs birth",
 			"BCG (Birth) < 1 week",
@@ -416,7 +416,7 @@ class Immunisation extends DB
 		<div style="font-size:12px; font-family:Arial;width:700px; margin:10px auto 20px;">
 			<p><strong>Note:</strong> The data within this report contains client consultation records for immunisation :</p>
 			<ul>
-				<li><strong>Report Duration: </strong>(<?php echo $this->fetchSendSchedule()[1]; ?>)</li>
+				<li><strong>Report Duration: </strong>(<?php echo $this->fetchSendSchedule()[1]; ?>) (<?php echo $isAdHoc ? 'Adhoc' : ucfirst($this->fetchSendSchedule()[2]) ?>)</li>
 			</ul> 
 		</div>
 		<p style="background:#f5f5f2;font-family:Arial;">

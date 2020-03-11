@@ -57,13 +57,13 @@ class Immunisation extends DB
 			$where = "AND ( DATEDIFF(NOW(),b.date) < {$_days} && DATEDIFF(NOW(),b.date) >= 0 )";
 		}
 
-		$stmt = $this->query("
+		$query = "
         SELECT DISTINCT a.record_number, CONCAT(a.lname, ', ', a.fname) as fullname, 
             a.client_type as gender,
-            FLOOR(MOD(DATEDIFF(NOW(), a.date_birth)/365.25 * 12, 12)) as age_months, 
-			FLOOR(DATEDIFF(NOW(), a.date_birth)/365.25) as age_year,
+            FLOOR(MOD(DATEDIFF(b.date, a.date_birth)/365.25 * 12, 12)) as age_months, 
+			FLOOR(DATEDIFF(b.date, a.date_birth)/365.25) as age_year,
 			b.date,
-			(SELECT GROUP_CONCAT(type SEPARATOR ', ') FROM tbl_client_immunisation as im WHERE b.ID = im.record_id) type,
+			(SELECT GROUP_CONCAT(type SEPARATOR ', ') FROM tbl_client_immunisation as im WHERE b.ID = im.record_id) as type,
 			d.area_name as province
         FROM tbl_client a,
             tbl_records b,
@@ -74,8 +74,8 @@ class Immunisation extends DB
             AND d.entry_type='province'
 			AND b.clinic_id=e.ID AND e.province=d.ID
 			{$where}
-        ORDER BY b.date ASC
-		", array());
+        ORDER BY b.date ASC";
+		$stmt = $this->query($query, array());
 		
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -105,6 +105,7 @@ class Immunisation extends DB
 		}
 		$body_all_prov = $this->renderEmailBody($datas); //body for all provinces
 		// Loop through provinces and send mail
+		array_push($datas, array('province'=>'All Provinces'));
 		foreach($datas as $key=>$prov) {
 			$emails = $this->getEmailsByProvince( 'im_'.str_replace(' ','_',trim($prov['province'])) );
 			if(isset($emails[0]['value']) && $emails[0]['value']) {
@@ -172,16 +173,20 @@ class Immunisation extends DB
 		    );
 		}
 		$fetchNotif = $this->fetchNotificationSettingsForImmunisation();
+		
 		$provinces = array_splice($fetchNotif, 0, -3);
 		foreach($provinces as $prov) {
-			$foo = $this->in_array_2d( str_replace('_',' ',$prov['label']) , $output );
+			$label = str_replace('im_','',$prov['label']);
+			$label = str_replace('_',' ',  $label  );
+			$foo = $this->in_array_2d( $label, $output );
 			if( !$foo ) {
+				
 				array_push($output, array(
-					'province' => $prov['label'],
+					'province' => $label,
 					'datas' => array()
 				)); 
 			}
-        }
+		}
 		return $output;
 	}
 	public function fetchReportSummary($prov){
@@ -420,7 +425,7 @@ class Immunisation extends DB
 			if(count($datas) < 1) : ?>
 				<div class="content" style="background:#ffffff;border:1px solid #d5d5d5; box-shadow: 1px 2px 2px #d3d3d3;width:700px; margin:10px auto 20px;">
 				     <div class="header" style="background:#1abc9c; color: #fff; padding:7px 15px; font-size:22px;">
-					 eCIS | Immunisation
+					 	eCIS | Immunisation
 				     </div>
 				     <div class="body" style="padding:10px 15px;">
 				     	<table border="0" cellpadding="10" cellspacing="0" width="100%" style="font-size:11; font-family:monospace;border-left:1px solid #aaa;">
@@ -428,7 +433,7 @@ class Immunisation extends DB
 				        		<tr>
 				        			<th style="<?php echo $th_style ?>" width="80">Date</th>
 				        			<th style="<?php echo $th_style ?>" width="180">Patient</th>
-				        			<th style="<?php echo $th_style ?>" width="150">Immunisation Details</th>>
+				        			<th style="<?php echo $th_style ?>" width="150">Immunisation Details</th>
 				        		</tr>
 				        	</thead>
 				        	<tbody>
@@ -546,7 +551,10 @@ class Immunisation extends DB
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
      public function fetchNotificationSettingsForImmunisation() {
-		return $this->select('*', array(), false, 'tbl_notifications');
+		$stmt = $this->query("
+			SELECT * FROM tbl_notifications WHERE label LIKE '%im%'
+			", array());
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
      public function storeNotificationSettingsForImmunisation() {
 		unset($_POST['class']);

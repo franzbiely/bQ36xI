@@ -5,6 +5,9 @@
 *    2. public/config.php must be updated to the copied TEST database credentials   *
 *                                                                                        *
 ******************************************************************************************
+v3.44 | 20th of March 2020
+  - Immunization Report, added clinic attended.
+
 v3.43 | 29th of Feb 2020
   - Immunisation Feature
 		* Developer Note: To setup, add immunisation table into the db and then add the Immunisation Visit Type from the superadmin Visit Type Data management.

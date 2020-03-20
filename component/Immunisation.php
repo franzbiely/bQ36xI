@@ -64,7 +64,8 @@ class Immunisation extends DB
 			FLOOR(DATEDIFF(b.date, a.date_birth)/365.25) as age_year,
 			b.date,
 			(SELECT GROUP_CONCAT(type SEPARATOR ', ') FROM tbl_client_immunisation as im WHERE b.ID = im.record_id) as type,
-			d.area_name as province
+			d.area_name as province,
+			e.clinic_name as clinic
         FROM tbl_client a,
             tbl_records b,
             tbl_client_immunisation im,
@@ -503,6 +504,7 @@ class Immunisation extends DB
 					        				<em>(<?php echo $_data['record_number'] ?>)</em><br />
 											<strong>Age</strong> : <?php echo $_data['age_year'] . ' year(s) ' . $_data['age_months'] . ' month(s)'; ?><br />
 					        				<strong>Gender</strong> : <?php echo $_data['gender']; ?><br />
+											<strong>Clinic</strong> : <?php echo $_data['clinic']; ?><br />
 					        			</td>
 					        			<td style="<?php echo $td_style ?>">
                                             <?php  echo $_data['type'] ?>
